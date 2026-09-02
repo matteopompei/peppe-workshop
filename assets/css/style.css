@@ -1,0 +1,113 @@
+/* --------------------------------------------------------------------------
+   1. Variabili
+   -------------------------------------------------------------------------- */
+:root {
+	/* Colori — insegna */
+	--color-brand: #2a5a93;
+	--color-on-brand: #ffffff;
+
+	/* Colori — base */
+	--color-bg: #f4f6f9;
+	--color-text: #1c2330;
+
+	/* Spaziature (scala 4px) */
+	--space-xs: 0.5rem; /*  8px */
+	--space-sm: 0.75rem; /* 12px */
+	--space-md: 1rem; /* 16px */
+	--space-lg: 1.5rem; /* 24px */
+	--space-xl: 2.5rem; /* 40px */
+
+	/* Header */
+	--header-padding-inline: var(--space-sm);
+	--header-padding-block: var(--space-md);
+	--logo-max-width: 738px; /* larghezza naturale del PNG: mai upscalare */
+
+	/* Layout */
+	--container-max: 90rem;
+
+	/* Tipografia */
+	--font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.25rem);
+}
+
+/* Tablet+ */
+@media (min-width: 768px) {
+	:root {
+		--header-padding-inline: var(--space-lg);
+		--header-padding-block: var(--space-lg);
+	}
+}
+
+/* 4K */
+@media (min-width: 2560px) {
+	:root {
+		--header-padding-block: var(--space-xl);
+	}
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+* {
+	margin: 0;
+}
+img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+:focus-visible {
+	outline: 3px solid var(--color-brand);
+	outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   3. BASE
+   -------------------------------------------------------------------------- */
+body {
+	min-height: 100vh;
+	min-height: 100svh;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	font-family:
+		system-ui,
+		-apple-system,
+		"Segoe UI",
+		Roboto,
+		sans-serif;
+	font-size: var(--font-size-base);
+	line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   4. HEADER
+   -------------------------------------------------------------------------- */
+.site-header {
+	background-color: var(--color-brand);
+	padding: var(--header-padding-block) var(--header-padding-inline);
+	display: grid;
+	place-items: center;
+}
+
+.site-header__logo {
+	width: min(100%, var(--logo-max-width));
+	height: auto; /* mantiene il ratio 738:54 */
+}
+
+/* --------------------------------------------------------------------------
+   5. MAIN
+   -------------------------------------------------------------------------- */
+.site-main {
+	flex: 1;
+	width: 100%;
+	max-width: var(--container-max);
+	margin-inline: auto;
+	padding: var(--space-lg) var(--space-md);
+}
