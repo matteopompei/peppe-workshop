@@ -1,113 +1,115 @@
-/* --------------------------------------------------------------------------
-   1. Variabili
-   -------------------------------------------------------------------------- */
+/* ============================================================
+   RESET
+   ============================================================ */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+button {
+	font-family: inherit;
+	cursor: pointer;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+/* ============================================================
+   VARIABILI
+   ============================================================ */
 :root {
-	/* Colori — insegna */
-	--color-brand: #2a5a93;
-	--color-on-brand: #ffffff;
+	/* Palette principale */
+	--primary: #2a3757;
+	--primary-dark: #1e2841;
+	--primary-light: #3d4d78;
+	--accent: #4a5a8a;
 
-	/* Colori — base */
-	--color-bg: #f4f6f9;
-	--color-text: #1c2330;
+	/* Testo */
+	--text: #2c2c2c;
+	--text-light: #5a5a5a;
 
-	/* Spaziature (scala 4px) */
-	--space-xs: 0.5rem; /*  8px */
-	--space-sm: 0.75rem; /* 12px */
-	--space-md: 1rem; /* 16px */
-	--space-lg: 1.5rem; /* 24px */
-	--space-xl: 2.5rem; /* 40px */
+	/* Superfici */
+	--bg: #ffffff;
+	--bg-alt: #f6f8fb;
+	--border: #e3e7ee;
 
-	/* Header */
-	--header-padding-inline: var(--space-sm);
-	--header-padding-block: var(--space-md);
-	--logo-max-width: 738px; /* larghezza naturale del PNG: mai upscalare */
+	/* Accenti semantici */
+	--wa: #25d366;
+	--wa-dark: #1ebe57;
+	--star: #f5b301;
+	--gold: #d4a017;
+	--terracotta: #b8603a;
 
-	/* Layout */
-	--container-max: 90rem;
+	/* Ombre */
+	--shadow: 0 2px 12px rgba(42, 55, 87, 0.08);
+	--shadow-lg: 0 8px 24px rgba(42, 55, 87, 0.12);
 
 	/* Tipografia */
-	--font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.25rem);
+	--font-display: Georgia, "Times New Roman", serif;
+	--font-body:
+		-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+		sans-serif;
+
+	/* Layout */
+	--app-max: 540px;
+	--header-pad-y: 0.9rem;
+	--header-pad-x: 1rem;
+	--slide-pad-y-top: 1.75rem;
+	--slide-pad-x: 1.35rem;
+	--slide-pad-y-bottom: 6.5rem;
 }
 
-/* Tablet+ */
-@media (min-width: 768px) {
-	:root {
-		--header-padding-inline: var(--space-lg);
-		--header-padding-block: var(--space-lg);
-	}
+/* ============================================================
+   BASE
+   ============================================================ */
+html {
+	font-size: clamp(1rem, 0.35vw + 0.85rem, 1.375rem);
 }
 
-/* 4K */
-@media (min-width: 2560px) {
-	:root {
-		--header-padding-block: var(--space-xl);
-	}
-}
-
-/* --------------------------------------------------------------------------
-   2. RESET
-   -------------------------------------------------------------------------- */
-*,
-*::before,
-*::after {
-	box-sizing: border-box;
-}
-* {
-	margin: 0;
-}
-img {
-	display: block;
-	max-width: 100%;
-	height: auto;
-}
-
-:focus-visible {
-	outline: 3px solid var(--color-brand);
-	outline-offset: 2px;
-}
-
-/* --------------------------------------------------------------------------
-   3. BASE
-   -------------------------------------------------------------------------- */
 body {
-	min-height: 100vh;
-	min-height: 100svh;
+	font-family: var(--font-body);
+	color: var(--text);
+	background: var(--bg-alt);
+	line-height: 1.55;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   APP CONTAINER
+   ============================================================ */
+.app {
+	height: 100vh;
+	height: 100dvh;
 	display: flex;
 	flex-direction: column;
-	background-color: var(--color-bg);
-	color: var(--color-text);
-	font-family:
-		system-ui,
-		-apple-system,
-		"Segoe UI",
-		Roboto,
-		sans-serif;
-	font-size: var(--font-size-base);
-	line-height: 1.5;
+	max-width: var(--app-max);
+	margin: 0 auto;
+	background: var(--bg);
+	overflow: hidden;
 }
 
-/* --------------------------------------------------------------------------
-   4. HEADER
-   -------------------------------------------------------------------------- */
-.site-header {
-	background-color: var(--color-brand);
-	padding: var(--header-padding-block) var(--header-padding-inline);
-	display: grid;
-	place-items: center;
-}
-
-.site-header__logo {
-	width: min(100%, var(--logo-max-width));
-	height: auto; /* mantiene il ratio 738:54 */
-}
-
-/* --------------------------------------------------------------------------
-   5. MAIN
-   -------------------------------------------------------------------------- */
-.site-main {
-	flex: 1;
-	width: 100%;
-	max-width: var(--container-max);
-	margin-inline: auto;
-	padding: var(--space-lg) var(--space-md);
+/* Su desktop lo sfondo bianco di .app si fonde con la pagina */
+@media (min-width: 541px) {
+	.app {
+		max-width: none;
+		box-shadow: none;
+	}
+	:root {
+		--slide-pad-y-top: 3rem;
+		--slide-pad-x: 3rem;
+	}
 }
