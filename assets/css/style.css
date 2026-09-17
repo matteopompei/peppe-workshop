@@ -217,13 +217,13 @@ body {
 	z-index: 1;
 	margin: 0 auto;
 	text-align: center;
-	padding: 1.5rem 0 1rem;
+	padding: 1rem 0 0.5rem;
 }
 
 /* --- Rating pill --- */
 .rating-wrap {
 	display: block;
-	margin: 0 auto 1.75rem;
+	margin: 0 auto 1.5rem;
 }
 
 .rating-pill {
@@ -259,7 +259,7 @@ body {
 	font-size: clamp(2.2rem, 8vw, 3.1rem);
 	font-weight: 800;
 	line-height: 1.05;
-	letter-spacing: -0.5px;
+	letter-spacing: -0.3px;
 	margin-bottom: 1rem;
 	color: var(--primary);
 }
