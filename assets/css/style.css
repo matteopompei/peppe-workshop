@@ -102,7 +102,6 @@ body {
 	overflow: hidden;
 }
 
-/* Su desktop lo sfondo bianco di .app si fonde con la pagina */
 @media (min-width: 541px) {
 	.app {
 		max-width: none;
@@ -111,5 +110,42 @@ body {
 	:root {
 		--slide-pad-y-top: 3rem;
 		--slide-pad-x: 3rem;
+	}
+}
+
+/* ============================================================
+   HEADER — insegna spenta
+   ============================================================ */
+.app-header {
+	position: relative;
+	background-color: #1a2238;
+	padding: var(--header-pad-y) var(--header-pad-x);
+	flex-shrink: 0;
+	overflow: hidden;
+	z-index: 10;
+}
+
+.app-header .logo {
+	display: block;
+	width: min(22rem, 90%);
+	margin: 0 auto;
+	text-align: center;
+	font-family: var(--font-display);
+	font-size: 1.15rem;
+	font-weight: 700;
+	letter-spacing: 0.35em;
+	color: #e0e7f2;
+	text-indent: 0.35em;
+	line-height: 1.4;
+}
+
+@media (min-width: 541px) {
+	:root {
+		--header-pad-y: 1.25rem;
+		--header-pad-x: 1.5rem;
+	}
+	.app-header .logo {
+		width: min(26rem, 65%);
+		font-size: 1.25rem;
 	}
 }
