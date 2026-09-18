@@ -140,6 +140,21 @@ body {
 .ico-book {
 	--src: url(../img/icons/book-open.svg);
 }
+.ico-info {
+	--src: url(../img/icons/circle-info.svg);
+}
+.ico-clock {
+	--src: url(../img/icons/clock.svg);
+}
+.ico-phone {
+	--src: url(../img/icons/phone.svg);
+}
+.ico-cash {
+	--src: url(../img/icons/money-bill-wave.svg);
+}
+.ico-coffee {
+	--src: url(../img/icons/mug-hot.svg);
+}
 
 /* ============================================================
    APP CONTAINER
@@ -402,6 +417,20 @@ body {
 
 .btn-wa:hover {
 	background: var(--wa-dark);
+}
+
+.btn-ghost {
+	background: #fff;
+	color: var(--primary);
+	border: 1.5px solid var(--primary);
+}
+
+.btn-ghost:hover {
+	background: #f0f3fa;
+}
+
+.btn-full {
+	width: 100%;
 }
 
 /* ============================================================
@@ -845,6 +874,220 @@ body {
 	width: 0.9rem;
 	height: 0.9rem;
 	color: var(--star);
+}
+
+/* ============================================================
+   CONTATTI / INFO
+   ============================================================ */
+.info-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+}
+
+.info-block {
+	background: #fff;
+	border: 1px solid var(--border);
+	border-radius: 14px;
+	padding: 1.15rem 1.2rem;
+	box-shadow: var(--shadow);
+}
+
+.info-block .block-label {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: 0.78rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+	color: var(--accent);
+	margin-bottom: 0.85rem;
+}
+
+.block-label-left {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+}
+
+.info-block .block-label .ico {
+	width: 0.9375rem;
+	height: 0.9375rem;
+	color: var(--gold);
+}
+
+.schedule-list {
+	list-style: none;
+	padding: 0;
+}
+
+.schedule-list li {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.6rem 0.7rem;
+	margin: 0 -0.7rem;
+	border-bottom: 1px solid var(--border);
+	font-size: 0.9rem;
+	border-radius: 8px;
+}
+
+.schedule-list li:last-child {
+	border-bottom: none;
+}
+
+.schedule-list .day {
+	font-weight: 600;
+	color: var(--primary);
+}
+
+.schedule-list .time {
+	color: var(--text-light);
+	text-align: right;
+}
+
+.schedule-list .closed {
+	color: #c0392b;
+	font-weight: 600;
+}
+
+.card-desc {
+	font-size: 0.85rem;
+	color: var(--text-light);
+	line-height: 1.55;
+	margin: 0 0 0.9rem;
+}
+
+.card-desc strong {
+	color: var(--primary);
+}
+
+.contact-buttons {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.contact-buttons .btn {
+	flex: 1;
+	padding: 0.6rem;
+	font-size: 0.85rem;
+}
+
+/* --- Nota pagamento e caffè --- */
+.trade-notes {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	margin-top: 1.15rem;
+}
+
+.trade-note {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	background: #fbfaf5;
+	border: 1px dashed #d9d1b8;
+	border-radius: 12px;
+	padding: 0.85rem 1rem;
+}
+
+.trade-note .ico {
+	width: 1.1rem;
+	height: 1.1rem;
+	color: #b8964a;
+	flex-shrink: 0;
+}
+
+.trade-note p {
+	margin: 0;
+	font-size: 0.83rem;
+	color: var(--text-light);
+	line-height: 1.55;
+}
+
+.trade-note.payment {
+	background: #fff;
+	border-style: solid;
+	border-color: var(--border);
+	border-left: 3px solid var(--gold);
+	padding: 0.6rem 0.9rem;
+}
+
+.trade-note.payment .ico {
+	color: var(--gold);
+	width: 1rem;
+	height: 1rem;
+}
+
+.trade-note.payment p {
+	font-style: italic;
+	color: var(--text);
+	font-weight: 600;
+	font-size: 0.85rem;
+}
+
+.trade-note.coffee {
+	background: #faf4ec;
+	border-color: #e6d5bf;
+	align-items: flex-start;
+}
+
+.trade-note.coffee .ico {
+	color: #8a5a2b;
+	margin-top: 2px;
+}
+
+/* --- Mappa placeholder --- */
+.map-wrap {
+	border-radius: 14px;
+	overflow: hidden;
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow-lg);
+	aspect-ratio: 16 / 13;
+	margin-bottom: 0.9rem;
+	background: #e8ecf5;
+	position: relative;
+}
+
+.map-placeholder {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	background:
+		radial-gradient(
+			circle 100px at 30% 30%,
+			rgba(42, 55, 87, 0.06) 0%,
+			transparent 70%
+		),
+		radial-gradient(
+			circle 130px at 70% 70%,
+			rgba(74, 90, 138, 0.05) 0%,
+			transparent 70%
+		),
+		linear-gradient(135deg, #eef2f8 0%, #e2e8f2 100%);
+	color: var(--accent);
+	padding: 1rem;
+	text-align: center;
+}
+
+.map-placeholder .ico {
+	width: 2rem;
+	height: 2rem;
+	opacity: 0.55;
+}
+
+.map-placeholder span:last-child {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--text-light);
 }
 
 /* ============================================================
