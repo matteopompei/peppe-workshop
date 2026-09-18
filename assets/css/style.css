@@ -658,7 +658,7 @@ body {
 	width: 12px;
 	height: 12px;
 	background: #fff;
-	border: 3px solid var(--primary);
+	border: 2px solid var(--primary);
 	border-radius: 50%;
 	box-shadow: 0 0 0 3px rgba(42, 55, 87, 0.1);
 }
@@ -692,6 +692,162 @@ body {
 }
 
 /* ============================================================
+   RECENSIONI
+   ============================================================ */
+.reviews-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	margin: 2rem 0 1.1rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--border);
+}
+
+.reviews-header h3 {
+	font-family: var(--font-display);
+	color: var(--primary);
+	font-size: 1.2rem;
+	font-weight: 700;
+	line-height: 1.2;
+	margin: 0;
+	letter-spacing: -0.2px;
+}
+
+.reviews-header .reviews-source {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: 0.72rem;
+	color: var(--text-light);
+	font-weight: 600;
+}
+
+.reviews-header .reviews-source .ico {
+	width: 0.75rem;
+	height: 0.75rem;
+	color: var(--star);
+}
+
+.reviews-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+}
+
+.review-card {
+	background: #fff;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 0.95rem 1.1rem;
+	box-shadow: var(--shadow);
+	display: flex;
+	flex-direction: column;
+}
+
+.review-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.review-author {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	min-width: 0;
+}
+
+.review-avatar {
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	background: linear-gradient(135deg, var(--accent), var(--primary));
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.8rem;
+	font-weight: 800;
+	flex-shrink: 0;
+	box-shadow: 0 2px 6px rgba(42, 55, 87, 0.18);
+}
+
+.review-name {
+	font-size: 0.83rem;
+	font-weight: 700;
+	color: var(--primary);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.review-stars {
+	display: inline-flex;
+	gap: 1px;
+	flex-shrink: 0;
+}
+
+.review-stars .ico {
+	width: 0.72rem;
+	height: 0.72rem;
+	color: var(--star);
+}
+
+.review-text {
+	font-size: 0.87rem;
+	color: var(--text);
+	line-height: 1.55;
+	margin: 0;
+	font-style: italic;
+}
+
+.review-text::before {
+	content: "\201C";
+}
+
+.review-text::after {
+	content: "\201D";
+}
+
+.btn-reviews {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-top: 1.25rem;
+	width: 100%;
+	padding: 0.7rem 1rem;
+	background: #fff;
+	border: 1.5px solid var(--border);
+	border-radius: 50px;
+	font-size: 0.85rem;
+	font-weight: 700;
+	color: var(--primary);
+	transition:
+		background 0.15s,
+		border-color 0.15s,
+		transform 0.15s;
+}
+
+.btn-reviews:hover {
+	background: var(--bg-alt);
+	border-color: #cdd5e3;
+}
+
+.btn-reviews:active {
+	transform: scale(0.98);
+}
+
+.btn-reviews .ico {
+	width: 0.9rem;
+	height: 0.9rem;
+	color: var(--star);
+}
+
+/* ============================================================
    DESKTOP
    ============================================================ */
 @media (min-width: 541px) {
@@ -713,5 +869,10 @@ body {
 		margin: 0 auto;
 		max-width: clamp(43.75rem, 50vw, 75rem);
 		width: 100%;
+	}
+	.reviews-list {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
 	}
 }
