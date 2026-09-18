@@ -982,7 +982,6 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 0.75rem;
-	margin-top: 1.15rem;
 }
 
 .trade-note {
@@ -1039,6 +1038,16 @@ body {
 .trade-note.coffee .ico {
 	color: #8a5a2b;
 	margin-top: 2px;
+}
+
+.info-extra-title {
+	font-family: var(--font-display);
+	color: var(--primary);
+	font-size: 1.05rem;
+	font-weight: 700;
+	letter-spacing: -0.2px;
+	margin: 0 0 0.9rem;
+	line-height: 1.25;
 }
 
 /* --- Mappa placeholder --- */
