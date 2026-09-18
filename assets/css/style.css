@@ -105,37 +105,40 @@ body {
 
 /* Registrazione icone */
 .ico-star {
-	--src: url(../img/icons/star-solid.svg);
+	--src: url(../img/icons/star.svg);
 }
 .ico-star-half {
-	--src: url(../img/icons/star-half-stroke-solid.svg);
+	--src: url(../img/icons/star-half-stroke.svg);
 }
 .ico-location {
-	--src: url(../img/icons/location-dot-solid.svg);
+	--src: url(../img/icons/location-dot.svg);
 }
 .ico-whatsapp {
-	--src: url(../img/icons/whatsapp-brands-solid.svg);
+	--src: url(../img/icons/whatsapp.svg);
 }
 .ico-microchip {
-	--src: url(../img/icons/microchip-solid.svg);
+	--src: url(../img/icons/microchip.svg);
 }
 .ico-warning {
-	--src: url(../img/icons/triangle-exclamation-solid.svg);
+	--src: url(../img/icons/triangle-exclamation.svg);
 }
 .ico-bolt {
-	--src: url(../img/icons/bolt-solid.svg);
+	--src: url(../img/icons/bolt.svg);
 }
 .ico-car {
-	--src: url(../img/icons/car-side-solid.svg);
+	--src: url(../img/icons/car-side.svg);
 }
 .ico-battery {
-	--src: url(../img/icons/battery-full-solid.svg);
+	--src: url(../img/icons/battery-full.svg);
 }
 .ico-bolt-lightning {
-	--src: url(../img/icons/bolt-lightning-solid.svg);
+	--src: url(../img/icons/bolt-lightning.svg);
 }
 .ico-screwdriver {
-	--src: url(../img/icons/screwdriver-wrench-solid.svg);
+	--src: url(../img/icons/screwdriver-wrench.svg);
+}
+.ico-book {
+	--src: url(../img/icons/book-open.svg);
 }
 
 /* ============================================================
@@ -614,6 +617,81 @@ body {
 }
 
 /* ============================================================
+   STORIA
+   ============================================================ */
+.timeline {
+	position: relative;
+	padding-left: 26px;
+	margin: 0.5rem 0 2rem;
+}
+
+.timeline::before {
+	content: "";
+	position: absolute;
+	left: 6px;
+	top: 10px;
+	bottom: 10px;
+	width: 2px;
+	background: linear-gradient(to bottom, var(--primary), var(--accent));
+	border-radius: 2px;
+}
+
+.timeline-item {
+	position: relative;
+	margin-bottom: 1.5rem;
+	background: #fff;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 1rem 1.1rem;
+	box-shadow: var(--shadow);
+}
+
+.timeline-item:last-child {
+	margin-bottom: 0;
+}
+
+.timeline-item::before {
+	content: "";
+	position: absolute;
+	left: -28px;
+	top: 1.1rem;
+	width: 12px;
+	height: 12px;
+	background: #fff;
+	border: 3px solid var(--primary);
+	border-radius: 50%;
+	box-shadow: 0 0 0 3px rgba(42, 55, 87, 0.1);
+}
+
+.timeline-year {
+	display: inline-block;
+	background: var(--primary);
+	color: #fff;
+	padding: 0.15rem 0.6rem;
+	border-radius: 20px;
+	font-size: 0.72rem;
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+	letter-spacing: 0.5px;
+}
+
+.timeline-item h4 {
+	font-family: var(--font-display);
+	color: var(--primary);
+	font-size: 1.05rem;
+	font-weight: 700;
+	margin-bottom: 0.3rem;
+	letter-spacing: -0.2px;
+}
+
+.timeline-item p {
+	font-size: 0.85rem;
+	color: var(--text-light);
+	margin: 0;
+	line-height: 1.55;
+}
+
+/* ============================================================
    DESKTOP
    ============================================================ */
 @media (min-width: 541px) {
@@ -630,5 +708,10 @@ body {
 	.app-header .logo {
 		width: min(26rem, 65%);
 		font-size: 1.25rem;
+	}
+	.slide-inner {
+		margin: 0 auto;
+		max-width: clamp(43.75rem, 50vw, 75rem);
+		width: 100%;
 	}
 }
