@@ -1161,6 +1161,12 @@ body {
 	transform: scale(0.92);
 }
 
+.nav-btn.disabled {
+	opacity: 0.3;
+	pointer-events: none;
+	cursor: default;
+}
+
 .dots {
 	display: flex;
 	gap: 0.4rem;
