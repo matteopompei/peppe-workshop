@@ -155,6 +155,12 @@ body {
 .ico-coffee {
 	--src: url(../img/icons/mug-hot.svg);
 }
+.ico-chevron-left {
+	--src: url(../img/icons/chevron-left.svg);
+}
+.ico-chevron-right {
+	--src: url(../img/icons/chevron-right.svg);
+}
 
 /* ============================================================
    APP CONTAINER
@@ -1097,6 +1103,86 @@ body {
 	font-size: 0.8rem;
 	font-weight: 600;
 	color: var(--text-light);
+}
+
+/* ============================================================
+   BOTTOM NAV
+   ============================================================ */
+.bottom-nav {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border-top: 1px solid var(--border);
+	padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	z-index: 20;
+}
+
+.nav-btn {
+	width: 2.625rem;
+	height: 2.625rem;
+	border-radius: 50%;
+	border: 1.5px solid var(--border);
+	background: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		transform 0.15s;
+}
+
+.nav-btn .ico {
+	width: 1.125rem;
+	height: 1.125rem;
+	color: var(--primary);
+	transition: color 0.2s ease;
+}
+
+.nav-btn:hover {
+	background: var(--primary);
+	border-color: var(--primary);
+}
+
+.nav-btn:hover .ico {
+	color: #fff;
+}
+
+.nav-btn:active {
+	transform: scale(0.92);
+}
+
+.dots {
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+}
+
+.dot {
+	width: 0.4375rem;
+	height: 0.4375rem;
+	border-radius: 50%;
+	background: var(--border);
+	transition:
+		background 0.3s,
+		width 0.3s,
+		border-radius 0.3s;
+	display: block;
+}
+
+.dot.active {
+	background: var(--primary);
+	width: 1.25rem;
+	border-radius: 4px;
 }
 
 /* ============================================================

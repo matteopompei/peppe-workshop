@@ -12,6 +12,7 @@
 		/>
 		<title>Elettrauto Giuseppe Lelli</title>
 		<link rel="stylesheet" href="./assets/css/style.css" />
+		<script src="./assets/js/main.js" defer></script>
 	</head>
 	<body>
 		<div class="app">
@@ -20,7 +21,7 @@
 			</header>
 
 			<main class="deck">
-				<section class="slide hero">
+				<section id="slide-1" class="slide hero">
 					<div class="slide-inner">
 						<div class="hero-content">
 							<div class="rating-wrap">
@@ -64,7 +65,7 @@
 					</div>
 				</section>
 
-				<section class="slide white">
+				<section id="slide-2" class="slide white">
 					<div class="slide-inner">
 						<div class="slide-label">
 							<span class="ico ico-screwdriver" aria-hidden="true"></span>
@@ -158,7 +159,7 @@
 					</div>
 				</section>
 
-				<section class="slide">
+				<section id="slide-3" class="slide">
 					<div class="slide-inner">
 						<div class="slide-label">
 							<span class="ico ico-book" aria-hidden="true"></span>
@@ -298,7 +299,7 @@
 					</div>
 				</section>
 
-				<section class="slide">
+				<section id="slide-4" class="slide">
 					<div class="slide-inner">
 						<div class="slide-label">
 							<span class="ico ico-info" aria-hidden="true"></span>
@@ -414,6 +415,33 @@
 					</div>
 				</section>
 			</main>
+
+						<nav class="bottom-nav" aria-label="Navigazione slide">
+				<a
+					href="#slide-1"
+					class="nav-btn"
+					id="prevBtn"
+					aria-label="Slide precedente"
+				>
+					<span class="ico ico-chevron-left" aria-hidden="true"></span>
+				</a>
+
+				<div class="dots" id="dots" role="tablist" aria-label="Indice delle slide">
+					<a href="#slide-1" class="dot active" aria-label="Vai alla slide 1"></a>
+					<a href="#slide-2" class="dot" aria-label="Vai alla slide 2"></a>
+					<a href="#slide-3" class="dot" aria-label="Vai alla slide 3"></a>
+					<a href="#slide-4" class="dot" aria-label="Vai alla slide 4"></a>
+				</div>
+
+				<a
+					href="#slide-2"
+					class="nav-btn"
+					id="nextBtn"
+					aria-label="Slide successiva"
+				>
+					<span class="ico ico-chevron-right" aria-hidden="true"></span>
+				</a>
+			</nav>
 		</div>
 	</body>
 </html>
