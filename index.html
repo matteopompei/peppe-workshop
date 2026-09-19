@@ -30,9 +30,34 @@
 	</head>
 	<body>
 		<div class="app">
-			<header class="app-header">
-				<div class="logo">ELETTRAUTO RICAMBI</div>
-			</header>
+			<div class="header-wrap">
+				<header class="app-header">
+					<div class="logo">ELETTRAUTO RICAMBI</div>
+				</header>
+
+				<div
+					class="cookie-banner"
+					id="cookieBanner"
+					role="dialog"
+					aria-live="polite"
+					aria-label="Gestione cookie"
+				>
+					<div class="cookie-banner-text">
+						Usiamo <strong>Google Analytics</strong> e
+						<strong>Google Maps</strong> per il funzionamento del sito (dati
+						anonimi). Puoi accettare, rifiutare o leggere la
+						<a id="openPolicyFromBanner">Privacy &amp; Cookie Policy</a>.
+					</div>
+					<div class="cookie-banner-actions">
+						<button class="cookie-btn reject" id="rejectCookies" type="button">
+							Rifiuta
+						</button>
+						<button class="cookie-btn accept" id="acceptCookies" type="button">
+							Accetta
+						</button>
+					</div>
+				</div>
+			</div>
 
 			<main class="deck">
 				<section id="slide-1" class="slide hero">

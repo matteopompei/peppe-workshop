@@ -73,4 +73,106 @@
 
 	/* Stato iniziale */
 	updateUI();
+
+	/* ============================================================
+	   COOKIE CONSENT
+	   ============================================================ */
+	const COOKIE_KEY = "cookie_consent";
+	const COOKIE_DURATION_DAYS = 180;
+	const GA_MEASUREMENT_ID =
+		"G-XXXXXXXXXX"; /* placeholder: sostituire al deploy */
+
+	const banner = document.getElementById("cookieBanner");
+
+	function getConsent() {
+		try {
+			const raw = localStorage.getItem(COOKIE_KEY);
+			if (!raw) return null;
+			const data = JSON.parse(raw);
+			if (
+				data.ts &&
+				Date.now() - data.ts > COOKIE_DURATION_DAYS * 24 * 3600 * 1000
+			) {
+				localStorage.removeItem(COOKIE_KEY);
+				return null;
+			}
+			return data;
+		} catch (e) {
+			return null;
+		}
+	}
+
+	function setConsent(analytics) {
+		localStorage.setItem(
+			COOKIE_KEY,
+			JSON.stringify({
+				analytics: analytics,
+				ts: Date.now(),
+			}),
+		);
+	}
+
+	function loadGoogleAnalytics() {
+		if (document.getElementById("ga-script")) return;
+		const script = document.createElement("script");
+		script.id = "ga-script";
+		script.async = true;
+		script.src =
+			"https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
+		document.head.appendChild(script);
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		window.gtag = gtag;
+		gtag("js", new Date());
+		gtag("config", GA_MEASUREMENT_ID, {
+			anonymize_ip: true,
+			cookie_flags: "SameSite=Lax;Secure",
+		});
+	}
+
+	function unloadGoogleAnalytics() {
+		const s = document.getElementById("ga-script");
+		if (s) s.remove();
+		const names = ["_ga", "_gid", "_ga_" + GA_MEASUREMENT_ID.replace("G-", "")];
+		names.forEach(function (name) {
+			document.cookie = name + "=; Max-Age=0; path=/;";
+			document.cookie =
+				name + "=; Max-Age=0; path=/; domain=" + location.hostname + ";";
+		});
+	}
+
+	function applyConsent(analytics) {
+		if (analytics) loadGoogleAnalytics();
+		else unloadGoogleAnalytics();
+		/* Il caricamento della mappa verrà agganciato qui nel commit dedicato */
+		banner.classList.add("hidden");
+	}
+
+	/* Stato iniziale */
+	const existingConsent = getConsent();
+	if (existingConsent) {
+		applyConsent(existingConsent.analytics);
+	}
+
+	/* Bottoni */
+	document.getElementById("acceptCookies").addEventListener("click", () => {
+		setConsent(true);
+		applyConsent(true);
+	});
+
+	document.getElementById("rejectCookies").addEventListener("click", () => {
+		setConsent(false);
+		applyConsent(false);
+	});
+
+	/* Link Privacy dal banner — per ora non fa nulla, sarà agganciato al modale */
+	const policyLinkFromBanner = document.getElementById("openPolicyFromBanner");
+	if (policyLinkFromBanner) {
+		policyLinkFromBanner.addEventListener("click", (e) => {
+			e.preventDefault();
+			/* Il modale verrà implementato nel commit successivo */
+		});
+	}
 })();
