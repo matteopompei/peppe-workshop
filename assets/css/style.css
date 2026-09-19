@@ -1626,6 +1626,7 @@ body {
 	text-underline-offset: 0.25em;
 	text-decoration-thickness: 1px;
 	transition: color 0.15s;
+	white-space: nowrap;
 }
 
 .legal-block p a:hover,
