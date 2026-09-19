@@ -186,6 +186,27 @@ body {
 .ico-compass {
 	--src: url(../img/icons/compass.svg);
 }
+.ico-shield {
+	--src: url(../img/icons/shield-halved.svg);
+}
+.ico-user {
+	--src: url(../img/icons/user.svg);
+}
+.ico-user-shield {
+	--src: url(../img/icons/user-shield.svg);
+}
+.ico-github {
+	--src: url(../img/icons/github.svg);
+}
+.ico-cookie {
+	--src: url(../img/icons/cookie-bite.svg);
+}
+.ico-heart {
+	--src: url(../img/icons/heart.svg);
+}
+.ico-code {
+	--src: url(../img/icons/code.svg);
+}
 
 /* ============================================================
    APP CONTAINER
@@ -1455,6 +1476,126 @@ body {
 	line-height: 1.5;
 	text-align: center;
 	letter-spacing: 0.2px;
+}
+
+/* ============================================================
+   NOTE LEGALI
+   ============================================================ */
+.legal-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+	margin-top: 0.5rem;
+}
+
+.legal-block {
+	background: #fff;
+	border: 1px solid var(--border);
+	border-radius: 14px;
+	padding: 1.15rem 1.2rem;
+	box-shadow: var(--shadow);
+}
+
+.legal-block h3 {
+	font-family: var(--font-display);
+	color: var(--primary);
+	font-size: 1.05rem;
+	font-weight: 700;
+	margin-bottom: 0.6rem;
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	letter-spacing: -0.2px;
+}
+
+.legal-block h3 .ico {
+	width: 1rem;
+	height: 1rem;
+	color: var(--gold);
+	flex-shrink: 0;
+}
+
+.legal-block p {
+	font-size: 0.85rem;
+	color: var(--text-light);
+	line-height: 1.6;
+	margin: 0;
+}
+
+.legal-block p .ico {
+	display: inline-block;
+	width: 0.85rem;
+	height: 0.85rem;
+	vertical-align: -0.15em;
+	margin-left: 0.25rem;
+	color: currentColor;
+}
+
+.legal-block .disclaimer-note {
+	background: #fff8e6;
+	border-left: 3px solid var(--gold);
+	border-radius: 8px;
+	padding: 0.8rem 0.95rem;
+	font-size: 0.83rem;
+	color: var(--text);
+	line-height: 1.6;
+}
+
+.legal-block .disclaimer-note p {
+	color: var(--text);
+	font-size: 0.83rem;
+}
+
+.legal-block .disclaimer-note strong {
+	color: var(--primary);
+}
+
+.legal-block p a,
+.legal-block .disclaimer-note a {
+	color: var(--accent);
+	font-weight: 700;
+	text-decoration: underline;
+	text-decoration-style: dotted;
+	text-underline-offset: 0.25em;
+	text-decoration-thickness: 1px;
+	transition: color 0.15s;
+}
+
+.legal-block p a:hover,
+.legal-block .disclaimer-note a:hover {
+	color: var(--primary);
+}
+
+.policy-links {
+	display: flex;
+	gap: 1rem;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+
+.policy-links a {
+	font-size: 0.78rem;
+	color: var(--text-light);
+	font-weight: 600;
+	text-decoration: underline;
+	text-decoration-style: dotted;
+	text-underline-offset: 0.25em;
+	text-decoration-thickness: 1px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	transition: color 0.15s;
+	padding: 0.2rem 0;
+}
+
+.policy-links a:hover {
+	color: var(--primary);
+}
+
+.policy-links a .ico {
+	width: 0.75rem;
+	height: 0.75rem;
 }
 
 /* ============================================================
