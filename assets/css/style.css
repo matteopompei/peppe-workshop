@@ -931,7 +931,7 @@ body {
 	align-items: center;
 	justify-content: space-between;
 	gap: 0.5rem;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.75rem;
 }
 
 .review-author {
@@ -986,11 +986,11 @@ body {
 }
 
 .review-text::before {
-	content: "\201C";
+	content: "\201C\00A0";
 }
 
 .review-text::after {
-	content: "\201D";
+	content: "\00A0\201D";
 }
 
 .btn-reviews {
@@ -1025,7 +1025,7 @@ body {
 .btn-reviews .ico {
 	width: 0.9rem;
 	height: 0.9rem;
-	color: var(--star);
+	color: currentColor;
 }
 
 /* ============================================================
