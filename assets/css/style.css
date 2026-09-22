@@ -274,6 +274,9 @@ body {
 .ico-code {
 	--src: url(../img/icons/code.svg);
 }
+.ico-xmark {
+	--src: url(../img/icons/xmark.svg);
+}
 
 /* ============================================================
    APP CONTAINER
@@ -1751,6 +1754,190 @@ body {
 
 .cookie-btn.reject:hover {
 	background: var(--bg-alt);
+}
+
+/* ============================================================
+   MODALI
+   ============================================================ */
+.modal-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(30, 40, 65, 0.55);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 200;
+	padding: 1rem;
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		opacity 0.25s ease,
+		visibility 0.25s ease;
+}
+
+.modal-backdrop.show {
+	opacity: 1;
+	visibility: visible;
+}
+
+.modal-box {
+	background: #ffffff;
+	border-radius: 22px;
+	padding: 2rem 1.5rem 1.6rem;
+	max-width: 26.25rem;
+	width: 100%;
+	max-height: 85vh;
+	position: relative;
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+	transform: translateY(10px) scale(0.97);
+	transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+	display: flex;
+	flex-direction: column;
+}
+
+.modal-backdrop.show .modal-box {
+	transform: translateY(0) scale(1);
+}
+
+.modal-close {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	background: transparent;
+	border: none;
+	width: 2.375rem;
+	height: 2.375rem;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-light);
+	transition: background 0.15s;
+	z-index: 2;
+}
+
+.modal-close:hover {
+	background: var(--bg-alt);
+}
+
+.modal-close .ico {
+	width: 1rem;
+	height: 1rem;
+}
+
+/* --- Modale policy --- */
+.modal-box.policy {
+	max-width: 35rem;
+	text-align: left;
+	padding: 1.5rem 1.75rem;
+}
+
+.policy-header {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin-bottom: 1rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--border);
+	padding-right: 2rem;
+}
+
+.policy-header .ico {
+	width: 1.375rem;
+	height: 1.375rem;
+	color: var(--primary);
+	flex-shrink: 0;
+}
+
+.policy-header h2 {
+	font-family: var(--font-display);
+	color: var(--primary);
+	font-size: 1.25rem;
+	font-weight: 700;
+	margin: 0;
+	letter-spacing: -0.3px;
+}
+
+.policy-content {
+	overflow-y: auto;
+	flex: 1;
+	padding-right: 0.25rem;
+	scrollbar-width: thin;
+	scrollbar-color: var(--border) transparent;
+}
+
+.policy-content::-webkit-scrollbar {
+	width: 6px;
+}
+
+.policy-content::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.policy-content::-webkit-scrollbar-thumb {
+	background: var(--border);
+	border-radius: 3px;
+}
+
+.policy-content h3 {
+	color: var(--primary);
+	font-size: 0.95rem;
+	margin: 1.1rem 0 0.4rem;
+	font-weight: 700;
+}
+
+.policy-content h3:first-child {
+	margin-top: 0;
+}
+
+.policy-content p {
+	font-size: 0.82rem;
+	color: var(--text);
+	margin-bottom: 0.6rem;
+	line-height: 1.55;
+}
+
+.policy-content ul {
+	font-size: 0.82rem;
+	color: var(--text);
+	padding-left: 1.2rem;
+	margin-bottom: 0.6rem;
+}
+
+.policy-content ul li {
+	margin-bottom: 0.25rem;
+}
+
+.policy-content strong {
+	color: var(--primary);
+}
+
+.policy-content a {
+	color: var(--accent);
+	font-weight: 600;
+	text-decoration: underline;
+}
+
+.policy-content code {
+	font-family:
+		ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+	font-size: 0.78rem;
+	background: var(--bg-alt);
+	padding: 0.1rem 0.35rem;
+	border-radius: 4px;
+	color: var(--primary);
+}
+
+.policy-meta {
+	font-size: 0.72rem;
+	color: var(--text-light);
+	margin-top: 0;
+	margin-bottom: 1rem !important;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--border);
+	font-style: italic;
 }
 
 /* ============================================================

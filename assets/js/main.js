@@ -167,12 +167,58 @@
 		applyConsent(false);
 	});
 
-	/* Link Privacy dal banner — per ora non fa nulla, sarà agganciato al modale */
+	/* ============================================================
+	   MODALE PRIVACY
+	   ============================================================ */
+	const policyModal = document.getElementById("policyModal");
+	const policyClose = document.getElementById("policyClose");
+	const openPrivacyLink = document.getElementById("openPrivacyLink");
+	const reopenCookieSettings = document.getElementById("reopenCookieSettings");
 	const policyLinkFromBanner = document.getElementById("openPolicyFromBanner");
+
+	function openPolicy() {
+		policyModal.classList.add("show");
+	}
+
+	function closePolicy() {
+		policyModal.classList.remove("show");
+	}
+
 	if (policyLinkFromBanner) {
 		policyLinkFromBanner.addEventListener("click", (e) => {
 			e.preventDefault();
-			/* Il modale verrà implementato nel commit successivo */
+			openPolicy();
+		});
+	}
+
+	if (openPrivacyLink) {
+		openPrivacyLink.addEventListener("click", (e) => {
+			e.preventDefault();
+			openPolicy();
+		});
+	}
+
+	if (policyClose) {
+		policyClose.addEventListener("click", closePolicy);
+	}
+
+	policyModal.addEventListener("click", (e) => {
+		if (e.target === policyModal) closePolicy();
+	});
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape" && policyModal.classList.contains("show")) {
+			closePolicy();
+		}
+	});
+
+	/* Modifica preferenze cookie: rimuove la scelta e riapre il banner */
+	if (reopenCookieSettings) {
+		reopenCookieSettings.addEventListener("click", (e) => {
+			e.preventDefault();
+			localStorage.removeItem(COOKIE_KEY);
+			closePolicy();
+			banner.classList.remove("hidden");
 		});
 	}
 })();
