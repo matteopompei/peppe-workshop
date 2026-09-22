@@ -91,9 +91,12 @@
 								nella vallata del Tronto.
 							</p>
 
-							<div class="hero-location">
+														<div class="hero-location" id="heroLocation">
 								<span class="ico ico-location" aria-hidden="true"></span>
-								Bivio Offida · Via Salaria, Castorano (AP)
+								<span class="loc-text"
+									>Bivio Offida · Via Salaria, Castorano (AP)</span
+								>
+								<span class="location-dot" id="locationDot" aria-hidden="true"></span>
 							</div>
 
 							<div class="cta-row">
@@ -364,11 +367,20 @@
 						<h2 class="slide-title accent-line">Dove e quando<br />trovarci</h2>
 
 						<div class="info-stack">
-							<div class="info-block">
+														<div class="info-block">
 								<div class="block-label">
 									<span class="block-label-left">
 										<span class="ico ico-clock" aria-hidden="true"></span>
 										Orari di apertura
+									</span>
+									<span
+										class="open-status-badge"
+										id="openStatusBadge"
+										role="status"
+										aria-live="polite"
+									>
+										<span class="status-dot-small" aria-hidden="true"></span>
+										<span id="openStatusText">Verifica…</span>
 									</span>
 								</div>
 								<ul class="schedule-list">

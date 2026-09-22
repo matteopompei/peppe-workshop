@@ -324,4 +324,153 @@
 			banner.classList.remove("hidden");
 		});
 	}
+
+	/* ============================================================
+	   STATO APERTURA (ora di Roma)
+	   ============================================================ */
+	/* Orari in minuti dalla mezzanotte:
+	   510 = 8:30, 750 = 12:30, 900 = 15:00, 1170 = 19:30 */
+	const SCHEDULE = {
+		0: [] /* domenica */,
+		1: [
+			[510, 750],
+			[900, 1170],
+		] /* lunedì */,
+		2: [
+			[510, 750],
+			[900, 1170],
+		] /* martedì */,
+		3: [
+			[510, 750],
+			[900, 1170],
+		] /* mercoledì */,
+		4: [
+			[510, 750],
+			[900, 1170],
+		] /* giovedì */,
+		5: [
+			[510, 750],
+			[900, 1170],
+		] /* venerdì */,
+		6: [[510, 750]] /* sabato */,
+	};
+
+	const DAY_NAMES = [
+		"domenica",
+		"lunedì",
+		"martedì",
+		"mercoledì",
+		"giovedì",
+		"venerdì",
+		"sabato",
+	];
+
+	const CLOSING_SOON_MINUTES = 30;
+
+	function getRomeNow() {
+		try {
+			const s = new Date().toLocaleString("en-US", {
+				timeZone: "Europe/Rome",
+			});
+			return new Date(s);
+		} catch (e) {
+			return new Date();
+		}
+	}
+
+	function fmtTime(minutes) {
+		const h = Math.floor(minutes / 60);
+		const m = minutes % 60;
+		return h + ":" + String(m).padStart(2, "0");
+	}
+
+	function getOpenStatus() {
+		const now = getRomeNow();
+		const day = now.getDay();
+		const minutes = now.getHours() * 60 + now.getMinutes();
+		const todayRanges = SCHEDULE[day] || [];
+
+		/* Aperto adesso? */
+		for (let i = 0; i < todayRanges.length; i++) {
+			const open = todayRanges[i][0];
+			const close = todayRanges[i][1];
+			if (minutes >= open && minutes < close) {
+				const remaining = close - minutes;
+				if (remaining <= CLOSING_SOON_MINUTES) {
+					return {
+						state: "closing-soon",
+						short: "CHIUDE " + fmtTime(close),
+						full: "Aperto · chiude alle " + fmtTime(close),
+					};
+				}
+				return { state: "open", short: "APERTO", full: "Aperto ora" };
+			}
+		}
+
+		/* Chiuso: prossima apertura oggi? */
+		for (let i = 0; i < todayRanges.length; i++) {
+			const open = todayRanges[i][0];
+			if (open > minutes) {
+				return {
+					state: "closed",
+					short: "CHIUSO",
+					full: "Chiuso · riapre alle " + fmtTime(open),
+				};
+			}
+		}
+
+		/* Chiuso: prossima apertura nei giorni successivi */
+		for (let i = 1; i <= 7; i++) {
+			const nextDay = (day + i) % 7;
+			const nextRanges = SCHEDULE[nextDay] || [];
+			if (nextRanges.length > 0) {
+				const open = nextRanges[0][0];
+				const dayLabel = i === 1 ? "domani" : DAY_NAMES[nextDay];
+				return {
+					state: "closed",
+					short: "CHIUSO",
+					full: "Chiuso · riapre " + dayLabel + " alle " + fmtTime(open),
+				};
+			}
+		}
+
+		return { state: "closed", short: "CHIUSO", full: "Chiuso" };
+	}
+
+	const locationDot = document.getElementById("locationDot");
+	const heroLocation = document.getElementById("heroLocation");
+	const openStatusBadge = document.getElementById("openStatusBadge");
+	const openStatusText = document.getElementById("openStatusText");
+
+	function updateStatus() {
+		const status = getOpenStatus();
+
+		if (locationDot) {
+			locationDot.classList.remove("is-open", "is-closing-soon", "is-closed");
+			locationDot.classList.add("is-" + status.state);
+		}
+
+		if (heroLocation) {
+			heroLocation.setAttribute(
+				"aria-label",
+				"Bivio Offida, Via Salaria, Castorano. " +
+					status.full +
+					". Clicca per vedere orari e contatti.",
+			);
+		}
+
+		if (openStatusBadge && openStatusText) {
+			openStatusBadge.classList.remove(
+				"is-open",
+				"is-closing-soon",
+				"is-closed",
+			);
+			openStatusBadge.classList.add("is-" + status.state);
+			openStatusText.textContent = status.short;
+			openStatusBadge.setAttribute("aria-label", status.full);
+		}
+	}
+
+	updateStatus();
+	setInterval(updateStatus, 60000);
 })();

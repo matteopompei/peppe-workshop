@@ -398,11 +398,15 @@ body {
 	cursor: pointer;
 }
 
-.rating-wrap {
-	cursor: pointer;
-}
-
 .rating-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	background: #fff;
+	border: 1px solid #f0e2b5;
+	padding: 0.5rem 1.1rem;
+	border-radius: 50px;
+	box-shadow: 0 2px 6px rgba(212, 160, 23, 0.15);
 	transition: transform 0.15s;
 }
 
@@ -421,17 +425,6 @@ body {
 .rating-wrap:focus-visible .rating-pill {
 	outline: 2px solid var(--primary);
 	outline-offset: 3px;
-}
-
-.rating-pill {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.55rem;
-	background: #fff;
-	border: 1px solid #f0e2b5;
-	padding: 0.5rem 1.1rem;
-	border-radius: 50px;
-	box-shadow: 0 2px 6px rgba(212, 160, 23, 0.15);
 }
 
 .stars-row {
@@ -516,6 +509,39 @@ body {
 	width: 0.8125rem;
 	height: 0.8125rem;
 	color: var(--accent);
+}
+
+.hero-location .loc-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.location-dot {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: #9aa6be;
+	flex-shrink: 0;
+	margin-left: 0.15rem;
+	transition:
+		background 0.3s,
+		box-shadow 0.3s;
+}
+
+.location-dot.is-open {
+	background: #22c55e;
+	box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+}
+
+.location-dot.is-closing-soon {
+	background: #f59e0b;
+	box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+}
+
+.location-dot.is-closed {
+	background: #ef4444;
+	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
 /* --- Bottoni --- */
@@ -1024,14 +1050,6 @@ body {
 	font-style: italic;
 }
 
-.review-text::before {
-	content: "\201C\00A0";
-}
-
-.review-text::after {
-	content: "\00A0\201D";
-}
-
 .btn-reviews {
 	display: flex;
 	align-items: center;
@@ -1110,6 +1128,74 @@ body {
 	color: var(--gold);
 }
 
+/* ============================================================
+   BADGE STATO APERTURA
+   ============================================================ */
+.open-status-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.28rem 0.65rem;
+	border-radius: 50px;
+	font-size: 0.62rem;
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: 0.4px;
+	text-transform: uppercase;
+	white-space: nowrap;
+	flex-shrink: 0;
+	transition:
+		background 0.3s ease,
+		color 0.3s ease;
+}
+
+.open-status-badge .status-dot-small {
+	position: relative;
+	width: 0.4rem;
+	height: 0.4rem;
+	border-radius: 50%;
+	background: currentColor;
+	flex-shrink: 0;
+}
+
+.open-status-badge.is-open .status-dot-small::before,
+.open-status-badge.is-closing-soon .status-dot-small::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: currentColor;
+	animation: dotPulse 2.4s ease-out infinite;
+	pointer-events: none;
+}
+
+@keyframes dotPulse {
+	0% {
+		transform: scale(1);
+		opacity: 0.5;
+	}
+	100% {
+		transform: scale(2.2);
+		opacity: 0;
+	}
+}
+
+.open-status-badge.is-open {
+	background: #dcfce7;
+	color: #15803d;
+}
+
+.open-status-badge.is-closing-soon {
+	background: #fef3c7;
+	color: #b45309;
+}
+
+.open-status-badge.is-closed {
+	background: #fee2e2;
+	color: #b91c1c;
+}
+
+/* --- Tabella orari --- */
 .schedule-list {
 	list-style: none;
 	padding: 0;
@@ -1241,7 +1327,7 @@ body {
 	line-height: 1.25;
 }
 
-/* --- Mappa placeholder --- */
+/* --- Mappa --- */
 .map-wrap {
 	border-radius: 14px;
 	overflow: hidden;
@@ -2113,37 +2199,45 @@ body {
 		max-width: none;
 		box-shadow: none;
 	}
+
 	:root {
 		--header-pad-y: 1.25rem;
 		--header-pad-x: 1.5rem;
 		--slide-pad-y-top: 3rem;
 		--slide-pad-x: 3rem;
 	}
+
 	.app-header .logo {
 		width: min(26rem, 65%);
 		font-size: 1.25rem;
 	}
+
 	.slide-inner {
 		margin: 0 auto;
 		max-width: clamp(43.75rem, 50vw, 75rem);
 		width: 100%;
 	}
+
 	.reviews-list {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
 	}
+
 	.gp-features {
 		grid-template-columns: repeat(4, 1fr);
 	}
+
 	.gp-logo-circle {
 		width: 7rem;
 		height: 7rem;
 		padding: 0.85rem;
 	}
+
 	.gp-name {
 		font-size: 1.9rem;
 	}
+
 	.cookie-banner {
 		flex-direction: row;
 		align-items: center;
