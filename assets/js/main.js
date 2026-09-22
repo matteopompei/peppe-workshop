@@ -1,6 +1,9 @@
 (function () {
 	"use strict";
 
+	/* ============================================================
+	   NAVIGAZIONE SLIDE
+	   ============================================================ */
 	const deck = document.querySelector(".deck");
 	if (!deck) return;
 
@@ -13,7 +16,6 @@
 
 	let currentIndex = 0;
 
-	/* Aggiorna dots e stato delle frecce in base alla slide corrente */
 	function updateUI() {
 		dots.forEach((dot, i) => {
 			dot.classList.toggle("active", i === currentIndex);
@@ -29,7 +31,6 @@
 		nextBtn.setAttribute("aria-disabled", atEnd ? "true" : "false");
 	}
 
-	/* Vai alla slide n */
 	function goTo(index) {
 		if (index < 0 || index >= slides.length) return;
 		currentIndex = index;
@@ -37,7 +38,6 @@
 		updateUI();
 	}
 
-	/* Frecce */
 	prevBtn.addEventListener("click", (e) => {
 		e.preventDefault();
 		if (currentIndex === 0) return;
@@ -50,7 +50,6 @@
 		goTo(currentIndex + 1);
 	});
 
-	/* Sincronizza stato quando l'utente scorre con swipe o trackpad */
 	let scrollTimeout;
 	deck.addEventListener(
 		"scroll",
@@ -71,7 +70,6 @@
 		{ passive: true },
 	);
 
-	/* Stato iniziale */
 	updateUI();
 
 	/* ============================================================
@@ -150,13 +148,11 @@
 		banner.classList.add("hidden");
 	}
 
-	/* Stato iniziale */
 	const existingConsent = getConsent();
 	if (existingConsent) {
 		applyConsent(existingConsent.analytics);
 	}
 
-	/* Bottoni */
 	document.getElementById("acceptCookies").addEventListener("click", () => {
 		setConsent(true);
 		applyConsent(true);
@@ -168,8 +164,28 @@
 	});
 
 	/* ============================================================
-	   MODALE PRIVACY
+	   MODALI (focus trap + inert)
 	   ============================================================ */
+	const appEl = document.querySelector(".app");
+	let lastFocused = null;
+
+	function openModal(modal) {
+		lastFocused = document.activeElement;
+		modal.classList.add("show");
+		if (appEl) appEl.setAttribute("inert", "");
+		const focusable = modal.querySelector(".modal-close, .modal-dismiss, .btn");
+		if (focusable) focusable.focus();
+	}
+
+	function closeModal(modal) {
+		modal.classList.remove("show");
+		if (appEl) appEl.removeAttribute("inert");
+		if (lastFocused && typeof lastFocused.focus === "function") {
+			lastFocused.focus();
+		}
+	}
+
+	/* --- Modale privacy --- */
 	const policyModal = document.getElementById("policyModal");
 	const policyClose = document.getElementById("policyClose");
 	const openPrivacyLink = document.getElementById("openPrivacyLink");
@@ -177,11 +193,10 @@
 	const policyLinkFromBanner = document.getElementById("openPolicyFromBanner");
 
 	function openPolicy() {
-		policyModal.classList.add("show");
+		openModal(policyModal);
 	}
-
 	function closePolicy() {
-		policyModal.classList.remove("show");
+		closeModal(policyModal);
 	}
 
 	if (policyLinkFromBanner) {
@@ -206,35 +221,16 @@
 		if (e.target === policyModal) closePolicy();
 	});
 
-	document.addEventListener("keydown", (e) => {
-		if (e.key === "Escape" && policyModal.classList.contains("show")) {
-			closePolicy();
-		}
-	});
-
-	/* Modifica preferenze cookie: rimuove la scelta e riapre il banner */
-	if (reopenCookieSettings) {
-		reopenCookieSettings.addEventListener("click", (e) => {
-			e.preventDefault();
-			localStorage.removeItem(COOKIE_KEY);
-			closePolicy();
-			banner.classList.remove("hidden");
-		});
-	}
-
-	/* ============================================================
-	   MODALE RECENSIONE
-	   ============================================================ */
+	/* --- Modale recensione --- */
 	const ratingTrigger = document.getElementById("ratingTrigger");
 	const reviewModal = document.getElementById("reviewModal");
 	const reviewDismiss = document.getElementById("reviewDismiss");
 
 	function openReview() {
-		reviewModal.classList.add("show");
+		openModal(reviewModal);
 	}
-
 	function closeReview() {
-		reviewModal.classList.remove("show");
+		closeModal(reviewModal);
 	}
 
 	if (ratingTrigger) {
@@ -255,9 +251,20 @@
 		if (e.target === reviewModal) closeReview();
 	});
 
+	/* --- Escape chiude il modale aperto --- */
 	document.addEventListener("keydown", (e) => {
-		if (e.key === "Escape" && reviewModal.classList.contains("show")) {
-			closeReview();
-		}
+		if (e.key !== "Escape") return;
+		if (policyModal.classList.contains("show")) closePolicy();
+		if (reviewModal.classList.contains("show")) closeReview();
 	});
+
+	/* --- Modifica preferenze cookie --- */
+	if (reopenCookieSettings) {
+		reopenCookieSettings.addEventListener("click", (e) => {
+			e.preventDefault();
+			localStorage.removeItem(COOKIE_KEY);
+			closePolicy();
+			banner.classList.remove("hidden");
+		});
+	}
 })();
