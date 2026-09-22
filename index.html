@@ -63,7 +63,13 @@
 				<section id="slide-1" class="slide hero">
 					<div class="slide-inner">
 						<div class="hero-content">
-							<div class="rating-wrap">
+							<div
+								class="rating-wrap"
+								id="ratingTrigger"
+								role="button"
+								tabindex="0"
+								aria-label="Valutazione media 4,3 su 5 stelle. Clicca per lasciare una recensione."
+							>
 								<div class="rating-pill">
 									<span class="stars-row" aria-hidden="true">
 										<span class="ico ico-star"></span>
@@ -822,6 +828,45 @@
 						indicata in cima al documento.
 					</p>
 				</div>
+			</div>
+		</div>
+
+		<div
+			class="modal-backdrop"
+			id="reviewModal"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="reviewTitle"
+		>
+			<div class="modal-box">
+				<div class="modal-stars" aria-hidden="true">
+					<span class="ico ico-star"></span>
+					<span class="ico ico-star"></span>
+					<span class="ico ico-star"></span>
+					<span class="ico ico-star"></span>
+					<span class="ico ico-star"></span>
+				</div>
+
+				<h3 id="reviewTitle">Lascia una recensione a 5 stelle</h3>
+
+				<p>
+					Sei passato a trovarci e ti sei trovato bene? Una recensione su Google
+					Maps aiuta Peppe e chi verrà dopo di te.
+				</p>
+
+				<a
+					href="https://maps.app.goo.gl/xH7HjNVx2xbUHKUQ7"
+					target="_blank"
+					rel="noopener"
+					class="btn btn-review"
+				>
+					<span class="ico ico-star" aria-hidden="true"></span>
+					Vai su Google Maps
+				</a>
+
+				<button class="modal-dismiss" id="reviewDismiss" type="button">
+					Forse un'altra volta
+				</button>
 			</div>
 		</div>
 	</body>

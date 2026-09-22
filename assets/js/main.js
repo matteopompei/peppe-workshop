@@ -221,4 +221,43 @@
 			banner.classList.remove("hidden");
 		});
 	}
+
+	/* ============================================================
+	   MODALE RECENSIONE
+	   ============================================================ */
+	const ratingTrigger = document.getElementById("ratingTrigger");
+	const reviewModal = document.getElementById("reviewModal");
+	const reviewDismiss = document.getElementById("reviewDismiss");
+
+	function openReview() {
+		reviewModal.classList.add("show");
+	}
+
+	function closeReview() {
+		reviewModal.classList.remove("show");
+	}
+
+	if (ratingTrigger) {
+		ratingTrigger.addEventListener("click", openReview);
+		ratingTrigger.addEventListener("keydown", (e) => {
+			if (e.key === "Enter" || e.key === " ") {
+				e.preventDefault();
+				openReview();
+			}
+		});
+	}
+
+	if (reviewDismiss) {
+		reviewDismiss.addEventListener("click", closeReview);
+	}
+
+	reviewModal.addEventListener("click", (e) => {
+		if (e.target === reviewModal) closeReview();
+	});
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape" && reviewModal.classList.contains("show")) {
+			closeReview();
+		}
+	});
 })();

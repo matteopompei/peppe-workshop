@@ -395,6 +395,32 @@ body {
 .rating-wrap {
 	display: block;
 	margin: 0 auto 1.5rem;
+	cursor: pointer;
+}
+
+.rating-wrap {
+	cursor: pointer;
+}
+
+.rating-pill {
+	transition: transform 0.15s;
+}
+
+.rating-wrap:hover .rating-pill {
+	transform: translateY(-2px);
+}
+
+.rating-wrap:active .rating-pill {
+	transform: translateY(0) scale(0.98);
+}
+
+.rating-wrap:focus-visible {
+	outline: none;
+}
+
+.rating-wrap:focus-visible .rating-pill {
+	outline: 2px solid var(--primary);
+	outline-offset: 3px;
 }
 
 .rating-pill {
@@ -1938,6 +1964,84 @@ body {
 	padding-bottom: 0.75rem;
 	border-bottom: 1px solid var(--border);
 	font-style: italic;
+}
+
+/* --- Modale recensione --- */
+.modal-box:not(.policy) {
+	text-align: center;
+	padding: 2.2rem 1.75rem 1.6rem;
+}
+
+.modal-stars {
+	display: inline-flex;
+	gap: 4px;
+	align-self: center;
+	margin: 0 auto 1rem;
+	background: linear-gradient(135deg, #fff8e6, #ffffff);
+	padding: 0.7rem 1rem;
+	border-radius: 50px;
+	box-shadow: 0 4px 12px rgba(212, 160, 23, 0.2);
+}
+
+.modal-stars .ico {
+	width: 1.4rem;
+	height: 1.4rem;
+	color: var(--star);
+}
+
+.modal-box:not(.policy) h3 {
+	font-family: var(--font-display);
+	color: var(--primary);
+	margin-bottom: 0.7rem;
+	font-size: 1.35rem;
+	font-weight: 700;
+	text-align: center;
+	letter-spacing: -0.3px;
+}
+
+.modal-box:not(.policy) p {
+	color: var(--text-light);
+	font-size: 0.92rem;
+	margin: 0 auto 1.4rem;
+	line-height: 1.55;
+	max-width: 22rem;
+	text-align: center;
+}
+
+.modal-box:not(.policy) .btn {
+	width: 100%;
+	margin-bottom: 0.6rem;
+}
+
+.btn-review {
+	background: var(--star);
+	color: #5c4300;
+	box-shadow: 0 4px 12px rgba(245, 179, 1, 0.35);
+}
+
+.btn-review:hover {
+	background: #e0a400;
+}
+
+.btn-review .ico {
+	color: #5c4300;
+}
+
+.modal-dismiss {
+	background: transparent;
+	border: none;
+	color: var(--text-light);
+	font-size: 0.82rem;
+	cursor: pointer;
+	padding: 0.4rem 0.6rem;
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+	margin: 0 auto;
+	display: block;
+}
+
+.modal-dismiss:hover {
+	color: var(--primary);
 }
 
 /* ============================================================
