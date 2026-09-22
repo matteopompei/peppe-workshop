@@ -873,6 +873,45 @@ body {
 }
 
 /* ============================================================
+   FOTO OFFICINA
+   ============================================================ */
+.office-photo {
+	margin: 0 0 2rem;
+	border-radius: 14px;
+	overflow: hidden;
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow);
+	position: relative;
+	background: var(--bg-alt);
+}
+
+.office-photo img {
+	width: 100%;
+	height: auto;
+	display: block;
+	aspect-ratio: 16 / 10;
+	object-fit: cover;
+}
+
+.office-photo figcaption {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 1.4rem 0.95rem 0.7rem;
+	background: linear-gradient(
+		to top,
+		rgba(26, 34, 56, 0.85) 0%,
+		rgba(26, 34, 56, 0) 100%
+	);
+	color: #ffffff;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.3px;
+	text-align: left;
+}
+
+/* ============================================================
    RECENSIONI
    ============================================================ */
 .reviews-header {
