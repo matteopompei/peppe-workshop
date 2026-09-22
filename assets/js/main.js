@@ -141,16 +141,56 @@
 		});
 	}
 
+	function updateMapForConsent(analytics) {
+		const iframe = document.querySelector(".map-wrap iframe");
+		const mapOverlay = document.getElementById("mapOverlay");
+		const activateMapLabel = document.getElementById("activateMapLabel");
+		const activateMapBtn = document.getElementById("activateMap");
+		if (!iframe || !mapOverlay) return;
+
+		if (analytics) {
+			if (iframe.dataset.src && !iframe.src) {
+				iframe.src = iframe.dataset.src;
+			}
+			mapOverlay.classList.add("hidden");
+			if (activateMapLabel) {
+				activateMapLabel.textContent = "Tocca per attivare la mappa";
+			}
+			if (activateMapBtn) {
+				activateMapBtn.setAttribute(
+					"aria-label",
+					"Attiva la mappa interattiva",
+				);
+			}
+		} else {
+			if (iframe.src) {
+				iframe.removeAttribute("src");
+			}
+			mapOverlay.classList.remove("hidden");
+			if (activateMapLabel) {
+				activateMapLabel.textContent = "Accetta i cookie per vedere la mappa";
+			}
+			if (activateMapBtn) {
+				activateMapBtn.setAttribute(
+					"aria-label",
+					"Accetta i cookie per vedere la mappa",
+				);
+			}
+		}
+	}
+
 	function applyConsent(analytics) {
 		if (analytics) loadGoogleAnalytics();
 		else unloadGoogleAnalytics();
-		/* Il caricamento della mappa verrà agganciato qui nel commit dedicato */
+		updateMapForConsent(analytics);
 		banner.classList.add("hidden");
 	}
 
 	const existingConsent = getConsent();
 	if (existingConsent) {
 		applyConsent(existingConsent.analytics);
+	} else {
+		updateMapForConsent(false);
 	}
 
 	document.getElementById("acceptCookies").addEventListener("click", () => {
@@ -162,6 +202,23 @@
 		setConsent(false);
 		applyConsent(false);
 	});
+
+	/* Bottone "Accetta i cookie per vedere la mappa" */
+	const activateMapBtn = document.getElementById("activateMap");
+	if (activateMapBtn) {
+		activateMapBtn.addEventListener("click", () => {
+			const consent = getConsent();
+			if (consent && consent.analytics) {
+				/* Consenso già dato: carica la mappa */
+				updateMapForConsent(true);
+			} else {
+				/* Nessun consenso: riapri il banner cookie */
+				banner.classList.remove("hidden");
+				const rejectBtn = document.getElementById("rejectCookies");
+				if (rejectBtn) rejectBtn.focus();
+			}
+		});
+	}
 
 	/* ============================================================
 	   MODALI (focus trap + inert)
