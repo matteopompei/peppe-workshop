@@ -2,42 +2,69 @@
 	"use strict";
 
 	/* ============================================================
-	   NAVIGAZIONE SLIDE
-	   ============================================================ */
+   NAVIGAZIONE SLIDE
+   ============================================================ */
 	const deck = document.querySelector(".deck");
 	if (!deck) return;
 
 	const slides = Array.from(deck.querySelectorAll(".slide"));
 	const dots = Array.from(document.querySelectorAll(".dot"));
-
-	dots.forEach((dot, i) => {
-		dot.addEventListener("click", (e) => {
-			e.preventDefault();
-			goTo(i);
-		});
-	});
-
 	const prevBtn = document.getElementById("prevBtn");
 	const nextBtn = document.getElementById("nextBtn");
 	const swipeHint = document.getElementById("swipeHint");
+	const liveRegion = document.getElementById("liveRegion");
 
 	if (!slides.length || !prevBtn || !nextBtn) return;
+
+	const slideTitles = [
+		"Benvenuto",
+		"La nostra storia",
+		"Servizi offerti",
+		"Dove e quando trovarci",
+		"Guida Picena",
+		"Note legali e credits",
+	];
+	const total = slides.length;
 
 	let currentIndex = 0;
 
 	function updateUI() {
 		dots.forEach((dot, i) => {
-			dot.classList.toggle("active", i === currentIndex);
+			const isActive = i === currentIndex;
+			dot.classList.toggle("active", isActive);
+			if (isActive) {
+				dot.setAttribute("aria-current", "true");
+			} else {
+				dot.removeAttribute("aria-current");
+			}
 		});
 
 		const atStart = currentIndex === 0;
-		const atEnd = currentIndex === slides.length - 1;
+		const atEnd = currentIndex === total - 1;
 
 		prevBtn.classList.toggle("disabled", atStart);
 		prevBtn.setAttribute("aria-disabled", atStart ? "true" : "false");
+		prevBtn.disabled = atStart;
 
 		nextBtn.classList.toggle("disabled", atEnd);
 		nextBtn.setAttribute("aria-disabled", atEnd ? "true" : "false");
+		nextBtn.disabled = atEnd;
+
+		// Gestione focus/lettura schermo: la slide attiva è l'unica raggiungibile
+		slides.forEach((slide, i) => {
+			if (i === currentIndex) {
+				slide.removeAttribute("inert");
+				slide.setAttribute("aria-hidden", "false");
+			} else {
+				slide.setAttribute("inert", "");
+				slide.setAttribute("aria-hidden", "true");
+			}
+		});
+
+		// Annuncio per screen reader
+		if (liveRegion) {
+			liveRegion.textContent = `Slide ${currentIndex + 1} di ${total}: ${slideTitles[currentIndex]}`;
+		}
 
 		if (currentIndex > 0 && swipeHint) {
 			swipeHint.classList.add("hidden");
@@ -45,24 +72,43 @@
 	}
 
 	function goTo(index) {
-		if (index < 0 || index >= slides.length) return;
+		if (index < 0 || index >= total) return;
 		currentIndex = index;
-		deck.scrollTo({ left: index * deck.clientWidth });
+		deck.scrollTo({ left: index * deck.clientWidth, behavior: "smooth" });
 		updateUI();
 	}
 
-	prevBtn.addEventListener("click", (e) => {
-		e.preventDefault();
+	// Click / tastiera sui dot
+	dots.forEach((dot, i) => {
+		dot.addEventListener("click", () => goTo(i));
+	});
+
+	// Click sui nav button
+	prevBtn.addEventListener("click", () => {
 		if (currentIndex === 0) return;
 		goTo(currentIndex - 1);
 	});
 
-	nextBtn.addEventListener("click", (e) => {
-		e.preventDefault();
-		if (currentIndex === slides.length - 1) return;
+	nextBtn.addEventListener("click", () => {
+		if (currentIndex === total - 1) return;
 		goTo(currentIndex + 1);
 	});
 
+	// Frecce sinistra/destra sulla tastiera (solo se nessun modale è aperto)
+	document.addEventListener("keydown", (e) => {
+		const policyOpen = document
+			.getElementById("policyModal")
+			?.classList.contains("show");
+		const reviewOpen = document
+			.getElementById("reviewModal")
+			?.classList.contains("show");
+		if (policyOpen || reviewOpen) return;
+
+		if (e.key === "ArrowLeft") goTo(currentIndex - 1);
+		if (e.key === "ArrowRight") goTo(currentIndex + 1);
+	});
+
+	// Sync quando l'utente scrolla/swipe
 	let scrollTimeout;
 	deck.addEventListener(
 		"scroll",
@@ -70,11 +116,7 @@
 			clearTimeout(scrollTimeout);
 			scrollTimeout = setTimeout(() => {
 				const newIndex = Math.round(deck.scrollLeft / deck.clientWidth);
-				if (
-					newIndex !== currentIndex &&
-					newIndex >= 0 &&
-					newIndex < slides.length
-				) {
+				if (newIndex !== currentIndex && newIndex >= 0 && newIndex < total) {
 					currentIndex = newIndex;
 					updateUI();
 				}
