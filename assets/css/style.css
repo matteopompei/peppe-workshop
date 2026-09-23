@@ -1240,6 +1240,16 @@ body {
 	font-style: italic;
 }
 
+.review-text::before {
+	content: "\201C";
+	margin-right: 0.1em;
+}
+
+.review-text::after {
+	content: "\201D";
+	margin-left: 0.1em;
+}
+
 .btn-reviews {
 	display: flex;
 	align-items: center;
