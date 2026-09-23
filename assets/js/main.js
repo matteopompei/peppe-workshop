@@ -589,8 +589,44 @@
 		}
 	}
 
-	updateStatus();
-	setInterval(updateStatus, 60000);
+	function highlightToday() {
+		const today = getRomeNow().getDay();
+		const list = document.getElementById("scheduleList");
+		if (!list) return;
+
+		// Pulisci lo stato precedente
+		list.querySelectorAll("li").forEach((li) => {
+			li.classList.remove("is-today");
+			const tag = li.querySelector(".today-tag");
+			if (tag) tag.remove();
+		});
+
+		// Trova la riga corrispondente al giorno
+		const target = Array.from(list.querySelectorAll("li")).find((li) => {
+			const days = (li.dataset.days || "").split(",").map(Number);
+			return days.indexOf(today) !== -1;
+		});
+		if (!target) return;
+
+		target.classList.add("is-today");
+
+		// Aggiungi la targhetta "oggi" accanto al nome del giorno
+		const dayEl = target.querySelector(".day");
+		if (dayEl && !dayEl.querySelector(".today-tag")) {
+			const tag = document.createElement("span");
+			tag.className = "today-tag";
+			tag.textContent = "oggi";
+			dayEl.appendChild(tag);
+		}
+	}
+
+	function updateAll() {
+		updateStatus();
+		highlightToday();
+	}
+
+	updateAll();
+	setInterval(updateAll, 60000);
 
 	/* ============================================================
 	   INSEGNA — Accensione al crepuscolo (ora di Roma)

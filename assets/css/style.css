@@ -1363,20 +1363,21 @@ body {
 .open-status-badge.is-closing-soon .status-dot-small::before {
 	content: "";
 	position: absolute;
-	inset: 0;
+	inset: -2px;
 	border-radius: 50%;
-	background: currentColor;
-	animation: dotPulse 2.4s ease-out infinite;
+	border: 1.5px solid currentColor;
+	opacity: 0.4;
+	animation: dotPulseSmall 2.4s ease-out infinite;
 	pointer-events: none;
 }
 
-@keyframes dotPulse {
+@keyframes dotPulseSmall {
 	0% {
-		transform: scale(1);
-		opacity: 0.5;
+		transform: scale(0.6);
+		opacity: 0.55;
 	}
 	100% {
-		transform: scale(2.2);
+		transform: scale(1.8);
 		opacity: 0;
 	}
 }
@@ -1431,6 +1432,38 @@ body {
 .schedule-list .closed {
 	color: #c0392b;
 	font-weight: 600;
+}
+
+/* Tabella orari */
+.schedule-list li.is-today {
+	background: #eef4fb;
+	border-bottom-color: transparent;
+}
+
+.schedule-list li.is-today .day {
+	color: var(--primary);
+	font-weight: 800;
+}
+
+.schedule-list li.is-today .time,
+.schedule-list li.is-today .closed {
+	color: var(--primary);
+	font-weight: 600;
+}
+
+.today-tag {
+	display: inline-block;
+	background: var(--primary);
+	color: #fff;
+	font-size: 0.58rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	padding: 0.1rem 0.4rem;
+	border-radius: 20px;
+	line-height: 1.2;
+	margin-left: 0.4rem;
+	vertical-align: middle;
 }
 
 .card-desc {
