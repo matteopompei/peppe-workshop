@@ -708,17 +708,7 @@ body {
 	margin-left: 0.15rem;
 	transition:
 		background var(--dur-med) var(--ease-ui),
-		width var(--dur-med) var(--ease-ui),
-		border-radius var(--dur-med) var(--ease-ui),
-		transform var(--dur-ui) var(--ease-ui);
-}
-
-.dot:hover {
-	transform: scale(1.25);
-}
-
-.dot:active {
-	transform: scale(0.9);
+		box-shadow var(--dur-med) var(--ease-ui);
 }
 
 .location-dot.is-open {
@@ -1735,10 +1725,19 @@ body {
 	border: none;
 	background: var(--border);
 	transition:
-		background 0.3s,
-		width 0.3s,
-		border-radius 0.3s;
+		background var(--dur-med) var(--ease-ui),
+		width var(--dur-med) var(--ease-ui),
+		border-radius var(--dur-med) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
 	display: block;
+}
+
+.dot:hover {
+	transform: scale(1.25);
+}
+
+.dot:active {
+	transform: scale(0.9);
 }
 
 .dot.active {
@@ -2355,7 +2354,6 @@ body {
 	align-items: center;
 	justify-content: center;
 	color: var(--text-light);
-	transition: background 0.15s;
 	z-index: 2;
 	transition:
 		background-color var(--dur-ui) var(--ease-ui),
