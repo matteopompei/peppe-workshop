@@ -530,15 +530,17 @@
 		for (let i = 0; i < todayRanges.length; i++) {
 			const open = todayRanges[i][0];
 			if (open > minutes) {
+				// Se c'è già stata un'apertura prima → è pausa pranzo
+				const isLunchBreak = i > 0;
 				return {
-					state: "closed",
-					short: "CHIUSO",
+					state: isLunchBreak ? "lunch-break" : "closed",
+					short: "RIAPRE " + fmtTime(open),
 					full: "Chiuso · riapre alle " + fmtTime(open),
 				};
 			}
 		}
 
-		// Chiuso: prossima apertura nei giorni successivi
+		// Chiuso per oggi: prossima apertura nei giorni successivi
 		for (let i = 1; i <= 7; i++) {
 			const nextDay = (day + i) % 7;
 			const nextRanges = SCHEDULE[nextDay] || [];
@@ -547,7 +549,7 @@
 				const dayLabel = i === 1 ? "domani" : DAY_NAMES[nextDay];
 				return {
 					state: "closed",
-					short: "CHIUSO",
+					short: "RIAPRE " + dayLabel.toUpperCase(),
 					full: "Chiuso · riapre " + dayLabel + " alle " + fmtTime(open),
 				};
 			}

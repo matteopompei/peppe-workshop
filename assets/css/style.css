@@ -724,6 +724,11 @@ body {
 	box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
 }
 
+.location-dot.is-lunch-break {
+	background: #0ea5e9;
+	box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
+}
+
 .location-dot.is-closed {
 	background: #ef4444;
 	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
@@ -1360,7 +1365,8 @@ body {
 }
 
 .open-status-badge.is-open .status-dot-small::before,
-.open-status-badge.is-closing-soon .status-dot-small::before {
+.open-status-badge.is-closing-soon .status-dot-small::before,
+.open-status-badge.is-lunch-break .status-dot-small::before {
 	content: "";
 	position: absolute;
 	inset: -2px;
@@ -1390,6 +1396,11 @@ body {
 .open-status-badge.is-closing-soon {
 	background: #fef3c7;
 	color: #b45309;
+}
+
+.open-status-badge.is-lunch-break {
+	background: #e0f2fe;
+	color: #0369a1;
 }
 
 .open-status-badge.is-closed {
