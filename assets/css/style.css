@@ -144,6 +144,12 @@ a {
 	--slide-pad-y-top: 1.75rem;
 	--slide-pad-x: 1.35rem;
 	--slide-pad-y-bottom: 6.5rem;
+
+	/* Timing interazioni — un unico punto di verità */
+	--dur-ui: 0.18s;
+	--dur-med: 0.25s;
+	--dur-fast: 0.15s;
+	--ease-ui: ease;
 }
 
 /* ============================================================
@@ -500,7 +506,9 @@ body {
 	padding: 0.5rem 1.1rem;
 	border-radius: 50px;
 	overflow: hidden;
-	transition: transform 0.15s;
+	transition:
+		transform var(--dur-ui) var(--ease-ui),
+		box-shadow var(--dur-ui) var(--ease-ui);
 	animation: edgeGlow 2.4s ease-in-out infinite;
 }
 
@@ -552,11 +560,11 @@ body {
 }
 
 .rating-wrap:hover .rating-pill {
-	transform: translateY(-2px);
+	transform: translateY(-1px);
 }
 
 .rating-wrap:active .rating-pill {
-	transform: translateY(0) scale(0.98);
+	transform: translateY(0) scale(0.97);
 }
 
 .rating-wrap:focus-visible {
@@ -692,8 +700,18 @@ body {
 	flex-shrink: 0;
 	margin-left: 0.15rem;
 	transition:
-		background 0.3s,
-		box-shadow 0.3s;
+		background var(--dur-med) var(--ease-ui),
+		width var(--dur-med) var(--ease-ui),
+		border-radius var(--dur-med) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
+}
+
+.dot:hover {
+	transform: scale(1.25);
+}
+
+.dot:active {
+	transform: scale(0.9);
 }
 
 .location-dot.is-open {
@@ -730,13 +748,18 @@ body {
 	font-size: 0.92rem;
 	border: none;
 	transition:
-		background 0.15s,
-		transform 0.15s,
-		box-shadow 0.15s;
+		background-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui),
+		box-shadow var(--dur-ui) var(--ease-ui),
+		border-color var(--dur-ui) var(--ease-ui);
+}
+
+.btn:hover {
+	transform: translateY(-1px);
 }
 
 .btn:active {
-	transform: scale(0.97);
+	transform: translateY(0) scale(0.97);
 }
 
 .btn .ico {
@@ -1232,18 +1255,19 @@ body {
 	font-weight: 700;
 	color: var(--primary);
 	transition:
-		background 0.15s,
-		border-color 0.15s,
-		transform 0.15s;
+		background-color var(--dur-ui) var(--ease-ui),
+		border-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
 }
 
 .btn-reviews:hover {
 	background: var(--bg-alt);
 	border-color: #cdd5e3;
+	transform: translateY(-1px);
 }
 
 .btn-reviews:active {
-	transform: scale(0.98);
+	transform: translateY(0) scale(0.97);
 }
 
 .btn-reviews .ico {
@@ -1543,20 +1567,20 @@ body {
 	align-items: center;
 	gap: 0.5rem;
 	box-shadow: var(--shadow-lg);
-	transition:
-		transform 0.15s,
-		background 0.15s;
 	text-align: left;
 	line-height: 1.3;
 	max-width: 90%;
-}
-
-.map-overlay-btn:active {
-	transform: scale(0.96);
+	transition:
+		background-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
 }
 
 .map-overlay-btn:hover {
 	background: var(--primary-dark);
+}
+
+.map-overlay-btn:active {
+	transform: translateY(0) scale(0.97);
 }
 
 .map-overlay-btn .ico {
@@ -1596,9 +1620,9 @@ body {
 	justify-content: center;
 	flex-shrink: 0;
 	transition:
-		background 0.2s ease,
-		border-color 0.2s ease,
-		transform 0.15s;
+		background-color var(--dur-ui) var(--ease-ui),
+		border-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
 }
 
 .nav-btn:focus-visible,
@@ -1684,8 +1708,8 @@ body {
 	justify-content: center;
 	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
 	transition:
-		transform 0.15s,
-		box-shadow 0.15s;
+		transform var(--dur-ui) var(--ease-ui),
+		box-shadow var(--dur-ui) var(--ease-ui);
 }
 
 .fab-btn .ico {
@@ -1970,9 +1994,9 @@ body {
 	font-weight: 800;
 	box-shadow: 0 6px 18px rgba(193, 95, 51, 0.35);
 	transition:
-		background 0.15s,
-		transform 0.15s,
-		box-shadow 0.15s;
+		background-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui),
+		box-shadow var(--dur-ui) var(--ease-ui);
 }
 
 .gp-cta:hover {
@@ -1982,7 +2006,7 @@ body {
 }
 
 .gp-cta:active {
-	transform: translateY(0);
+	transform: translateY(0) scale(0.97);
 }
 
 .gp-cta .ico {
@@ -2095,6 +2119,9 @@ body {
 	gap: 1rem;
 	justify-content: flex-start;
 	flex-wrap: wrap;
+	transition:
+		color var(--dur-fast) var(--ease-ui),
+		opacity var(--dur-fast) var(--ease-ui);
 }
 
 .policy-links a {
@@ -2115,6 +2142,10 @@ body {
 
 .policy-links a:hover {
 	color: var(--primary);
+}
+
+.policy-links a:active {
+	opacity: 0.6;
 }
 
 .policy-links a .ico {
@@ -2177,13 +2208,13 @@ body {
 	font-weight: 700;
 	cursor: pointer;
 	transition:
-		transform 0.15s,
-		background 0.15s;
+		background-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
 	white-space: nowrap;
 }
 
 .cookie-btn:active {
-	transform: scale(0.96);
+	transform: translateY(0) scale(0.97);
 }
 
 .cookie-btn.accept {
@@ -2265,10 +2296,17 @@ body {
 	color: var(--text-light);
 	transition: background 0.15s;
 	z-index: 2;
+	transition:
+		background-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
 }
 
 .modal-close:hover {
 	background: var(--bg-alt);
+}
+
+.modal-close:active {
+	transform: scale(0.92);
 }
 
 .modal-close .ico {
@@ -2461,10 +2499,17 @@ body {
 	text-underline-offset: 0.2em;
 	margin: 0 auto;
 	display: block;
+	transition:
+		color var(--dur-fast) var(--ease-ui),
+		opacity var(--dur-fast) var(--ease-ui);
 }
 
 .modal-dismiss:hover {
 	color: var(--primary);
+}
+
+.modal-dismiss:active {
+	opacity: 0.6;
 }
 
 /* ============================================================
