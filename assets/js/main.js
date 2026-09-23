@@ -2,51 +2,68 @@
 	"use strict";
 
 	/* ============================================================
-	   COSTANTI E HELPER
+	   CONFIGURAZIONE
 	   ============================================================ */
 
-	// TODO: sostituire con l'ID reale di Google Analytics prima del deploy
-	const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+	const CONFIG = {
+		// TODO: sostituire con l'ID reale di Google Analytics prima del deploy
+		gaMeasurementId: "G-XXXXXXXXXX",
 
-	const COOKIE_KEY = "cookie_consent";
-	const COOKIE_DURATION_DAYS = 180;
+		cookieKey: "cookie_consent",
+		cookieDurationDays: 180,
 
-	const DAY_NAMES = [
-		"domenica",
-		"lunedì",
-		"martedì",
-		"mercoledì",
-		"giovedì",
-		"venerdì",
-		"sabato",
-	];
+		// Orari in minuti dalla mezzanotte: 510=8:30, 750=12:30, 900=15:00, 1170=19:30
+		schedule: {
+			0: [], // domenica
+			1: [
+				[510, 750],
+				[900, 1170],
+			], // lunedì
+			2: [
+				[510, 750],
+				[900, 1170],
+			], // martedì
+			3: [
+				[510, 750],
+				[900, 1170],
+			], // mercoledì
+			4: [
+				[510, 750],
+				[900, 1170],
+			], // giovedì
+			5: [
+				[510, 750],
+				[900, 1170],
+			], // venerdì
+			6: [[510, 750]], // sabato
+		},
+		closingSoonMinutes: 30,
 
-	// Orari in minuti dalla mezzanotte: 510=8:30, 750=12:30, 900=15:00, 1170=19:30
-	const SCHEDULE = {
-		0: [], // domenica
-		1: [
-			[510, 750],
-			[900, 1170],
-		], // lunedì
-		2: [
-			[510, 750],
-			[900, 1170],
-		], // martedì
-		3: [
-			[510, 750],
-			[900, 1170],
-		], // mercoledì
-		4: [
-			[510, 750],
-			[900, 1170],
-		], // giovedì
-		5: [
-			[510, 750],
-			[900, 1170],
-		], // venerdì
-		6: [[510, 750]], // sabato
+		dayNames: [
+			"domenica",
+			"lunedì",
+			"martedì",
+			"mercoledì",
+			"giovedì",
+			"venerdì",
+			"sabato",
+		],
+
+		slideTitles: [
+			"Benvenuto",
+			"La nostra storia",
+			"Servizi offerti",
+			"Dove e quando trovarci",
+			"Guida Picena",
+			"Note legali e credits",
+		],
+
+		decadeSlideshowDuration: 1500, // ms per foto
 	};
-	const CLOSING_SOON_MINUTES = 30;
+
+	/* ============================================================
+	   UTILS — funzioni pure condivise
+	   ============================================================ */
 
 	function getRomeNow() {
 		try {
@@ -69,689 +86,786 @@
 	}
 
 	/* ============================================================
-	   NAVIGAZIONE SLIDE
+	   MODULO: NAVIGAZIONE SLIDE
+	   Deck orizzontale, dot, drag mouse, deep linking, popstate
 	   ============================================================ */
 
-	const deck = document.querySelector(".deck");
-	if (!deck) return;
+	function initNavigation() {
+		const deck = document.querySelector(".deck");
+		if (!deck) return;
 
-	const slides = Array.from(deck.querySelectorAll(".slide"));
-	const dots = Array.from(document.querySelectorAll(".dot"));
-	const prevBtn = document.getElementById("prevBtn");
-	const nextBtn = document.getElementById("nextBtn");
-	const swipeHint = document.getElementById("swipeHint");
-	const liveRegion = document.getElementById("liveRegion");
+		const slides = Array.from(deck.querySelectorAll(".slide"));
+		const dots = Array.from(document.querySelectorAll(".dot"));
+		const prevBtn = document.getElementById("prevBtn");
+		const nextBtn = document.getElementById("nextBtn");
+		const swipeHint = document.getElementById("swipeHint");
+		const liveRegion = document.getElementById("liveRegion");
 
-	if (!slides.length || !prevBtn || !nextBtn) return;
+		if (!slides.length || !prevBtn || !nextBtn) return;
 
-	const slideTitles = [
-		"Benvenuto",
-		"La nostra storia",
-		"Servizi offerti",
-		"Dove e quando trovarci",
-		"Guida Picena",
-		"Note legali e credits",
-	];
-	const total = slides.length;
+		const total = slides.length;
+		const titles = CONFIG.slideTitles;
 
-	let currentIndex = 0;
-	let isProgrammaticScroll = false;
-	let programmaticScrollTimer = null;
-	let scrollDebounceTimer = null;
+		let currentIndex = 0;
+		let isProgrammaticScroll = false;
+		let programmaticScrollTimer = null;
+		let scrollDebounceTimer = null;
 
-	function getSlideWidth() {
-		return deck.clientWidth || 1;
-	}
+		const getSlideWidth = () => deck.clientWidth || 1;
 
-	function updateUI() {
-		// Dot: classe attiva + roving tabindex + aria-current
+		function updateUI() {
+			dots.forEach((dot, i) => {
+				const isActive = i === currentIndex;
+				dot.classList.toggle("active", isActive);
+				dot.tabIndex = isActive ? 0 : -1;
+				if (isActive) dot.setAttribute("aria-current", "true");
+				else dot.removeAttribute("aria-current");
+			});
+
+			const atStart = currentIndex === 0;
+			const atEnd = currentIndex === total - 1;
+
+			prevBtn.classList.toggle("disabled", atStart);
+			prevBtn.setAttribute("aria-disabled", atStart ? "true" : "false");
+			prevBtn.disabled = atStart;
+
+			nextBtn.classList.toggle("disabled", atEnd);
+			nextBtn.setAttribute("aria-disabled", atEnd ? "true" : "false");
+			nextBtn.disabled = atEnd;
+
+			slides.forEach((slide, i) => {
+				const isActive = i === currentIndex;
+				if (isActive) {
+					slide.removeAttribute("inert");
+					slide.setAttribute("aria-hidden", "false");
+				} else {
+					slide.setAttribute("inert", "");
+					slide.setAttribute("aria-hidden", "true");
+				}
+			});
+
+			if (liveRegion) {
+				liveRegion.textContent =
+					"Slide " +
+					(currentIndex + 1) +
+					" di " +
+					total +
+					": " +
+					titles[currentIndex];
+			}
+
+			if (currentIndex > 0 && swipeHint) {
+				swipeHint.classList.add("hidden");
+			}
+		}
+
+		function releaseProgrammaticScroll() {
+			isProgrammaticScroll = false;
+			clearTimeout(programmaticScrollTimer);
+			programmaticScrollTimer = null;
+		}
+
+		function goTo(index, options) {
+			const opts = options || {};
+			const push = opts.push !== false;
+
+			if (index < 0 || index >= total) return;
+			if (index === currentIndex && !isProgrammaticScroll) return;
+
+			currentIndex = index;
+			isProgrammaticScroll = true;
+			updateUI();
+
+			if (push) {
+				const slideId = slides[index].id;
+				history.pushState({ slide: index }, "", "#" + slideId);
+			}
+
+			clearTimeout(programmaticScrollTimer);
+			programmaticScrollTimer = setTimeout(releaseProgrammaticScroll, 800);
+
+			deck.scrollTo({ left: index * getSlideWidth(), behavior: "smooth" });
+		}
+
+		function indexFromHash() {
+			const hash = location.hash.slice(1);
+			if (!hash) return 0;
+			const target = document.getElementById(hash);
+			if (!target) return 0;
+			const idx = slides.indexOf(target);
+			return idx >= 0 ? idx : 0;
+		}
+
+		/* --- Eventi: data-goto --- */
+		document.querySelectorAll("[data-goto]").forEach((el) => {
+			el.addEventListener("click", (e) => {
+				e.preventDefault();
+				const raw = el.getAttribute("data-goto");
+				let index = -1;
+
+				if (raw.startsWith("#")) {
+					const target = document.querySelector(raw);
+					if (target) index = slides.indexOf(target);
+				} else {
+					index = parseInt(raw, 10);
+				}
+
+				if (index >= 0 && index < total) goTo(index);
+			});
+		});
+
+		/* --- Eventi: dot --- */
 		dots.forEach((dot, i) => {
-			const isActive = i === currentIndex;
-			dot.classList.toggle("active", isActive);
-			dot.tabIndex = isActive ? 0 : -1;
-			if (isActive) dot.setAttribute("aria-current", "true");
-			else dot.removeAttribute("aria-current");
-		});
+			dot.addEventListener("click", () => goTo(i));
 
-		// Nav buttons
-		const atStart = currentIndex === 0;
-		const atEnd = currentIndex === total - 1;
-
-		prevBtn.classList.toggle("disabled", atStart);
-		prevBtn.setAttribute("aria-disabled", atStart ? "true" : "false");
-		prevBtn.disabled = atStart;
-
-		nextBtn.classList.toggle("disabled", atEnd);
-		nextBtn.setAttribute("aria-disabled", atEnd ? "true" : "false");
-		nextBtn.disabled = atEnd;
-
-		// Slide: solo quella attiva è raggiungibile da tab/focus
-		slides.forEach((slide, i) => {
-			const isActive = i === currentIndex;
-			if (isActive) {
-				slide.removeAttribute("inert");
-				slide.setAttribute("aria-hidden", "false");
-			} else {
-				slide.setAttribute("inert", "");
-				slide.setAttribute("aria-hidden", "true");
-			}
-		});
-
-		// Annuncio screen reader
-		if (liveRegion) {
-			liveRegion.textContent =
-				"Slide " +
-				(currentIndex + 1) +
-				" di " +
-				total +
-				": " +
-				slideTitles[currentIndex];
-		}
-
-		// Nascondi hint swipe dopo il primo movimento
-		if (currentIndex > 0 && swipeHint) {
-			swipeHint.classList.add("hidden");
-		}
-	}
-
-	function releaseProgrammaticScroll() {
-		isProgrammaticScroll = false;
-		clearTimeout(programmaticScrollTimer);
-		programmaticScrollTimer = null;
-	}
-
-	function goTo(index, options = {}) {
-		const { push = true } = options;
-		if (index < 0 || index >= total) return;
-		if (index === currentIndex && !isProgrammaticScroll) return;
-
-		currentIndex = index;
-		isProgrammaticScroll = true;
-		updateUI();
-
-		// Aggiorna l'URL senza triggerare scroll nativo
-		if (push) {
-			const slideId = slides[index].id; // "slide-2"
-			history.pushState({ slide: index }, "", "#" + slideId);
-		}
-
-		clearTimeout(programmaticScrollTimer);
-		programmaticScrollTimer = setTimeout(releaseProgrammaticScroll, 800);
-
-		deck.scrollTo({ left: index * getSlideWidth(), behavior: "smooth" });
-	}
-
-	// Elementi con [data-goto] (accetta indice numerico o selettore "#slide-N")
-	document.querySelectorAll("[data-goto]").forEach((el) => {
-		el.addEventListener("click", (e) => {
-			e.preventDefault();
-			const raw = el.getAttribute("data-goto");
-			let index = -1;
-
-			if (raw.startsWith("#")) {
-				const target = document.querySelector(raw);
-				if (target) index = slides.indexOf(target);
-			} else {
-				index = parseInt(raw, 10);
-			}
-
-			if (index >= 0 && index < total) goTo(index);
-		});
-	});
-
-	// Dot: click + navigazione da tastiera (roving tabindex)
-	dots.forEach((dot, i) => {
-		dot.addEventListener("click", () => goTo(i));
-
-		dot.addEventListener("keydown", (e) => {
-			let target = null;
-			if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-				target = (i + 1) % dots.length;
-			} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-				target = (i - 1 + dots.length) % dots.length;
-			} else if (e.key === "Home") {
-				target = 0;
-			} else if (e.key === "End") {
-				target = dots.length - 1;
-			}
-			if (target === null) return;
-			e.preventDefault();
-			e.stopPropagation();
-			goTo(target);
-			dots[target].focus();
-		});
-	});
-
-	// Nav buttons
-	prevBtn.addEventListener("click", () => goTo(currentIndex - 1));
-	nextBtn.addEventListener("click", () => goTo(currentIndex + 1));
-
-	// Frecce tastiera globali (fuori dai dot e dai modali)
-	document.addEventListener("keydown", (e) => {
-		if (e.target.closest && e.target.closest(".dots")) return;
-
-		const policyOpen = document
-			.getElementById("policyModal")
-			?.classList.contains("show");
-		const reviewOpen = document
-			.getElementById("reviewModal")
-			?.classList.contains("show");
-		if (policyOpen || reviewOpen) return;
-
-		if (e.key === "ArrowLeft") goTo(currentIndex - 1);
-		if (e.key === "ArrowRight") goTo(currentIndex + 1);
-	});
-
-	// Unico listener di scroll: gestisce sia scroll programmatico sia manuale
-	deck.addEventListener(
-		"scroll",
-		() => {
-			// Se stiamo animando, prova a sbloccare quando arriviamo al target
-			if (isProgrammaticScroll) {
-				const ratio = deck.scrollLeft / getSlideWidth();
-				if (Math.abs(ratio - currentIndex) < 0.02) {
-					releaseProgrammaticScroll();
+			dot.addEventListener("keydown", (e) => {
+				let target = null;
+				if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+					target = (i + 1) % dots.length;
+				} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+					target = (i - 1 + dots.length) % dots.length;
+				} else if (e.key === "Home") {
+					target = 0;
+				} else if (e.key === "End") {
+					target = dots.length - 1;
 				}
-			}
+				if (target === null) return;
+				e.preventDefault();
+				e.stopPropagation();
+				goTo(target);
+				dots[target].focus();
+			});
+		});
 
-			// Sincronizzazione debounced
-			clearTimeout(scrollDebounceTimer);
-			scrollDebounceTimer = setTimeout(() => {
-				if (isProgrammaticScroll) return; // ancora in animazione
-				const newIndex = Math.round(deck.scrollLeft / getSlideWidth());
-				if (newIndex >= 0 && newIndex < total && newIndex !== currentIndex) {
-					currentIndex = newIndex;
-					updateUI();
+		/* --- Eventi: nav buttons --- */
+		prevBtn.addEventListener("click", () => goTo(currentIndex - 1));
+		nextBtn.addEventListener("click", () => goTo(currentIndex + 1));
+
+		/* --- Eventi: tastiera globale --- */
+		document.addEventListener("keydown", (e) => {
+			if (e.target.closest && e.target.closest(".dots")) return;
+
+			const policyOpen = document
+				.getElementById("policyModal")
+				?.classList.contains("show");
+			const reviewOpen = document
+				.getElementById("reviewModal")
+				?.classList.contains("show");
+			if (policyOpen || reviewOpen) return;
+
+			if (e.key === "ArrowLeft") goTo(currentIndex - 1);
+			if (e.key === "ArrowRight") goTo(currentIndex + 1);
+		});
+
+		/* --- Eventi: scroll --- */
+		deck.addEventListener(
+			"scroll",
+			() => {
+				if (isProgrammaticScroll) {
+					const ratio = deck.scrollLeft / getSlideWidth();
+					if (Math.abs(ratio - currentIndex) < 0.02) {
+						releaseProgrammaticScroll();
+					}
 				}
-			}, 100);
-		},
-		{ passive: true },
-	);
 
-	/* --- Drag col mouse (solo desktop) --- */
-	let isDragging = false;
-	let wasDragged = false;
-	let dragStartX = 0;
-	let dragStartScrollLeft = 0;
-
-	deck.addEventListener("mousedown", (e) => {
-		// Solo tasto sinistro, ignora se stiamo già animando
-		if (e.button !== 0) return;
-		if (isProgrammaticScroll) releaseProgrammaticScroll();
-		isDragging = true;
-		wasDragged = false;
-		dragStartX = e.pageX;
-		dragStartScrollLeft = deck.scrollLeft;
-	});
-
-	deck.addEventListener("mousemove", (e) => {
-		if (!isDragging) return;
-		const dx = e.pageX - dragStartX;
-		if (Math.abs(dx) > 5) {
-			wasDragged = true;
-			deck.classList.add("dragging");
-			e.preventDefault();
-			deck.scrollLeft = dragStartScrollLeft - dx;
-		}
-	});
-
-	["mouseup", "mouseleave"].forEach((evt) => {
-		deck.addEventListener(evt, () => {
-			if (!isDragging) return;
-			isDragging = false;
-			deck.classList.remove("dragging");
-			// Se l'utente ha trascinato, forza un sync dopo che lo snap si è assestato
-			if (wasDragged) {
-				setTimeout(() => {
+				clearTimeout(scrollDebounceTimer);
+				scrollDebounceTimer = setTimeout(() => {
+					if (isProgrammaticScroll) return;
 					const newIndex = Math.round(deck.scrollLeft / getSlideWidth());
 					if (newIndex >= 0 && newIndex < total && newIndex !== currentIndex) {
 						currentIndex = newIndex;
 						updateUI();
 					}
-				}, 200);
+				}, 100);
+			},
+			{ passive: true },
+		);
+
+		/* --- Drag col mouse --- */
+		let isDragging = false;
+		let wasDragged = false;
+		let dragStartX = 0;
+		let dragStartScrollLeft = 0;
+
+		deck.addEventListener("mousedown", (e) => {
+			if (e.button !== 0) return;
+			if (isProgrammaticScroll) releaseProgrammaticScroll();
+			isDragging = true;
+			wasDragged = false;
+			dragStartX = e.pageX;
+			dragStartScrollLeft = deck.scrollLeft;
+		});
+
+		deck.addEventListener("mousemove", (e) => {
+			if (!isDragging) return;
+			const dx = e.pageX - dragStartX;
+			if (Math.abs(dx) > 5) {
+				wasDragged = true;
+				deck.classList.add("dragging");
+				e.preventDefault();
+				deck.scrollLeft = dragStartScrollLeft - dx;
 			}
 		});
-	});
 
-	// Blocca click accidentali dopo un drag
-	deck.addEventListener(
-		"click",
-		(e) => {
-			if (wasDragged) {
-				e.preventDefault();
-				e.stopPropagation();
-				wasDragged = false;
-			}
-		},
-		true, // ← capture: true, essenziale
-	);
+		["mouseup", "mouseleave"].forEach((evt) => {
+			deck.addEventListener(evt, () => {
+				if (!isDragging) return;
+				isDragging = false;
+				deck.classList.remove("dragging");
+				if (wasDragged) {
+					setTimeout(() => {
+						const newIndex = Math.round(deck.scrollLeft / getSlideWidth());
+						if (
+							newIndex >= 0 &&
+							newIndex < total &&
+							newIndex !== currentIndex
+						) {
+							currentIndex = newIndex;
+							updateUI();
+						}
+					}, 200);
+				}
+			});
+		});
 
-	// Previeni il dragstart nativo delle immagini
-	deck.addEventListener("dragstart", (e) => e.preventDefault());
+		// Blocca click accidentali dopo un drag (in capture, prima dei bottoni figli)
+		deck.addEventListener(
+			"click",
+			(e) => {
+				if (wasDragged) {
+					e.preventDefault();
+					e.stopPropagation();
+					wasDragged = false;
+				}
+			},
+			true,
+		);
 
-	updateUI();
+		deck.addEventListener("dragstart", (e) => e.preventDefault());
 
-	/* --- Deep linking: leggi hash all'avvio --- */
-	function readIndexFromHash() {
-		const hash = location.hash.slice(1); // rimuove "#"
-		if (!hash) return 0;
-		const target = document.getElementById(hash);
-		if (!target) return 0;
-		const idx = slides.indexOf(target);
-		return idx >= 0 ? idx : 0;
-	}
-
-	const initialIndex = readIndexFromHash();
-	if (initialIndex > 0) {
-		// Salta alla slide senza pushare nello storico
-		goTo(initialIndex, { push: false });
-	}
-
-	/* --- Back/forward del browser --- */
-	window.addEventListener("popstate", (e) => {
-		const hash = location.hash.slice(1);
-		const target = hash ? document.getElementById(hash) : null;
-		const idx = target ? slides.indexOf(target) : 0;
-		if (idx >= 0 && idx !== currentIndex) {
-			goTo(idx, { push: false });
+		/* --- Deep linking: hash all'avvio --- */
+		const initialIndex = indexFromHash();
+		updateUI();
+		if (initialIndex > 0) {
+			goTo(initialIndex, { push: false });
 		}
-	});
+
+		/* --- Back/forward del browser --- */
+		window.addEventListener("popstate", () => {
+			const idx = indexFromHash();
+			if (idx !== currentIndex) goTo(idx, { push: false });
+		});
+	}
 
 	/* ============================================================
-	   COOKIE CONSENT
+	   MODULO: SLIDESHOW DECENNI — foto officina
 	   ============================================================ */
 
-	const banner = document.getElementById("cookieBanner");
+	function initDecadeSlideshow() {
+		const container = document.querySelector(".office-slideshow");
+		if (!container) return;
 
-	function getConsent() {
-		try {
-			const raw = localStorage.getItem(COOKIE_KEY);
-			if (!raw) return null;
-			const data = JSON.parse(raw);
-			if (
-				data.ts &&
-				Date.now() - data.ts > COOKIE_DURATION_DAYS * 24 * 3600 * 1000
-			) {
-				localStorage.removeItem(COOKIE_KEY);
-				return null;
-			}
-			return data;
-		} catch (e) {
-			return null;
-		}
-	}
-
-	function setConsent(analytics) {
-		localStorage.setItem(
-			COOKIE_KEY,
-			JSON.stringify({ analytics: analytics, ts: Date.now() }),
+		const photos = Array.from(
+			container.querySelectorAll(".slideshow-track img"),
 		);
-	}
+		const decadeValue = container.querySelector(".decade-value");
+		if (!photos.length) return;
 
-	function loadGoogleAnalytics() {
-		if (document.getElementById("ga-script")) return;
-		const script = document.createElement("script");
-		script.id = "ga-script";
-		script.async = true;
-		script.src =
-			"https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
-		document.head.appendChild(script);
-
-		window.dataLayer = window.dataLayer || [];
-		function gtag() {
-			dataLayer.push(arguments);
+		// Accessibilità: se l'utente ha ridotto le animazioni, mostra solo la prima
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			photos[0].classList.add("is-visible");
+			if (decadeValue) decadeValue.textContent = photos[0].dataset.decade || "";
+			return;
 		}
-		window.gtag = gtag;
-		gtag("js", new Date());
-		gtag("config", GA_MEASUREMENT_ID, {
-			anonymize_ip: true,
-			cookie_flags: "SameSite=Lax;Secure",
+
+		const DURATION = CONFIG.decadeSlideshowDuration;
+		let idx = 0;
+		let timeoutId = null;
+		let paused = false;
+
+		function show(index) {
+			photos.forEach((p, i) => p.classList.toggle("is-visible", i === index));
+			if (decadeValue) {
+				decadeValue.textContent = photos[index].dataset.decade || "";
+			}
+		}
+
+		function next() {
+			idx = (idx + 1) % photos.length;
+			show(idx);
+		}
+
+		function loop() {
+			if (paused) return;
+			next();
+			timeoutId = setTimeout(loop, DURATION);
+		}
+
+		show(0);
+		timeoutId = setTimeout(loop, DURATION);
+
+		container.addEventListener("mouseenter", () => {
+			paused = true;
+			clearTimeout(timeoutId);
+		});
+
+		container.addEventListener("mouseleave", () => {
+			paused = false;
+			timeoutId = setTimeout(loop, DURATION);
 		});
 	}
 
-	function unloadGoogleAnalytics() {
-		const s = document.getElementById("ga-script");
-		if (s) s.remove();
-		const names = ["_ga", "_gid", "_ga_" + GA_MEASUREMENT_ID.replace("G-", "")];
-		names.forEach((name) => {
-			document.cookie = name + "=; Max-Age=0; path=/;";
-			document.cookie =
-				name + "=; Max-Age=0; path=/; domain=" + location.hostname + ";";
-		});
-	}
+	/* ============================================================
+	   MODULO: COOKIE CONSENT + MAPPA
+	   Espone API per essere usato da altri moduli (modali, ecc.)
+	   ============================================================ */
 
-	function updateMapForConsent(analytics) {
+	function initCookieConsent() {
+		const banner = document.getElementById("cookieBanner");
 		const iframe = document.querySelector(".map-wrap iframe");
 		const mapOverlay = document.getElementById("mapOverlay");
-		const activateMapLabel = document.getElementById("activateMapLabel");
 		const activateMapBtn = document.getElementById("activateMap");
-		if (!iframe || !mapOverlay) return;
+		const activateMapLabel = document.getElementById("activateMapLabel");
 
-		if (analytics) {
-			if (iframe.dataset.src && !iframe.src) {
-				iframe.src = iframe.dataset.src;
-			}
-			mapOverlay.classList.add("hidden");
-			if (activateMapLabel) {
-				activateMapLabel.textContent = "Tocca per attivare la mappa";
-			}
-			if (activateMapBtn) {
-				activateMapBtn.setAttribute(
-					"aria-label",
-					"Attiva la mappa interattiva",
-				);
-			}
-		} else {
-			if (iframe.src) {
-				iframe.removeAttribute("src");
-			}
-			mapOverlay.classList.remove("hidden");
-			if (activateMapLabel) {
-				activateMapLabel.textContent = "Accetta i cookie per vedere la mappa";
-			}
-			if (activateMapBtn) {
-				activateMapBtn.setAttribute(
-					"aria-label",
-					"Accetta i cookie per vedere la mappa",
-				);
+		const api = {
+			getConsent: getConsent,
+			setConsent: setConsent,
+			showBanner: showBanner,
+			updateMap: updateMap,
+		};
+
+		function getConsent() {
+			try {
+				const raw = localStorage.getItem(CONFIG.cookieKey);
+				if (!raw) return null;
+				const data = JSON.parse(raw);
+				if (
+					data.ts &&
+					Date.now() - data.ts > CONFIG.cookieDurationDays * 24 * 3600 * 1000
+				) {
+					localStorage.removeItem(CONFIG.cookieKey);
+					return null;
+				}
+				return data;
+			} catch (e) {
+				return null;
 			}
 		}
-	}
 
-	function applyConsent(analytics) {
-		if (analytics) loadGoogleAnalytics();
-		else unloadGoogleAnalytics();
-		updateMapForConsent(analytics);
-		if (banner) banner.classList.add("hidden");
-	}
+		function setConsent(analytics) {
+			localStorage.setItem(
+				CONFIG.cookieKey,
+				JSON.stringify({ analytics: analytics, ts: Date.now() }),
+			);
+		}
 
-	const existingConsent = getConsent();
-	if (existingConsent) {
-		applyConsent(existingConsent.analytics);
-	} else {
-		updateMapForConsent(false);
-	}
+		function loadGoogleAnalytics() {
+			if (document.getElementById("ga-script")) return;
+			const script = document.createElement("script");
+			script.id = "ga-script";
+			script.async = true;
+			script.src =
+				"https://www.googletagmanager.com/gtag/js?id=" + CONFIG.gaMeasurementId;
+			document.head.appendChild(script);
 
-	document.getElementById("acceptCookies")?.addEventListener("click", () => {
-		setConsent(true);
-		applyConsent(true);
-	});
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			window.gtag = gtag;
+			gtag("js", new Date());
+			gtag("config", CONFIG.gaMeasurementId, {
+				anonymize_ip: true,
+				cookie_flags: "SameSite=Lax;Secure",
+			});
+		}
 
-	document.getElementById("rejectCookies")?.addEventListener("click", () => {
-		setConsent(false);
-		applyConsent(false);
-	});
+		function unloadGoogleAnalytics() {
+			const s = document.getElementById("ga-script");
+			if (s) s.remove();
+			const names = [
+				"_ga",
+				"_gid",
+				"_ga_" + CONFIG.gaMeasurementId.replace("G-", ""),
+			];
+			names.forEach((name) => {
+				document.cookie = name + "=; Max-Age=0; path=/;";
+				document.cookie =
+					name + "=; Max-Age=0; path=/; domain=" + location.hostname + ";";
+			});
+		}
 
-	// Bottone "Accetta i cookie per vedere la mappa"
-	const activateMapBtn = document.getElementById("activateMap");
-	if (activateMapBtn) {
-		activateMapBtn.addEventListener("click", () => {
-			const consent = getConsent();
-			if (consent && consent.analytics) {
-				updateMapForConsent(true);
+		function updateMap(analytics) {
+			if (!iframe || !mapOverlay) return;
+
+			if (analytics) {
+				if (iframe.dataset.src && !iframe.src) {
+					iframe.src = iframe.dataset.src;
+				}
+				mapOverlay.classList.add("hidden");
+				if (activateMapLabel) {
+					activateMapLabel.textContent = "Tocca per attivare la mappa";
+				}
+				if (activateMapBtn) {
+					activateMapBtn.setAttribute(
+						"aria-label",
+						"Attiva la mappa interattiva",
+					);
+				}
 			} else {
-				banner?.classList.remove("hidden");
-				document.getElementById("rejectCookies")?.focus();
+				if (iframe.src) iframe.removeAttribute("src");
+				mapOverlay.classList.remove("hidden");
+				if (activateMapLabel) {
+					activateMapLabel.textContent = "Accetta i cookie per vedere la mappa";
+				}
+				if (activateMapBtn) {
+					activateMapBtn.setAttribute(
+						"aria-label",
+						"Accetta i cookie per vedere la mappa",
+					);
+				}
 			}
-		});
-	}
-
-	/* ============================================================
-	   MODALI (focus trap tramite inert su .app)
-	   ============================================================ */
-
-	const appEl = document.querySelector(".app");
-	let lastFocused = null;
-
-	function openModal(modal) {
-		if (!modal) return;
-		lastFocused = document.activeElement;
-		modal.classList.add("show");
-		if (appEl) appEl.setAttribute("inert", "");
-		const focusable = modal.querySelector(".modal-close, .modal-dismiss, .btn");
-		if (focusable) focusable.focus();
-	}
-
-	function closeModal(modal) {
-		if (!modal) return;
-		modal.classList.remove("show");
-		if (appEl) appEl.removeAttribute("inert");
-		if (lastFocused && typeof lastFocused.focus === "function") {
-			lastFocused.focus();
 		}
+
+		function applyConsent(analytics) {
+			if (analytics) loadGoogleAnalytics();
+			else unloadGoogleAnalytics();
+			updateMap(analytics);
+			if (banner) banner.classList.add("hidden");
+		}
+
+		function showBanner() {
+			if (banner) banner.classList.remove("hidden");
+			const rejectBtn = document.getElementById("rejectCookies");
+			if (rejectBtn) rejectBtn.focus();
+		}
+
+		/* --- Stato iniziale --- */
+		const existing = getConsent();
+		if (existing) {
+			applyConsent(existing.analytics);
+		} else {
+			updateMap(false);
+		}
+
+		/* --- Eventi: bottoni cookie --- */
+		document.getElementById("acceptCookies")?.addEventListener("click", () => {
+			setConsent(true);
+			applyConsent(true);
+		});
+
+		document.getElementById("rejectCookies")?.addEventListener("click", () => {
+			setConsent(false);
+			applyConsent(false);
+		});
+
+		/* --- Eventi: bottone "attiva mappa" --- */
+		if (activateMapBtn) {
+			activateMapBtn.addEventListener("click", () => {
+				const consent = getConsent();
+				if (consent && consent.analytics) {
+					updateMap(true);
+				} else {
+					showBanner();
+				}
+			});
+		}
+
+		return api;
 	}
 
-	const policyModal = document.getElementById("policyModal");
-	const policyClose = document.getElementById("policyClose");
-	const openPrivacyLink = document.getElementById("openPrivacyLink");
-	const reopenCookieSettings = document.getElementById("reopenCookieSettings");
-	const policyLinkFromBanner = document.getElementById("openPolicyFromBanner");
+	/* ============================================================
+	   MODULO: MODALI (policy + recensione)
+	   ============================================================ */
 
-	const reviewModal = document.getElementById("reviewModal");
-	const ratingTrigger = document.getElementById("ratingTrigger");
-	const reviewDismiss = document.getElementById("reviewDismiss");
+	function initModals(cookieApi) {
+		const appEl = document.querySelector(".app");
+		const policyModal = document.getElementById("policyModal");
+		const policyClose = document.getElementById("policyClose");
+		const openPrivacyLink = document.getElementById("openPrivacyLink");
+		const reopenCookieSettings = document.getElementById(
+			"reopenCookieSettings",
+		);
+		const policyLinkFromBanner = document.getElementById(
+			"openPolicyFromBanner",
+		);
 
-	function openPolicy() {
-		openModal(policyModal);
-	}
-	function closePolicy() {
-		closeModal(policyModal);
-	}
+		const reviewModal = document.getElementById("reviewModal");
+		const ratingTrigger = document.getElementById("ratingTrigger");
+		const reviewDismiss = document.getElementById("reviewDismiss");
 
-	function openReview() {
-		openModal(reviewModal);
-	}
-	function closeReview() {
-		closeModal(reviewModal);
-	}
+		let lastFocused = null;
 
-	policyLinkFromBanner?.addEventListener("click", (e) => {
-		e.preventDefault();
-		openPolicy();
-	});
+		function openModal(modal) {
+			if (!modal) return;
+			lastFocused = document.activeElement;
+			modal.classList.add("show");
+			if (appEl) appEl.setAttribute("inert", "");
+			const focusable = modal.querySelector(
+				".modal-close, .modal-dismiss, .btn",
+			);
+			if (focusable) focusable.focus();
+		}
 
-	openPrivacyLink?.addEventListener("click", (e) => {
-		e.preventDefault();
-		openPolicy();
-	});
-
-	policyClose?.addEventListener("click", closePolicy);
-
-	policyModal?.addEventListener("click", (e) => {
-		if (e.target === policyModal) closePolicy();
-	});
-
-	if (ratingTrigger) {
-		ratingTrigger.addEventListener("click", openReview);
-		ratingTrigger.addEventListener("keydown", (e) => {
-			if (e.key === "Enter" || e.key === " ") {
-				e.preventDefault();
-				openReview();
+		function closeModal(modal) {
+			if (!modal) return;
+			modal.classList.remove("show");
+			if (appEl) appEl.removeAttribute("inert");
+			if (lastFocused && typeof lastFocused.focus === "function") {
+				lastFocused.focus();
 			}
+		}
+
+		function openPolicy() {
+			openModal(policyModal);
+		}
+		function closePolicy() {
+			closeModal(policyModal);
+		}
+		function openReview() {
+			openModal(reviewModal);
+		}
+		function closeReview() {
+			closeModal(reviewModal);
+		}
+
+		/* --- Eventi: policy --- */
+		policyLinkFromBanner?.addEventListener("click", (e) => {
+			e.preventDefault();
+			openPolicy();
+		});
+
+		openPrivacyLink?.addEventListener("click", (e) => {
+			e.preventDefault();
+			openPolicy();
+		});
+
+		policyClose?.addEventListener("click", closePolicy);
+
+		policyModal?.addEventListener("click", (e) => {
+			if (e.target === policyModal) closePolicy();
+		});
+
+		/* --- Eventi: recensione --- */
+		if (ratingTrigger) {
+			ratingTrigger.addEventListener("click", openReview);
+			ratingTrigger.addEventListener("keydown", (e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault();
+					openReview();
+				}
+			});
+		}
+
+		reviewDismiss?.addEventListener("click", closeReview);
+
+		reviewModal?.addEventListener("click", (e) => {
+			if (e.target === reviewModal) closeReview();
+		});
+
+		/* --- Escape chiude il modale aperto --- */
+		document.addEventListener("keydown", (e) => {
+			if (e.key !== "Escape") return;
+			if (policyModal?.classList.contains("show")) closePolicy();
+			if (reviewModal?.classList.contains("show")) closeReview();
+		});
+
+		/* --- Modifica preferenze cookie --- */
+		reopenCookieSettings?.addEventListener("click", (e) => {
+			e.preventDefault();
+			localStorage.removeItem(CONFIG.cookieKey);
+			closePolicy();
+			if (cookieApi) cookieApi.showBanner();
 		});
 	}
 
-	reviewDismiss?.addEventListener("click", closeReview);
-
-	reviewModal?.addEventListener("click", (e) => {
-		if (e.target === reviewModal) closeReview();
-	});
-
-	// Escape chiude il modale aperto
-	document.addEventListener("keydown", (e) => {
-		if (e.key !== "Escape") return;
-		if (policyModal?.classList.contains("show")) closePolicy();
-		if (reviewModal?.classList.contains("show")) closeReview();
-	});
-
-	// Modifica preferenze cookie
-	reopenCookieSettings?.addEventListener("click", (e) => {
-		e.preventDefault();
-		localStorage.removeItem(COOKIE_KEY);
-		closePolicy();
-		banner?.classList.remove("hidden");
-	});
-
 	/* ============================================================
-	   STATO APERTURA (ora di Roma)
+	   MODULO: STATO APERTURA + "oggi" nella tabella orari
 	   ============================================================ */
 
-	function getOpenStatus() {
-		const now = getRomeNow();
-		const day = now.getDay();
-		const minutes = now.getHours() * 60 + now.getMinutes();
-		const todayRanges = SCHEDULE[day] || [];
+	function initOpeningStatus() {
+		const locationDot = document.getElementById("locationDot");
+		const heroLocation = document.getElementById("heroLocation");
+		const openStatusBadge = document.getElementById("openStatusBadge");
+		const openStatusText = document.getElementById("openStatusText");
 
-		// Aperto adesso?
-		for (let i = 0; i < todayRanges.length; i++) {
-			const open = todayRanges[i][0];
-			const close = todayRanges[i][1];
-			if (minutes >= open && minutes < close) {
-				const remaining = close - minutes;
-				if (remaining <= CLOSING_SOON_MINUTES) {
+		function getOpenStatus() {
+			const now = getRomeNow();
+			const day = now.getDay();
+			const minutes = now.getHours() * 60 + now.getMinutes();
+			const todayRanges = CONFIG.schedule[day] || [];
+
+			// Aperto adesso?
+			for (let i = 0; i < todayRanges.length; i++) {
+				const open = todayRanges[i][0];
+				const close = todayRanges[i][1];
+				if (minutes >= open && minutes < close) {
+					const remaining = close - minutes;
+					if (remaining <= CONFIG.closingSoonMinutes) {
+						return {
+							state: "closing-soon",
+							short: "CHIUDE " + fmtTime(close),
+							full: "Aperto · chiude alle " + fmtTime(close),
+						};
+					}
+					return { state: "open", short: "APERTO", full: "Aperto ora" };
+				}
+			}
+
+			// Chiuso: prossima apertura oggi?
+			for (let i = 0; i < todayRanges.length; i++) {
+				const open = todayRanges[i][0];
+				if (open > minutes) {
+					const isLunchBreak = i > 0;
 					return {
-						state: "closing-soon",
-						short: "CHIUDE " + fmtTime(close),
-						full: "Aperto · chiude alle " + fmtTime(close),
+						state: isLunchBreak ? "lunch-break" : "closed",
+						short: "RIAPRE " + fmtTime(open),
+						full: "Chiuso · riapre alle " + fmtTime(open),
 					};
 				}
-				return { state: "open", short: "APERTO", full: "Aperto ora" };
+			}
+
+			// Chiuso: prossima apertura nei giorni successivi
+			for (let i = 1; i <= 7; i++) {
+				const nextDay = (day + i) % 7;
+				const nextRanges = CONFIG.schedule[nextDay] || [];
+				if (nextRanges.length > 0) {
+					const open = nextRanges[0][0];
+					const dayLabel = i === 1 ? "domani" : CONFIG.dayNames[nextDay];
+					return {
+						state: "closed",
+						short: "RIAPRE " + dayLabel.toUpperCase(),
+						full: "Chiuso · riapre " + dayLabel + " alle " + fmtTime(open),
+					};
+				}
+			}
+
+			return { state: "closed", short: "CHIUSO", full: "Chiuso" };
+		}
+
+		function updateStatus() {
+			const status = getOpenStatus();
+
+			if (locationDot) {
+				locationDot.classList.remove(
+					"is-open",
+					"is-closing-soon",
+					"is-lunch-break",
+					"is-closed",
+				);
+				locationDot.classList.add("is-" + status.state);
+			}
+
+			if (heroLocation) {
+				heroLocation.setAttribute(
+					"title",
+					"Bivio Offida, Via Salaria, Castorano. " + status.full + ".",
+				);
+			}
+
+			if (openStatusBadge && openStatusText) {
+				openStatusBadge.classList.remove(
+					"is-open",
+					"is-closing-soon",
+					"is-lunch-break",
+					"is-closed",
+				);
+				openStatusBadge.classList.add("is-" + status.state);
+				openStatusText.textContent = status.short;
+				openStatusBadge.setAttribute("aria-label", status.full);
 			}
 		}
 
-		// Chiuso: prossima apertura oggi?
-		for (let i = 0; i < todayRanges.length; i++) {
-			const open = todayRanges[i][0];
-			if (open > minutes) {
-				// Se c'è già stata un'apertura prima → è pausa pranzo
-				const isLunchBreak = i > 0;
-				return {
-					state: isLunchBreak ? "lunch-break" : "closed",
-					short: "RIAPRE " + fmtTime(open),
-					full: "Chiuso · riapre alle " + fmtTime(open),
-				};
+		function highlightToday() {
+			const today = getRomeNow().getDay();
+			const list = document.getElementById("scheduleList");
+			if (!list) return;
+
+			list.querySelectorAll("li").forEach((li) => {
+				li.classList.remove("is-today");
+				const tag = li.querySelector(".today-tag");
+				if (tag) tag.remove();
+			});
+
+			const target = Array.from(list.querySelectorAll("li")).find((li) => {
+				const days = (li.dataset.days || "").split(",").map(Number);
+				return days.indexOf(today) !== -1;
+			});
+			if (!target) return;
+
+			target.classList.add("is-today");
+
+			const dayEl = target.querySelector(".day");
+			if (dayEl && !dayEl.querySelector(".today-tag")) {
+				const tag = document.createElement("span");
+				tag.className = "today-tag";
+				tag.textContent = "oggi";
+				dayEl.appendChild(tag);
 			}
 		}
 
-		// Chiuso per oggi: prossima apertura nei giorni successivi
-		for (let i = 1; i <= 7; i++) {
-			const nextDay = (day + i) % 7;
-			const nextRanges = SCHEDULE[nextDay] || [];
-			if (nextRanges.length > 0) {
-				const open = nextRanges[0][0];
-				const dayLabel = i === 1 ? "domani" : DAY_NAMES[nextDay];
-				return {
-					state: "closed",
-					short: "RIAPRE " + dayLabel.toUpperCase(),
-					full: "Chiuso · riapre " + dayLabel + " alle " + fmtTime(open),
-				};
-			}
+		function updateAll() {
+			updateStatus();
+			highlightToday();
 		}
 
-		return { state: "closed", short: "CHIUSO", full: "Chiuso" };
+		updateAll();
+		setInterval(updateAll, 60000);
 	}
-
-	const locationDot = document.getElementById("locationDot");
-	const heroLocation = document.getElementById("heroLocation");
-	const openStatusBadge = document.getElementById("openStatusBadge");
-	const openStatusText = document.getElementById("openStatusText");
-
-	function updateStatus() {
-		const status = getOpenStatus();
-
-		if (locationDot) {
-			locationDot.classList.remove("is-open", "is-closing-soon", "is-closed");
-			locationDot.classList.add("is-" + status.state);
-		}
-
-		// heroLocation è un div informativo: usa il tooltip nativo
-		if (heroLocation) {
-			heroLocation.setAttribute(
-				"title",
-				"Bivio Offida, Via Salaria, Castorano. " + status.full + ".",
-			);
-		}
-
-		if (openStatusBadge && openStatusText) {
-			openStatusBadge.classList.remove(
-				"is-open",
-				"is-closing-soon",
-				"is-closed",
-			);
-			openStatusBadge.classList.add("is-" + status.state);
-			openStatusText.textContent = status.short;
-			openStatusBadge.setAttribute("aria-label", status.full);
-		}
-	}
-
-	function highlightToday() {
-		const today = getRomeNow().getDay();
-		const list = document.getElementById("scheduleList");
-		if (!list) return;
-
-		// Pulisci lo stato precedente
-		list.querySelectorAll("li").forEach((li) => {
-			li.classList.remove("is-today");
-			const tag = li.querySelector(".today-tag");
-			if (tag) tag.remove();
-		});
-
-		// Trova la riga corrispondente al giorno
-		const target = Array.from(list.querySelectorAll("li")).find((li) => {
-			const days = (li.dataset.days || "").split(",").map(Number);
-			return days.indexOf(today) !== -1;
-		});
-		if (!target) return;
-
-		target.classList.add("is-today");
-
-		// Aggiungi la targhetta "oggi" accanto al nome del giorno
-		const dayEl = target.querySelector(".day");
-		if (dayEl && !dayEl.querySelector(".today-tag")) {
-			const tag = document.createElement("span");
-			tag.className = "today-tag";
-			tag.textContent = "oggi";
-			dayEl.appendChild(tag);
-		}
-	}
-
-	function updateAll() {
-		updateStatus();
-		highlightToday();
-	}
-
-	updateAll();
-	setInterval(updateAll, 60000);
 
 	/* ============================================================
-	   INSEGNA — Accensione al crepuscolo (ora di Roma)
+	   MODULO: INSEGNA — accensione al crepuscolo (ora di Roma)
 	   ============================================================ */
 
-	const appHeader = document.getElementById("appHeader");
-
-	// Finestra di buio: dal tramonto+crepuscolo civile (~30 min)
-	// all'alba-crepuscolo civile (~30 min). Approssimazione sinusoidale
-	// tarata sull'Italia centrale.
-	function getDarknessWindow(dayOfYear) {
-		const phase = ((dayOfYear - 172) * 2 * Math.PI) / 365;
-		const darkStart = 18.85 + 2.15 * Math.cos(phase) + 0.5;
-		const darkEnd = 6.5 - 1.0 * Math.cos(phase) - 0.5;
-		return { darkStart: darkStart, darkEnd: darkEnd };
-	}
-
-	function isDark() {
-		const now = getRomeNow();
-		const nowHours = now.getHours() + now.getMinutes() / 60;
-		const w = getDarknessWindow(getDayOfYear(now));
-		return nowHours < w.darkEnd || nowHours >= w.darkStart;
-	}
-
-	function updateSignage() {
+	function initSignage() {
+		const appHeader = document.getElementById("appHeader");
 		if (!appHeader) return;
-		if (isDark()) appHeader.classList.add("is-lit");
-		else appHeader.classList.remove("is-lit");
+
+		// Finestra di buio: dal tramonto+crepuscolo civile (~30 min)
+		// all'alba-crepuscolo civile (~30 min). Approssimazione sinusoidale
+		// tarata sull'Italia centrale.
+		function getDarknessWindow(dayOfYear) {
+			const phase = ((dayOfYear - 172) * 2 * Math.PI) / 365;
+			const darkStart = 18.85 + 2.15 * Math.cos(phase) + 0.5;
+			const darkEnd = 6.5 - 1.0 * Math.cos(phase) - 0.5;
+			return { darkStart: darkStart, darkEnd: darkEnd };
+		}
+
+		function isDark() {
+			const now = getRomeNow();
+			const nowHours = now.getHours() + now.getMinutes() / 60;
+			const w = getDarknessWindow(getDayOfYear(now));
+			return nowHours < w.darkEnd || nowHours >= w.darkStart;
+		}
+
+		function updateSignage() {
+			if (isDark()) appHeader.classList.add("is-lit");
+			else appHeader.classList.remove("is-lit");
+		}
+
+		updateSignage();
+		setInterval(updateSignage, 60000);
 	}
 
-	updateSignage();
-	setInterval(updateSignage, 60000);
+	/* ============================================================
+	   BOOT — avvia i moduli nell'ordine corretto
+	   ============================================================ */
+
+	function boot() {
+		initNavigation();
+		initDecadeSlideshow();
+
+		// Cookie e modali sono legati: modali riceve l'API di cookie
+		const cookieApi = initCookieConsent();
+		initModals(cookieApi);
+
+		initOpeningStatus();
+		initSignage();
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", boot);
+	} else {
+		boot();
+	}
 })();
