@@ -1796,27 +1796,6 @@ body {
 .dot:active {
 	transform: scale(0.9);
 }
-.dot {
-	width: 0.4375rem;
-	height: 0.4375rem;
-	border-radius: 50%;
-	border: none;
-	background: var(--border);
-	transition:
-		background var(--dur-med) var(--ease-ui),
-		width var(--dur-med) var(--ease-ui),
-		border-radius var(--dur-med) var(--ease-ui),
-		transform var(--dur-ui) var(--ease-ui);
-	display: block;
-}
-
-.dot:hover {
-	transform: scale(1.25);
-}
-
-.dot:active {
-	transform: scale(0.9);
-}
 
 .dot.active {
 	background: var(--primary);
