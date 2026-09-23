@@ -485,12 +485,13 @@ body {
 
 /* --- Rating pill --- */
 .rating-wrap {
-	display: block;
+	display: inline-block;
 	margin: 0 auto 1.5rem;
 	cursor: pointer;
 }
 
 .rating-pill {
+	position: relative;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.55rem;
@@ -498,8 +499,56 @@ body {
 	border: 1px solid #f0e2b5;
 	padding: 0.5rem 1.1rem;
 	border-radius: 50px;
-	box-shadow: 0 2px 6px rgba(212, 160, 23, 0.15);
+	overflow: hidden;
 	transition: transform 0.15s;
+	animation: edgeGlow 2.4s ease-in-out infinite;
+}
+
+/* Shimmer diagonale che attraversa la pill */
+.rating-pill::after {
+	content: "";
+	position: absolute;
+	top: -50%;
+	left: -100%;
+	width: 60%;
+	height: 200%;
+	background: linear-gradient(
+		105deg,
+		transparent 40%,
+		rgba(255, 255, 255, 0.85) 48%,
+		rgba(255, 255, 255, 1) 50%,
+		rgba(255, 255, 255, 0.85) 52%,
+		transparent 60%
+	);
+	transform: skewX(-20deg);
+	animation: glint 4s ease-in-out infinite;
+	pointer-events: none;
+}
+
+@keyframes edgeGlow {
+	0%,
+	100% {
+		box-shadow:
+			0 0 0 0 rgba(245, 179, 1, 0),
+			0 2px 6px rgba(212, 160, 23, 0.15);
+	}
+	50% {
+		box-shadow:
+			0 0 0 6px rgba(245, 179, 1, 0.2),
+			0 4px 16px rgba(245, 179, 1, 0.45);
+	}
+}
+
+@keyframes glint {
+	0% {
+		left: -100%;
+	}
+	50% {
+		left: 140%;
+	}
+	100% {
+		left: 140%;
+	}
 }
 
 .rating-wrap:hover .rating-pill {
@@ -546,7 +595,33 @@ body {
 	line-height: 1.05;
 	letter-spacing: -0.3px;
 	margin-bottom: 1rem;
-	color: var(--primary);
+
+	/* Gradiente animato */
+	background: linear-gradient(
+		100deg,
+		var(--primary-dark) 0%,
+		var(--primary) 25%,
+		var(--primary-light) 50%,
+		var(--accent) 75%,
+		var(--primary) 100%
+	);
+	background-size: 220% 100%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+
+	animation: titleGradient 12s ease-in-out infinite;
+}
+
+@keyframes titleGradient {
+	0%,
+	100% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
 }
 
 /* --- Kicker --- */
@@ -2456,5 +2531,16 @@ body {
 
 	.fab {
 		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
 	}
 }
