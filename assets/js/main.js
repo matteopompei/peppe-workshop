@@ -160,7 +160,8 @@
 		programmaticScrollTimer = null;
 	}
 
-	function goTo(index) {
+	function goTo(index, options = {}) {
+		const { push = true } = options;
 		if (index < 0 || index >= total) return;
 		if (index === currentIndex && !isProgrammaticScroll) return;
 
@@ -168,8 +169,13 @@
 		isProgrammaticScroll = true;
 		updateUI();
 
+		// Aggiorna l'URL senza triggerare scroll nativo
+		if (push) {
+			const slideId = slides[index].id; // "slide-2"
+			history.pushState({ slide: index }, "", "#" + slideId);
+		}
+
 		clearTimeout(programmaticScrollTimer);
-		// Safety net: se gli eventi scroll non arrivano, sblocca dopo 800ms
 		programmaticScrollTimer = setTimeout(releaseProgrammaticScroll, 800);
 
 		deck.scrollTo({ left: index * getSlideWidth(), behavior: "smooth" });
@@ -324,6 +330,32 @@
 	deck.addEventListener("dragstart", (e) => e.preventDefault());
 
 	updateUI();
+
+	/* --- Deep linking: leggi hash all'avvio --- */
+	function readIndexFromHash() {
+		const hash = location.hash.slice(1); // rimuove "#"
+		if (!hash) return 0;
+		const target = document.getElementById(hash);
+		if (!target) return 0;
+		const idx = slides.indexOf(target);
+		return idx >= 0 ? idx : 0;
+	}
+
+	const initialIndex = readIndexFromHash();
+	if (initialIndex > 0) {
+		// Salta alla slide senza pushare nello storico
+		goTo(initialIndex, { push: false });
+	}
+
+	/* --- Back/forward del browser --- */
+	window.addEventListener("popstate", (e) => {
+		const hash = location.hash.slice(1);
+		const target = hash ? document.getElementById(hash) : null;
+		const idx = target ? slides.indexOf(target) : 0;
+		if (idx >= 0 && idx !== currentIndex) {
+			goTo(idx, { push: false });
+		}
+	});
 
 	/* ============================================================
 	   COOKIE CONSENT
