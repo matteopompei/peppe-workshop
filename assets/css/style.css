@@ -306,20 +306,106 @@ body {
 	background-color: #1a2238;
 	padding: var(--header-pad-y) var(--header-pad-x);
 	overflow: hidden;
+	transition:
+		background-color 0.8s ease,
+		box-shadow 0.8s ease;
+}
+
+/* Alone interno diffuso (parte dell'effetto "accesa") */
+.app-header::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(
+		ellipse 80% 140% at 50% 50%,
+		rgba(190, 215, 255, 0.22) 0%,
+		rgba(150, 190, 255, 0.08) 45%,
+		rgba(120, 170, 255, 0) 80%
+	);
+	opacity: 0;
+	transition: opacity 0.9s ease;
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* Stato acceso */
+.app-header.is-lit {
+	background-color: #354d7d;
+	box-shadow:
+		0 0 18px rgba(130, 175, 255, 0.45),
+		0 0 42px rgba(110, 155, 240, 0.25),
+		0 14px 32px -8px rgba(90, 130, 220, 0.35);
+	animation: neonFlicker 14s linear infinite;
+}
+
+.app-header.is-lit::before {
+	opacity: 1;
+}
+
+.app-header.is-lit .logo {
+	background-color: #ffffff;
+	filter: drop-shadow(0 0 1px #ffffff)
+		drop-shadow(0 0 4px rgba(220, 235, 255, 0.75))
+		drop-shadow(0 0 12px rgba(160, 200, 255, 0.4));
+}
+
+/* Flicker realistico da neon vecchio: due micro-sfarfallii per ciclo,
+   uno a ~22% e uno a ~64%, il resto del tempo stabile. */
+@keyframes neonFlicker {
+	0% {
+		filter: brightness(1);
+	}
+	22% {
+		filter: brightness(1);
+	}
+	22.5% {
+		filter: brightness(0.9);
+	}
+	23% {
+		filter: brightness(1.04);
+	}
+	23.5% {
+		filter: brightness(0.94);
+	}
+	24% {
+		filter: brightness(1);
+	}
+	64% {
+		filter: brightness(1);
+	}
+	64.5% {
+		filter: brightness(0.87);
+	}
+	65% {
+		filter: brightness(1.05);
+	}
+	65.5% {
+		filter: brightness(0.93);
+	}
+	66% {
+		filter: brightness(1);
+	}
+	100% {
+		filter: brightness(1);
+	}
 }
 
 .app-header .logo {
-	display: block;
 	width: min(22rem, 90%);
+	aspect-ratio: 738 / 54;
 	margin: 0 auto;
-	text-align: center;
-	font-family: var(--font-display);
-	font-size: 1.15rem;
-	font-weight: 700;
-	letter-spacing: 0.35em;
-	color: #e0e7f2;
-	text-indent: 0.35em;
-	line-height: 1.4;
+	background-color: #e0e7f2;
+	-webkit-mask-image: url(../img/elettrauto-ricambi-logo.svg);
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	-webkit-mask-size: contain;
+	mask-image: url(../img/elettrauto-ricambi-logo.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+	mask-size: contain;
+	transition:
+		background-color 0.9s ease,
+		filter 0.9s ease;
 }
 
 /* ============================================================
@@ -2307,7 +2393,6 @@ body {
 
 	.app-header .logo {
 		width: min(26rem, 65%);
-		font-size: 1.25rem;
 	}
 
 	.slide-inner {

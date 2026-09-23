@@ -478,4 +478,57 @@
 
 	updateStatus();
 	setInterval(updateStatus, 60000);
+
+	/* ============================================================
+	   INSEGNA — Accensione al crepuscolo (ora di Roma)
+	   ============================================================ */
+	const appHeader = document.getElementById("appHeader");
+
+	/* Se `getRomeNow` è già definito più sopra nel file,
+	   salta questa funzione per evitare conflitti. */
+	function getRomeNowForSignage() {
+		try {
+			const s = new Date().toLocaleString("en-US", {
+				timeZone: "Europe/Rome",
+			});
+			return new Date(s);
+		} catch (e) {
+			return new Date();
+		}
+	}
+
+	function getDayOfYear(date) {
+		const start = new Date(date.getFullYear(), 0, 0);
+		const diff = date - start;
+		return Math.floor(diff / 86400000);
+	}
+
+	/* Finestra di buio: dal tramonto+crepuscolo civile (~30 min)
+	   all'alba-crepuscolo civile (~30 min). Approssimazione sinusoidale
+	   tarata sull'Italia centrale. */
+	function getDarknessWindow(dayOfYear) {
+		const phase = ((dayOfYear - 172) * 2 * Math.PI) / 365;
+		const darkStart = 18.85 + 2.15 * Math.cos(phase) + 0.5;
+		const darkEnd = 6.5 - 1.0 * Math.cos(phase) - 0.5;
+		return { darkStart, darkEnd };
+	}
+
+	function isDark() {
+		const now = getRomeNowForSignage();
+		const nowHours = now.getHours() + now.getMinutes() / 60;
+		const w = getDarknessWindow(getDayOfYear(now));
+		return nowHours < w.darkEnd || nowHours >= w.darkStart;
+	}
+
+	function updateSignage() {
+		if (!appHeader) return;
+		if (isDark()) {
+			appHeader.classList.add("is-lit");
+		} else {
+			appHeader.classList.remove("is-lit");
+		}
+	}
+
+	updateSignage();
+	setInterval(updateSignage, 60000);
 })();
