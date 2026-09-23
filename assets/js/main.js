@@ -262,6 +262,67 @@
 		{ passive: true },
 	);
 
+	/* --- Drag col mouse (solo desktop) --- */
+	let isDragging = false;
+	let wasDragged = false;
+	let dragStartX = 0;
+	let dragStartScrollLeft = 0;
+
+	deck.addEventListener("mousedown", (e) => {
+		// Solo tasto sinistro, ignora se stiamo già animando
+		if (e.button !== 0) return;
+		if (isProgrammaticScroll) releaseProgrammaticScroll();
+		isDragging = true;
+		wasDragged = false;
+		dragStartX = e.pageX;
+		dragStartScrollLeft = deck.scrollLeft;
+	});
+
+	deck.addEventListener("mousemove", (e) => {
+		if (!isDragging) return;
+		const dx = e.pageX - dragStartX;
+		if (Math.abs(dx) > 5) {
+			wasDragged = true;
+			deck.classList.add("dragging");
+			e.preventDefault();
+			deck.scrollLeft = dragStartScrollLeft - dx;
+		}
+	});
+
+	["mouseup", "mouseleave"].forEach((evt) => {
+		deck.addEventListener(evt, () => {
+			if (!isDragging) return;
+			isDragging = false;
+			deck.classList.remove("dragging");
+			// Se l'utente ha trascinato, forza un sync dopo che lo snap si è assestato
+			if (wasDragged) {
+				setTimeout(() => {
+					const newIndex = Math.round(deck.scrollLeft / getSlideWidth());
+					if (newIndex >= 0 && newIndex < total && newIndex !== currentIndex) {
+						currentIndex = newIndex;
+						updateUI();
+					}
+				}, 200);
+			}
+		});
+	});
+
+	// Blocca click accidentali dopo un drag
+	deck.addEventListener(
+		"click",
+		(e) => {
+			if (wasDragged) {
+				e.preventDefault();
+				e.stopPropagation();
+				wasDragged = false;
+			}
+		},
+		true, // ← capture: true, essenziale
+	);
+
+	// Previeni il dragstart nativo delle immagini
+	deck.addEventListener("dragstart", (e) => e.preventDefault());
+
 	updateUI();
 
 	/* ============================================================

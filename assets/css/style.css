@@ -432,6 +432,13 @@ body {
 	scrollbar-width: none;
 	user-select: none;
 	-webkit-user-select: none;
+	cursor: grab;
+}
+
+.deck.dragging {
+	cursor: grabbing;
+	scroll-behavior: auto;
+	scroll-snap-type: none;
 }
 
 .deck::-webkit-scrollbar {
