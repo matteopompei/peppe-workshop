@@ -1537,6 +1537,52 @@ body {
 }
 
 /* ============================================================
+   SWIPE HINT
+   ============================================================ */
+.swipe-hint {
+	position: fixed;
+	bottom: calc(6.25rem + env(safe-area-inset-bottom));
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(42, 55, 87, 0.92);
+	color: #ffffff;
+	padding: 0.5rem 1rem;
+	border-radius: 50px;
+	font-size: 0.78rem;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	z-index: 30;
+	pointer-events: none;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+	animation: hintPulse 2.4s ease-in-out infinite;
+	animation-delay: 1.2s;
+}
+
+.swipe-hint .ico {
+	width: 0.875rem;
+	height: 0.875rem;
+	color: #ffffff;
+}
+
+.swipe-hint.hidden {
+	display: none;
+}
+
+@keyframes hintPulse {
+	0%,
+	100% {
+		transform: translateX(-50%);
+		opacity: 1;
+	}
+	50% {
+		transform: translateX(calc(-50% + 10px));
+		opacity: 0.65;
+	}
+}
+
+/* ============================================================
    GUIDA PICENA
    ============================================================ */
 .slide.gp-theme {

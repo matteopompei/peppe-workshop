@@ -11,6 +11,7 @@
 	const dots = Array.from(document.querySelectorAll(".dot"));
 	const prevBtn = document.getElementById("prevBtn");
 	const nextBtn = document.getElementById("nextBtn");
+	const swipeHint = document.getElementById("swipeHint");
 
 	if (!slides.length || !prevBtn || !nextBtn) return;
 
@@ -29,6 +30,10 @@
 
 		nextBtn.classList.toggle("disabled", atEnd);
 		nextBtn.setAttribute("aria-disabled", atEnd ? "true" : "false");
+
+		if (currentIndex > 0 && swipeHint) {
+			swipeHint.classList.add("hidden");
+		}
 	}
 
 	function goTo(index) {
