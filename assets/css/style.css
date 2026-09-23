@@ -2661,6 +2661,21 @@ body {
 	.fab {
 		display: none;
 	}
+
+	.bottom-nav {
+		left: 50%;
+		right: auto;
+		bottom: 1.5rem;
+		transform: translateX(-50%);
+		max-width: 22rem;
+		width: auto;
+		border-radius: 50px;
+		border: 1px solid var(--border);
+		border-bottom: 1px solid var(--border);
+		padding: 0.5rem 1rem;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+		gap: 1rem;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
