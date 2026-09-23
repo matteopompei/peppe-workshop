@@ -146,10 +146,15 @@ a {
 	--slide-pad-y-bottom: 6.5rem;
 
 	/* Timing interazioni — un unico punto di verità */
-	--dur-ui: 0.18s;
-	--dur-med: 0.25s;
-	--dur-fast: 0.15s;
+	--dur-fast: 0.15s; /* micro-feedback: link, testi */
+	--dur-ui: 0.18s; /* bottoni, hover, tap */
+	--dur-med: 0.25s; /* cambi di stato visibili */
+	--dur-slow: 0.8s; /* transizioni "ampie" (header) */
+	--dur-slower: 0.9s; /* logo insegna */
+	--dur-modal: 0.3s; /* apertura modali */
+
 	--ease-ui: ease;
+	--ease-modal: cubic-bezier(0.2, 0.9, 0.3, 1.2);
 }
 
 /* ============================================================
@@ -317,8 +322,8 @@ body {
 	padding: var(--header-pad-y) var(--header-pad-x);
 	overflow: hidden;
 	transition:
-		background-color 0.8s ease,
-		box-shadow 0.8s ease;
+		background-color var(--dur-slow) var(--ease-ui),
+		box-shadow var(--dur-slow) var(--ease-ui);
 }
 
 /* Alone interno diffuso (parte dell'effetto "accesa") */
@@ -333,7 +338,7 @@ body {
 		rgba(120, 170, 255, 0) 80%
 	);
 	opacity: 0;
-	transition: opacity 0.9s ease;
+	transition: opacity var(--dur-slower) var(--ease-ui);
 	pointer-events: none;
 	z-index: 0;
 }
@@ -414,8 +419,8 @@ body {
 	mask-position: center;
 	mask-size: contain;
 	transition:
-		background-color 0.9s ease,
-		filter 0.9s ease;
+		background-color var(--dur-slower) var(--ease-ui),
+		filter var(--dur-slower) var(--ease-ui);
 }
 
 /* ============================================================
@@ -1348,8 +1353,8 @@ body {
 	white-space: nowrap;
 	flex-shrink: 0;
 	transition:
-		background 0.3s ease,
-		color 0.3s ease;
+		background var(--dur-med) var(--ease-ui),
+		color var(--dur-med) var(--ease-ui);
 }
 
 .open-status-badge .status-dot-small {
@@ -1599,7 +1604,7 @@ body {
 	justify-content: center;
 	z-index: 5;
 	padding: 1rem;
-	transition: opacity 0.25s ease;
+	transition: opacity var(--dur-med) var(--ease-ui);
 }
 
 .map-overlay.hidden {
@@ -1690,7 +1695,7 @@ body {
 	width: 1.125rem;
 	height: 1.125rem;
 	color: var(--primary);
-	transition: color 0.2s ease;
+	transition: color var(--dur-ui) var(--ease-ui);
 }
 
 .nav-btn:hover {
@@ -1718,6 +1723,27 @@ body {
 	align-items: center;
 }
 
+.dot {
+	width: 0.4375rem;
+	height: 0.4375rem;
+	border-radius: 50%;
+	border: none;
+	background: var(--border);
+	transition:
+		background var(--dur-med) var(--ease-ui),
+		width var(--dur-med) var(--ease-ui),
+		border-radius var(--dur-med) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
+	display: block;
+}
+
+.dot:hover {
+	transform: scale(1.25);
+}
+
+.dot:active {
+	transform: scale(0.9);
+}
 .dot {
 	width: 0.4375rem;
 	height: 0.4375rem;
@@ -2165,7 +2191,7 @@ body {
 	text-decoration-style: dotted;
 	text-underline-offset: 0.25em;
 	text-decoration-thickness: 1px;
-	transition: color 0.15s;
+	transition: color var(--dur-fast) var(--ease-ui);
 	white-space: nowrap;
 }
 
@@ -2179,9 +2205,6 @@ body {
 	gap: 1rem;
 	justify-content: flex-start;
 	flex-wrap: wrap;
-	transition:
-		color var(--dur-fast) var(--ease-ui),
-		opacity var(--dur-fast) var(--ease-ui);
 }
 
 .policy-links a {
@@ -2196,7 +2219,9 @@ body {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.35rem;
-	transition: color 0.15s;
+	transition:
+		color var(--dur-fast) var(--ease-ui),
+		opacity var(--dur-fast) var(--ease-ui);
 	padding: 0.2rem 0;
 }
 
@@ -2313,8 +2338,8 @@ body {
 	opacity: 0;
 	visibility: hidden;
 	transition:
-		opacity 0.25s ease,
-		visibility 0.25s ease;
+		opacity var(--dur-med) var(--ease-ui),
+		visibility var(--dur-med) var(--ease-ui);
 }
 
 .modal-backdrop.show {
@@ -2332,7 +2357,7 @@ body {
 	position: relative;
 	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
 	transform: translateY(10px) scale(0.97);
-	transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+	transition: transform var(--dur-modal) var(--ease-modal);
 	display: flex;
 	flex-direction: column;
 }
