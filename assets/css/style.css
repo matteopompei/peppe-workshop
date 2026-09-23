@@ -17,6 +17,8 @@ img {
 button {
 	font-family: inherit;
 	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
 }
 a {
 	text-decoration: none;
@@ -1520,6 +1522,16 @@ body {
 		transform 0.15s;
 }
 
+.nav-btn:focus-visible,
+.dot:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 3px;
+	border-radius: 50%;
+}
+.dot.active:focus-visible {
+	border-radius: 4px;
+}
+
 .nav-btn .ico {
 	width: 1.125rem;
 	height: 1.125rem;
@@ -1556,6 +1568,7 @@ body {
 	width: 0.4375rem;
 	height: 0.4375rem;
 	border-radius: 50%;
+	border: none;
 	background: var(--border);
 	transition:
 		background 0.3s,
