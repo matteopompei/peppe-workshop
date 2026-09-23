@@ -9,6 +9,14 @@
 
 	const slides = Array.from(deck.querySelectorAll(".slide"));
 	const dots = Array.from(document.querySelectorAll(".dot"));
+
+	dots.forEach((dot, i) => {
+		dot.addEventListener("click", (e) => {
+			e.preventDefault();
+			goTo(i);
+		});
+	});
+
 	const prevBtn = document.getElementById("prevBtn");
 	const nextBtn = document.getElementById("nextBtn");
 	const swipeHint = document.getElementById("swipeHint");
