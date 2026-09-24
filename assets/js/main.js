@@ -175,9 +175,11 @@
 			isProgrammaticScroll = true;
 			updateUI();
 
+			const slideId = slides[index].id;
 			if (push) {
-				const slideId = slides[index].id;
 				history.pushState({ slide: index }, "", "#" + slideId);
+			} else {
+				history.replaceState({ slide: index }, "", "#" + slideId);
 			}
 
 			clearTimeout(programmaticScrollTimer);
@@ -274,6 +276,9 @@
 					if (newIndex >= 0 && newIndex < total && newIndex !== currentIndex) {
 						currentIndex = newIndex;
 						updateUI();
+						// Aggiorna l'URL senza creare una nuova voce nella cronologia
+						const slideId = slides[currentIndex].id;
+						history.replaceState({ slide: currentIndex }, "", "#" + slideId);
 					}
 				}, 100);
 			},
@@ -321,6 +326,8 @@
 						) {
 							currentIndex = newIndex;
 							updateUI();
+							const slideId = slides[currentIndex].id;
+							history.replaceState({ slide: currentIndex }, "", "#" + slideId);
 						}
 					}, 200);
 				}
