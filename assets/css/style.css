@@ -115,8 +115,8 @@ ul {
 	--border: #e3e7ee;
 
 	/* Accenti semantici */
-	--wa: #128c7e; /* verde WhatsApp scuro — contrasto AA su testo bianco */
-	--wa-dark: #0d6b60; /* hover: ancora più scuro */
+	--wa: #0d7d3a;
+	--wa-dark: #0a6430;
 	--star: #f5b301;
 	--gold: #d4a017;
 	--terracotta: #b8603a;
