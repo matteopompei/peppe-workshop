@@ -380,7 +380,6 @@
 		const DURATION = CONFIG.decadeSlideshowDuration;
 		let idx = 0;
 		let timeoutId = null;
-		let paused = false;
 
 		function show(index) {
 			photos.forEach((p, i) => p.classList.toggle("is-visible", i === index));
@@ -395,23 +394,12 @@
 		}
 
 		function loop() {
-			if (paused) return;
 			next();
 			timeoutId = setTimeout(loop, DURATION);
 		}
 
 		show(0);
 		timeoutId = setTimeout(loop, DURATION);
-
-		container.addEventListener("mouseenter", () => {
-			paused = true;
-			clearTimeout(timeoutId);
-		});
-
-		container.addEventListener("mouseleave", () => {
-			paused = false;
-			timeoutId = setTimeout(loop, DURATION);
-		});
 	}
 
 	/* ============================================================
