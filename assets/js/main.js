@@ -450,6 +450,25 @@
 
 		function loadGoogleAnalytics() {
 			if (document.getElementById("ga-script")) return;
+
+			// 1. Inizializza dataLayer e gtag PRIMA di caricare lo script
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			window.gtag = gtag;
+
+			// 2. Imposta il consenso di default a "denied"
+			//    (GDPR: GA4 non deve tracciare finché l'utente non accetta)
+			gtag("consent", "default", {
+				analytics_storage: "denied",
+				ad_storage: "denied",
+				ad_user_data: "denied",
+				ad_personalization: "denied",
+				wait_for_update: 500,
+			});
+
+			// 3. Carica lo script di GA
 			const script = document.createElement("script");
 			script.id = "ga-script";
 			script.async = true;
@@ -457,15 +476,16 @@
 				"https://www.googletagmanager.com/gtag/js?id=" + CONFIG.gaMeasurementId;
 			document.head.appendChild(script);
 
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			window.gtag = gtag;
+			// 4. Configura la proprietà
 			gtag("js", new Date());
 			gtag("config", CONFIG.gaMeasurementId, {
 				anonymize_ip: true,
 				cookie_flags: "SameSite=Lax;Secure",
+			});
+
+			// 5. Dichiara il consenso come CONCESSO (l'utente ha cliccato Accetta)
+			gtag("consent", "update", {
+				analytics_storage: "granted",
 			});
 		}
 
