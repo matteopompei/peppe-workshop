@@ -115,8 +115,8 @@ ul {
 	--border: #e3e7ee;
 
 	/* Accenti semantici */
-	--wa: #25d366;
-	--wa-dark: #1ebe57;
+	--wa: #128c7e; /* verde WhatsApp scuro — contrasto AA su testo bianco */
+	--wa-dark: #0d6b60; /* hover: ancora più scuro */
 	--star: #f5b301;
 	--gold: #d4a017;
 	--terracotta: #b8603a;
@@ -128,9 +128,48 @@ ul {
 	--gp-cream: #fdf6ee;
 	--gp-cream-alt: #f8f2e8;
 
+	/* Header insegna */
+	--signage-off: #1a2238;
+	--signage-on: #354d7d;
+	--signage-logo-off: #e0e7f2;
+
+	/* Stati apertura — verde (aperto) */
+	--status-open-bg: #dcfce7;
+	--status-open-text: #15803d;
+	--status-open-dot: #22c55e;
+
+	/* Stati apertura — giallo (in chiusura) */
+	--status-closing-bg: #fef3c7;
+	--status-closing-text: #b45309;
+	--status-closing-dot: #f59e0b;
+
+	/* Stati apertura — azzurro (pausa pranzo) */
+	--status-lunch-bg: #e0f2fe;
+	--status-lunch-text: #0369a1;
+	--status-lunch-dot: #0ea5e9;
+
+	/* Stati apertura — rosso (chiuso) */
+	--status-closed-bg: #fee2e2;
+	--status-closed-text: #b91c1c;
+	--status-closed-dot: #ef4444;
+
+	/* Rating / gold */
+	--rating-border: #f0e2b5;
+	--rating-divider: #e8d89c;
+	--rating-text: #8a6500;
+	--rating-ink: #5c4300;
+	--rating-hover: #e0a400;
+	--rating-tint: #fff8e6;
+
+	/* RGB — per comporre rgba(var(--*-rgb), alpha) nelle shadow */
+	--primary-rgb: 42, 55, 87;
+	--wa-rgb: 18, 140, 126;
+	--gp-rgb: 193, 95, 51;
+	--signage-rgb: 26, 34, 56;
+
 	/* Ombre */
-	--shadow: 0 2px 12px rgba(42, 55, 87, 0.08);
-	--shadow-lg: 0 8px 24px rgba(42, 55, 87, 0.12);
+	--shadow: 0 2px 12px rgba(var(--primary-rgb), 0.08);
+	--shadow-lg: 0 8px 24px rgba(var(--primary-rgb), 0.12);
 
 	/* Tipografia */
 	--font-display: "Bitter", Georgia, "Times New Roman", serif;
@@ -319,7 +358,7 @@ body {
 
 .app-header {
 	position: relative;
-	background-color: #1a2238;
+	background-color: var(--signage-off);
 	padding: var(--header-pad-y) var(--header-pad-x);
 	overflow: hidden;
 	transition:
@@ -344,7 +383,7 @@ body {
 }
 
 .app-header.is-lit {
-	background-color: #354d7d;
+	background-color: var(--signage-on);
 	box-shadow:
 		0 0 18px rgba(130, 175, 255, 0.45),
 		0 0 42px rgba(110, 155, 240, 0.25),
@@ -400,7 +439,7 @@ body {
 	width: min(22rem, 90%);
 	aspect-ratio: 738 / 54;
 	margin: 0 auto;
-	background-color: #e0e7f2;
+	background-color: var(--signage-logo-off);
 	-webkit-mask-image: url(../img/elettrauto-ricambi-logo.svg);
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-position: center;
@@ -550,7 +589,7 @@ body {
 .btn-call {
 	background: var(--primary);
 	color: #fff;
-	box-shadow: 0 4px 12px rgba(42, 55, 87, 0.3);
+	box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
 }
 .btn-call:hover {
 	background: var(--primary-dark);
@@ -559,7 +598,7 @@ body {
 .btn-wa {
 	background: var(--wa);
 	color: #fff;
-	box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+	box-shadow: 0 4px 12px rgba(var(--wa-rgb), 0.35);
 }
 .btn-wa:hover {
 	background: var(--wa-dark);
@@ -591,7 +630,7 @@ body {
 	background:
 		radial-gradient(
 			circle 220px at calc(100% - 50px) 50px,
-			rgba(42, 55, 87, 0.07) 0%,
+			rgba(var(--primary-rgb), 0.07) 0%,
 			transparent 70%
 		),
 		radial-gradient(
@@ -623,7 +662,7 @@ body {
 	align-items: center;
 	gap: 0.55rem;
 	background: #fff;
-	border: 1px solid #f0e2b5;
+	border: 1px solid var(--rating-border);
 	padding: 0.5rem 1.1rem;
 	border-radius: 50px;
 	overflow: hidden;
@@ -703,9 +742,9 @@ body {
 
 .rating-value {
 	font-weight: 800;
-	color: #8a6500;
+	color: var(--rating-text);
 	font-size: 0.9rem;
-	border-left: 1px solid #e8d89c;
+	border-left: 1px solid var(--rating-divider);
 	padding-left: 0.55rem;
 }
 
@@ -816,19 +855,19 @@ body {
 }
 
 .location-dot.is-open {
-	background: #22c55e;
+	background: var(--status-open-dot);
 	box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
 }
 .location-dot.is-closing-soon {
-	background: #f59e0b;
+	background: var(--status-closing-dot);
 	box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
 }
 .location-dot.is-lunch-break {
-	background: #0ea5e9;
+	background: var(--status-lunch-dot);
 	box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
 }
 .location-dot.is-closed {
-	background: #ef4444;
+	background: var(--status-closed-dot);
 	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
@@ -911,7 +950,7 @@ body {
 
 .services-grid {
 	display: grid;
-	grid-template-columns: 1fr; /* mobile-first: 1 colonna */
+	grid-template-columns: 1fr;
 	gap: 1rem;
 }
 
@@ -1056,7 +1095,7 @@ body {
 	background: #fff;
 	border: 2px solid var(--primary);
 	border-radius: 50%;
-	box-shadow: 0 0 0 3px rgba(42, 55, 87, 0.1);
+	box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
 }
 
 .timeline-year {
@@ -1133,8 +1172,8 @@ body {
 	padding: 1.6rem 1rem 0.85rem;
 	background: linear-gradient(
 		to top,
-		rgba(26, 34, 56, 0.85) 0%,
-		rgba(26, 34, 56, 0) 100%
+		rgba(var(--signage-rgb), 0.85) 0%,
+		rgba(var(--signage-rgb), 0) 100%
 	);
 	color: #fff;
 	font-size: 0.75rem;
@@ -1179,7 +1218,7 @@ body {
    ------------------------------------------------------------ */
 .reviews-header {
 	display: flex;
-	flex-direction: column; /* mobile-first: stack verticale */
+	flex-direction: column;
 	align-items: flex-start;
 	gap: 0.35rem;
 	margin: 2rem 0 1.1rem;
@@ -1256,7 +1295,7 @@ body {
 	font-size: 0.8rem;
 	font-weight: 800;
 	flex-shrink: 0;
-	box-shadow: 0 2px 6px rgba(42, 55, 87, 0.18);
+	box-shadow: 0 2px 6px rgba(var(--primary-rgb), 0.18);
 }
 
 .review-name {
@@ -1526,20 +1565,20 @@ body {
 }
 
 .open-status-badge.is-open {
-	background: #dcfce7;
-	color: #15803d;
+	background: var(--status-open-bg);
+	color: var(--status-open-text);
 }
 .open-status-badge.is-closing-soon {
-	background: #fef3c7;
-	color: #b45309;
+	background: var(--status-closing-bg);
+	color: var(--status-closing-text);
 }
 .open-status-badge.is-lunch-break {
-	background: #e0f2fe;
-	color: #0369a1;
+	background: var(--status-lunch-bg);
+	color: var(--status-lunch-text);
 }
 .open-status-badge.is-closed {
-	background: #fee2e2;
-	color: #b91c1c;
+	background: var(--status-closed-bg);
+	color: var(--status-closed-text);
 }
 
 /* ------------------------------------------------------------
@@ -1547,7 +1586,7 @@ body {
    ------------------------------------------------------------ */
 .schedule-list li {
 	display: flex;
-	flex-direction: column; /* mobile-first: stack */
+	flex-direction: column;
 	align-items: flex-start;
 	gap: 0.15rem;
 	padding: 0.7rem;
@@ -1633,7 +1672,7 @@ body {
 .map-overlay {
 	position: absolute;
 	inset: 0;
-	background: rgba(42, 55, 87, 0.15);
+	background: rgba(var(--primary-rgb), 0.15);
 	backdrop-filter: blur(2px);
 	-webkit-backdrop-filter: blur(2px);
 	display: flex;
@@ -1718,7 +1757,7 @@ body {
 	margin-bottom: 1.75rem;
 	text-align: center;
 	overflow: hidden;
-	box-shadow: 0 12px 32px rgba(193, 95, 51, 0.28);
+	box-shadow: 0 12px 32px rgba(var(--gp-rgb), 0.28);
 }
 
 .gp-hero::before {
@@ -1886,7 +1925,7 @@ body {
 	border-radius: 50px;
 	font-size: 0.92rem;
 	font-weight: 800;
-	box-shadow: 0 6px 18px rgba(193, 95, 51, 0.35);
+	box-shadow: 0 6px 18px rgba(var(--gp-rgb), 0.35);
 	transition:
 		background-color var(--dur-ui) var(--ease-ui),
 		transform var(--dur-ui) var(--ease-ui),
@@ -1896,7 +1935,7 @@ body {
 .gp-cta:hover {
 	background: #a84f28;
 	transform: translateY(-1px);
-	box-shadow: 0 8px 22px rgba(193, 95, 51, 0.45);
+	box-shadow: 0 8px 22px rgba(var(--gp-rgb), 0.45);
 }
 
 .gp-cta:active {
@@ -1973,7 +2012,7 @@ body {
 }
 
 .legal-block .disclaimer-note {
-	background: #fff8e6;
+	background: var(--rating-tint);
 	border-left: 3px solid var(--gold);
 	border-radius: 8px;
 	padding: 0.8rem 0.95rem;
@@ -2189,13 +2228,13 @@ body {
 	background: var(--primary);
 }
 .fab-btn.call:hover {
-	box-shadow: 0 8px 22px rgba(42, 55, 87, 0.45);
+	box-shadow: 0 8px 22px rgba(var(--primary-rgb), 0.45);
 }
 .fab-btn.wa {
 	background: var(--wa);
 }
 .fab-btn.wa:hover {
-	box-shadow: 0 8px 22px rgba(37, 211, 102, 0.5);
+	box-shadow: 0 8px 22px rgba(var(--wa-rgb), 0.5);
 }
 
 /* ------------------------------------------------------------
@@ -2206,7 +2245,7 @@ body {
 	bottom: calc(6.25rem + env(safe-area-inset-bottom));
 	left: 50%;
 	transform: translateX(-50%);
-	background: rgba(42, 55, 87, 0.92);
+	background: rgba(var(--primary-rgb), 0.92);
 	color: #fff;
 	padding: 0.5rem 1rem;
 	border-radius: 50px;
@@ -2520,7 +2559,7 @@ body {
 	gap: 4px;
 	align-self: center;
 	margin: 0 auto 1rem;
-	background: linear-gradient(135deg, #fff8e6, #ffffff);
+	background: linear-gradient(135deg, var(--rating-tint), #ffffff);
 	padding: 0.7rem 1rem;
 	border-radius: 50px;
 	box-shadow: 0 4px 12px rgba(212, 160, 23, 0.2);
@@ -2558,14 +2597,14 @@ body {
 
 .btn-review {
 	background: var(--star);
-	color: #5c4300;
+	color: var(--rating-ink);
 	box-shadow: 0 4px 12px rgba(245, 179, 1, 0.35);
 }
 .btn-review:hover {
-	background: #e0a400;
+	background: var(--rating-hover);
 }
 .btn-review .ico {
-	color: #5c4300;
+	color: var(--rating-ink);
 }
 
 .modal-dismiss {
