@@ -837,12 +837,90 @@
 	}
 
 	/* ============================================================
+   MODULO: HOT ZONE NAV — mostra la nav solo avvicinandosi col mouse
+   ============================================================ */
+
+	function initNavHotZone() {
+		// Solo su desktop con mouse (non su touch)
+		if (
+			!window.matchMedia(
+				"(min-width: 541px) and (hover: hover) and (pointer: fine)",
+			).matches
+		) {
+			return;
+		}
+
+		const nav = document.querySelector(".bottom-nav");
+		if (!nav) return;
+
+		const HOT_ZONE_HEIGHT = 120; // px dal bordo inferiore
+		const HIDE_DELAY = 400; // ms prima di nascondere
+
+		let hideTimer = null;
+
+		function showNav() {
+			clearTimeout(hideTimer);
+			hideTimer = null;
+			nav.classList.add("is-visible");
+		}
+
+		function hideNavDelayed() {
+			if (hideTimer) return;
+			hideTimer = setTimeout(() => {
+				// Non nascondere se il focus è dentro la nav (tastiera)
+				if (nav.contains(document.activeElement)) return;
+				nav.classList.remove("is-visible");
+				hideTimer = null;
+			}, HIDE_DELAY);
+		}
+
+		function isPointerInNav(e) {
+			const rect = nav.getBoundingClientRect();
+			return (
+				e.clientX >= rect.left &&
+				e.clientX <= rect.right &&
+				e.clientY >= rect.top &&
+				e.clientY <= rect.bottom
+			);
+		}
+
+		document.addEventListener("mousemove", (e) => {
+			const fromBottom = window.innerHeight - e.clientY;
+
+			if (fromBottom <= HOT_ZONE_HEIGHT) {
+				showNav();
+				return;
+			}
+
+			// Fuori dalla hot zone: nascondi solo se non sopra la nav
+			if (!isPointerInNav(e)) {
+				hideNavDelayed();
+			} else {
+				showNav();
+			}
+		});
+
+		// Quando il mouse esce dalla finestra, nascondi
+		document.addEventListener("mouseleave", hideNavDelayed);
+
+		// Tastiera: se la nav riceve focus, resta visibile
+		nav.addEventListener("focusin", showNav);
+		nav.addEventListener("focusout", () => {
+			// Nascondi solo se il nuovo elemento attivo è fuori
+			setTimeout(() => {
+				if (!nav.contains(document.activeElement)) hideNavDelayed();
+			}, 0);
+		});
+	}
+
+	/* ============================================================
 	   BOOT — avvia i moduli nell'ordine corretto
 	   ============================================================ */
 
 	function boot() {
 		initNavigation();
 		initDecadeSlideshow();
+		initNavHotZone();
 
 		// Cookie e modali sono legati: modali riceve l'API di cookie
 		const cookieApi = initCookieConsent();
