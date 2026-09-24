@@ -377,14 +377,14 @@
 		const decadeValue = container.querySelector(".decade-value");
 		if (!photos.length) return;
 
-		// Accessibilità: se l'utente ha ridotto le animazioni, mostra solo la prima
-		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-			photos[0].classList.add("is-visible");
-			if (decadeValue) decadeValue.textContent = photos[0].dataset.decade || "";
-			return;
-		}
+		const reducedMotion = window.matchMedia(
+			"(prefers-reduced-motion: reduce)",
+		).matches;
 
-		const DURATION = CONFIG.decadeSlideshowDuration;
+		// Con reduced-motion: durata più lunga, nessuna transizione visiva
+		const DURATION = reducedMotion
+			? CONFIG.decadeSlideshowDuration * 2
+			: CONFIG.decadeSlideshowDuration;
 		let idx = 0;
 
 		function show(index) {
