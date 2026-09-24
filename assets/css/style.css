@@ -1,34 +1,42 @@
 /* ============================================================
-   RESET
+   1. RESET
    ============================================================ */
 * {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
 }
+
 html,
 body {
 	height: 100%;
 	overscroll-behavior: none;
 	overflow: hidden;
 }
+
 img {
 	max-width: 100%;
 	display: block;
 }
+
 button {
 	font-family: inherit;
 	cursor: pointer;
 	appearance: none;
 	-webkit-appearance: none;
 }
+
 a {
 	text-decoration: none;
 	color: inherit;
 }
 
+ul {
+	list-style: none;
+}
+
 /* ============================================================
-   FONT SELF-HOSTED
+   2. FONT SELF-HOSTED
    ============================================================ */
 @font-face {
 	font-family: "Bitter";
@@ -37,7 +45,6 @@ a {
 	font-display: swap;
 	src: url("../fonts/bitter-400.woff2") format("woff2");
 }
-
 @font-face {
 	font-family: "Bitter";
 	font-style: normal;
@@ -45,7 +52,6 @@ a {
 	font-display: swap;
 	src: url("../fonts/bitter-700.woff2") format("woff2");
 }
-
 @font-face {
 	font-family: "Bitter";
 	font-style: normal;
@@ -53,7 +59,6 @@ a {
 	font-display: swap;
 	src: url("../fonts/bitter-800.woff2") format("woff2");
 }
-
 @font-face {
 	font-family: "Manrope";
 	font-style: normal;
@@ -61,7 +66,6 @@ a {
 	font-display: swap;
 	src: url("../fonts/manrope-400.woff2") format("woff2");
 }
-
 @font-face {
 	font-family: "Manrope";
 	font-style: normal;
@@ -69,7 +73,6 @@ a {
 	font-display: swap;
 	src: url("../fonts/manrope-500.woff2") format("woff2");
 }
-
 @font-face {
 	font-family: "Manrope";
 	font-style: normal;
@@ -77,7 +80,6 @@ a {
 	font-display: swap;
 	src: url("../fonts/manrope-600.woff2") format("woff2");
 }
-
 @font-face {
 	font-family: "Manrope";
 	font-style: normal;
@@ -85,7 +87,6 @@ a {
 	font-display: swap;
 	src: url("../fonts/manrope-700.woff2") format("woff2");
 }
-
 @font-face {
 	font-family: "Manrope";
 	font-style: normal;
@@ -95,7 +96,7 @@ a {
 }
 
 /* ============================================================
-   VARIABILI
+   3. DESIGN TOKENS
    ============================================================ */
 :root {
 	/* Palette principale */
@@ -145,20 +146,20 @@ a {
 	--slide-pad-x: 1.35rem;
 	--slide-pad-y-bottom: 6.5rem;
 
-	/* Timing interazioni — un unico punto di verità */
-	--dur-fast: 0.15s; /* micro-feedback: link, testi */
-	--dur-ui: 0.18s; /* bottoni, hover, tap */
-	--dur-med: 0.25s; /* cambi di stato visibili */
-	--dur-slow: 0.8s; /* transizioni "ampie" (header) */
-	--dur-slower: 0.9s; /* logo insegna */
-	--dur-modal: 0.3s; /* apertura modali */
+	/* Timing interazioni */
+	--dur-fast: 0.15s;
+	--dur-ui: 0.18s;
+	--dur-med: 0.25s;
+	--dur-slow: 0.8s;
+	--dur-slower: 0.9s;
+	--dur-modal: 0.3s;
 
 	--ease-ui: ease;
 	--ease-modal: cubic-bezier(0.2, 0.9, 0.3, 1.2);
 }
 
 /* ============================================================
-   BASE
+   4. BASE
    ============================================================ */
 html {
 	font-size: clamp(1rem, 0.35vw + 0.85rem, 1.375rem);
@@ -174,7 +175,7 @@ body {
 }
 
 /* ============================================================
-   ICONE (CSS mask + currentColor)
+   5. ICONE — CSS mask + currentColor
    ============================================================ */
 .ico {
 	display: inline-block;
@@ -294,8 +295,10 @@ body {
 }
 
 /* ============================================================
-   APP CONTAINER
+   6. LAYOUT — App, Header, Deck, Slide
    ============================================================ */
+
+/* --- App container --- */
 .app {
 	height: 100vh;
 	height: 100dvh;
@@ -307,9 +310,7 @@ body {
 	overflow: hidden;
 }
 
-/* ============================================================
-   HEADER — insegna spenta
-   ============================================================ */
+/* --- Header (insegna) --- */
 .header-wrap {
 	position: relative;
 	flex-shrink: 0;
@@ -326,7 +327,6 @@ body {
 		box-shadow var(--dur-slow) var(--ease-ui);
 }
 
-/* Alone interno diffuso (parte dell'effetto "accesa") */
 .app-header::before {
 	content: "";
 	position: absolute;
@@ -343,7 +343,6 @@ body {
 	z-index: 0;
 }
 
-/* Stato acceso */
 .app-header.is-lit {
 	background-color: #354d7d;
 	box-shadow:
@@ -364,12 +363,8 @@ body {
 		drop-shadow(0 0 12px rgba(160, 200, 255, 0.4));
 }
 
-/* Flicker realistico da neon vecchio: due micro-sfarfallii per ciclo,
-   uno a ~22% e uno a ~64%, il resto del tempo stabile. */
 @keyframes neonFlicker {
-	0% {
-		filter: brightness(1);
-	}
+	0%,
 	22% {
 		filter: brightness(1);
 	}
@@ -382,9 +377,7 @@ body {
 	23.5% {
 		filter: brightness(0.94);
 	}
-	24% {
-		filter: brightness(1);
-	}
+	24%,
 	64% {
 		filter: brightness(1);
 	}
@@ -397,9 +390,7 @@ body {
 	65.5% {
 		filter: brightness(0.93);
 	}
-	66% {
-		filter: brightness(1);
-	}
+	66%,
 	100% {
 		filter: brightness(1);
 	}
@@ -423,9 +414,7 @@ body {
 		filter var(--dur-slower) var(--ease-ui);
 }
 
-/* ============================================================
-   DECK
-   ============================================================ */
+/* --- Deck (carosello orizzontale) --- */
 .deck {
 	flex: 1;
 	display: flex;
@@ -450,6 +439,7 @@ body {
 	display: none;
 }
 
+/* --- Slide --- */
 .slide {
 	flex: 0 0 100%;
 	width: 100%;
@@ -465,6 +455,7 @@ body {
 .slide::-webkit-scrollbar {
 	display: none;
 }
+
 .slide.white {
 	background: #fff;
 }
@@ -474,8 +465,126 @@ body {
 }
 
 /* ============================================================
-   HERO
+   7. COMPONENTI CONDIVISI
    ============================================================ */
+
+/* --- Label di sezione --- */
+.slide-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	color: var(--accent);
+	margin-bottom: 0.75rem;
+}
+
+.slide-label .ico {
+	width: 0.875rem;
+	height: 0.875rem;
+	color: var(--gold);
+}
+
+/* --- Titolo di sezione --- */
+.slide-title {
+	font-family: var(--font-display);
+	font-size: 1.85rem;
+	font-weight: 700;
+	color: var(--primary);
+	line-height: 1.15;
+	letter-spacing: -0.4px;
+	margin-bottom: 1.1rem;
+}
+
+.slide-title.accent-line::after {
+	content: "";
+	display: block;
+	width: 42px;
+	height: 3px;
+	background: var(--gold);
+	border-radius: 3px;
+	margin-top: 0.65rem;
+}
+
+/* --- Paragrafo --- */
+.body-text {
+	font-size: 0.92rem;
+	color: var(--text-light);
+	margin-bottom: 1.5rem;
+	line-height: 1.6;
+}
+
+/* --- Bottoni --- */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.75rem 1.25rem;
+	border-radius: 50px;
+	font-weight: 700;
+	font-size: 0.92rem;
+	border: none;
+	transition:
+		background-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui),
+		box-shadow var(--dur-ui) var(--ease-ui),
+		border-color var(--dur-ui) var(--ease-ui);
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+}
+
+.btn:active {
+	transform: translateY(0) scale(0.97);
+}
+
+.btn .ico {
+	width: 1.0625rem;
+	height: 1.0625rem;
+}
+
+.btn-call {
+	background: var(--primary);
+	color: #fff;
+	box-shadow: 0 4px 12px rgba(42, 55, 87, 0.3);
+}
+.btn-call:hover {
+	background: var(--primary-dark);
+}
+
+.btn-wa {
+	background: var(--wa);
+	color: #fff;
+	box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
+.btn-wa:hover {
+	background: var(--wa-dark);
+}
+
+.btn-ghost {
+	background: #fff;
+	color: var(--primary);
+	border: 1.5px solid var(--primary);
+}
+.btn-ghost:hover {
+	background: #f0f3fa;
+}
+
+.btn-full {
+	width: 100%;
+}
+
+/* ============================================================
+   8. SEZIONI SPECIFICHE
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   8.1 HERO
+   ------------------------------------------------------------ */
 .slide.hero {
 	position: relative;
 	overflow-x: hidden;
@@ -501,7 +610,7 @@ body {
 	padding: 1rem 0 0.5rem;
 }
 
-/* --- Rating pill --- */
+/* Rating pill */
 .rating-wrap {
 	display: inline-block;
 	margin: 0 auto 1.5rem;
@@ -524,7 +633,6 @@ body {
 	animation: edgeGlow 2.4s ease-in-out infinite;
 }
 
-/* Shimmer diagonale che attraversa la pill */
 .rating-pill::after {
 	content: "";
 	position: absolute;
@@ -563,9 +671,7 @@ body {
 	0% {
 		left: -100%;
 	}
-	50% {
-		left: 140%;
-	}
+	50%,
 	100% {
 		left: 140%;
 	}
@@ -574,15 +680,12 @@ body {
 .rating-wrap:hover .rating-pill {
 	transform: translateY(-1px);
 }
-
 .rating-wrap:active .rating-pill {
 	transform: translateY(0) scale(0.97);
 }
-
 .rating-wrap:focus-visible {
 	outline: none;
 }
-
 .rating-wrap:focus-visible .rating-pill {
 	outline: 2px solid var(--primary);
 	outline-offset: 3px;
@@ -593,7 +696,6 @@ body {
 	gap: 2px;
 	color: var(--star);
 }
-
 .stars-row .ico {
 	width: 1rem;
 	height: 1rem;
@@ -607,7 +709,7 @@ body {
 	padding-left: 0.55rem;
 }
 
-/* --- Titolo --- */
+/* Titolo con gradiente animato */
 .hero-title {
 	font-family: var(--font-display);
 	font-size: clamp(2.2rem, 8vw, 3.1rem);
@@ -615,8 +717,6 @@ body {
 	line-height: 1.05;
 	letter-spacing: -0.3px;
 	margin-bottom: 1rem;
-
-	/* Gradiente animato */
 	background: linear-gradient(
 		100deg,
 		var(--primary-dark) 0%,
@@ -630,7 +730,6 @@ body {
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
 	color: transparent;
-
 	animation: titleGradient 12s ease-in-out infinite;
 }
 
@@ -644,7 +743,7 @@ body {
 	}
 }
 
-/* --- Kicker --- */
+/* Kicker "Dal 1973" */
 .hero-kicker {
 	display: flex;
 	justify-content: center;
@@ -667,7 +766,7 @@ body {
 	border-radius: 1px;
 }
 
-/* --- Sottotitolo --- */
+/* Sottotitolo */
 .hero-subtitle {
 	font-size: 0.95rem;
 	color: var(--text-light);
@@ -676,7 +775,7 @@ body {
 	line-height: 1.55;
 }
 
-/* --- Location pill --- */
+/* Location pill */
 .hero-location {
 	display: inline-flex;
 	align-items: center;
@@ -720,145 +819,38 @@ body {
 	background: #22c55e;
 	box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
 }
-
 .location-dot.is-closing-soon {
 	background: #f59e0b;
 	box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
 }
-
 .location-dot.is-lunch-break {
 	background: #0ea5e9;
 	box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
 }
-
 .location-dot.is-closed {
 	background: #ef4444;
 	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
-/* --- Bottoni --- */
+/* CTA row */
 .cta-row {
 	display: flex;
 	gap: 0.6rem;
 	justify-content: center;
 	flex-wrap: wrap;
+	max-width: 22rem;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: 0.5rem;
-	padding: 0.75rem 1.25rem;
-	border-radius: 50px;
-	font-weight: 700;
-	font-size: 0.92rem;
-	border: none;
-	transition:
-		background-color var(--dur-ui) var(--ease-ui),
-		transform var(--dur-ui) var(--ease-ui),
-		box-shadow var(--dur-ui) var(--ease-ui),
-		border-color var(--dur-ui) var(--ease-ui);
+.cta-row .btn {
+	flex: 1 1 0;
+	min-width: 9rem;
 }
 
-.btn:hover {
-	transform: translateY(-1px);
-}
-
-.btn:active {
-	transform: translateY(0) scale(0.97);
-}
-
-.btn .ico {
-	width: 1.0625rem;
-	height: 1.0625rem;
-}
-
-.btn-call {
-	background: var(--primary);
-	color: #fff;
-	box-shadow: 0 4px 12px rgba(42, 55, 87, 0.3);
-}
-
-.btn-call:hover {
-	background: var(--primary-dark);
-}
-
-.btn-wa {
-	background: var(--wa);
-	color: #fff;
-	box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
-}
-
-.btn-wa:hover {
-	background: var(--wa-dark);
-}
-
-.btn-ghost {
-	background: #fff;
-	color: var(--primary);
-	border: 1.5px solid var(--primary);
-}
-
-.btn-ghost:hover {
-	background: #f0f3fa;
-}
-
-.btn-full {
-	width: 100%;
-}
-
-/* ============================================================
-   LABEL E TITOLO DI SEZIONE
-   ============================================================ */
-.slide-label {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.45rem;
-	font-size: 0.72rem;
-	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 1.5px;
-	color: var(--accent);
-	margin-bottom: 0.75rem;
-}
-
-.slide-label .ico {
-	width: 0.875rem;
-	height: 0.875rem;
-	color: var(--gold);
-}
-
-.slide-title {
-	font-family: var(--font-display);
-	font-size: 1.85rem;
-	font-weight: 700;
-	color: var(--primary);
-	line-height: 1.15;
-	letter-spacing: -0.4px;
-	margin-bottom: 1.1rem;
-}
-
-.slide-title.accent-line::after {
-	content: "";
-	display: block;
-	width: 42px;
-	height: 3px;
-	background: var(--gold);
-	border-radius: 3px;
-	margin-top: 0.65rem;
-}
-
-.body-text {
-	font-size: 0.92rem;
-	color: var(--text-light);
-	margin-bottom: 1.5rem;
-	line-height: 1.6;
-}
-
-/* ============================================================
-   SERVIZI
-   ============================================================ */
+/* ------------------------------------------------------------
+   8.2 SERVIZI
+   ------------------------------------------------------------ */
 .service-featured {
 	background: linear-gradient(135deg, var(--primary), var(--primary-light));
 	color: #fff;
@@ -919,7 +911,7 @@ body {
 
 .services-grid {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr; /* mobile-first: 1 colonna */
 	gap: 1rem;
 }
 
@@ -1020,9 +1012,9 @@ body {
 	color: #fff;
 }
 
-/* ============================================================
-   STORIA
-   ============================================================ */
+/* ------------------------------------------------------------
+   8.3 STORIA / TIMELINE
+   ------------------------------------------------------------ */
 .timeline {
 	position: relative;
 	padding-left: 26px;
@@ -1095,9 +1087,9 @@ body {
 	line-height: 1.55;
 }
 
-/* ============================================================
-   FOTO OFFICINA — SLIDESHOW
-   ============================================================ */
+/* ------------------------------------------------------------
+   8.4 SLIDESHOW FOTO OFFICINA
+   ------------------------------------------------------------ */
 .office-photo {
 	margin: 0 0 2rem;
 	border-radius: 14px;
@@ -1182,21 +1174,14 @@ body {
 	font-variant-numeric: tabular-nums;
 }
 
-/* Rispetta prefers-reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-	.slideshow-track img {
-		transition: none;
-	}
-}
-
-/* ============================================================
-   RECENSIONI
-   ============================================================ */
+/* ------------------------------------------------------------
+   8.5 RECENSIONI
+   ------------------------------------------------------------ */
 .reviews-header {
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 0.75rem;
+	flex-direction: column; /* mobile-first: stack verticale */
+	align-items: flex-start;
+	gap: 0.35rem;
 	margin: 2rem 0 1.1rem;
 	padding-top: 1.5rem;
 	border-top: 1px solid var(--border);
@@ -1219,6 +1204,7 @@ body {
 	font-size: 0.72rem;
 	color: var(--text-light);
 	font-weight: 600;
+	white-space: nowrap;
 }
 
 .reviews-header .reviews-source .ico {
@@ -1306,7 +1292,6 @@ body {
 	content: "\201C";
 	margin-right: 0.1em;
 }
-
 .review-text::after {
 	content: "\201D";
 	margin-left: 0.1em;
@@ -1348,9 +1333,9 @@ body {
 	color: currentColor;
 }
 
-/* ============================================================
-   CONTATTI / INFO
-   ============================================================ */
+/* ------------------------------------------------------------
+   8.6 CONTATTI / INFO
+   ------------------------------------------------------------ */
 .info-stack {
 	display: flex;
 	flex-direction: column;
@@ -1391,149 +1376,6 @@ body {
 	color: var(--gold);
 }
 
-/* ============================================================
-   BADGE STATO APERTURA
-   ============================================================ */
-.open-status-badge {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.4rem;
-	padding: 0.28rem 0.65rem;
-	border-radius: 50px;
-	font-size: 0.62rem;
-	font-weight: 800;
-	line-height: 1;
-	letter-spacing: 0.4px;
-	text-transform: uppercase;
-	white-space: nowrap;
-	flex-shrink: 0;
-	transition:
-		background var(--dur-med) var(--ease-ui),
-		color var(--dur-med) var(--ease-ui);
-}
-
-.open-status-badge .status-dot-small {
-	position: relative;
-	width: 0.4rem;
-	height: 0.4rem;
-	border-radius: 50%;
-	background: currentColor;
-	flex-shrink: 0;
-}
-
-.open-status-badge.is-open .status-dot-small::before,
-.open-status-badge.is-closing-soon .status-dot-small::before,
-.open-status-badge.is-lunch-break .status-dot-small::before {
-	content: "";
-	position: absolute;
-	inset: -2px;
-	border-radius: 50%;
-	border: 1.5px solid currentColor;
-	opacity: 0.4;
-	animation: dotPulseSmall 2.4s ease-out infinite;
-	pointer-events: none;
-}
-
-@keyframes dotPulseSmall {
-	0% {
-		transform: scale(0.6);
-		opacity: 0.55;
-	}
-	100% {
-		transform: scale(1.8);
-		opacity: 0;
-	}
-}
-
-.open-status-badge.is-open {
-	background: #dcfce7;
-	color: #15803d;
-}
-
-.open-status-badge.is-closing-soon {
-	background: #fef3c7;
-	color: #b45309;
-}
-
-.open-status-badge.is-lunch-break {
-	background: #e0f2fe;
-	color: #0369a1;
-}
-
-.open-status-badge.is-closed {
-	background: #fee2e2;
-	color: #b91c1c;
-}
-
-/* --- Tabella orari --- */
-.schedule-list {
-	list-style: none;
-	padding: 0;
-}
-
-.schedule-list li {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.6rem 0.7rem;
-	margin: 0 -0.7rem;
-	border-bottom: 1px solid var(--border);
-	font-size: 0.9rem;
-	border-radius: 8px;
-}
-
-.schedule-list li:last-child {
-	border-bottom: none;
-}
-
-.schedule-list .day {
-	font-weight: 600;
-	color: var(--primary);
-}
-
-.schedule-list .time {
-	color: var(--text-light);
-	text-align: right;
-}
-
-.schedule-list .closed {
-	color: #c0392b;
-	font-weight: 600;
-}
-
-/* Tabella orari */
-.schedule-list li.is-today {
-	background: #eef4fb;
-	border-bottom-color: transparent;
-}
-
-.schedule-list li.is-today .day {
-	color: var(--primary);
-	font-weight: 800;
-}
-
-.schedule-list li.is-today .time,
-.schedule-list li.is-today .closed {
-	color: var(--primary);
-	font-weight: 600;
-}
-
-.today-tag {
-	display: inline-block;
-	background: var(--primary);
-	color: #fff;
-	font-size: 0.58rem;
-	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	padding: 0.1rem 0.4rem;
-	border-radius: 20px;
-	line-height: 1.2;
-	margin-left: 0.4rem;
-	vertical-align: middle;
-}
-
 .card-desc {
 	font-size: 0.85rem;
 	color: var(--text-light);
@@ -1556,7 +1398,7 @@ body {
 	font-size: 0.85rem;
 }
 
-/* --- Nota pagamento e caffè --- */
+/* --- Note "pagamento" e "caffè" --- */
 .trade-notes {
 	display: flex;
 	flex-direction: column;
@@ -1629,7 +1471,147 @@ body {
 	line-height: 1.25;
 }
 
-/* --- Mappa --- */
+/* ------------------------------------------------------------
+   8.7 BADGE STATO APERTURA
+   ------------------------------------------------------------ */
+.open-status-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.28rem 0.65rem;
+	border-radius: 50px;
+	font-size: 0.62rem;
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: 0.4px;
+	text-transform: uppercase;
+	white-space: nowrap;
+	flex-shrink: 0;
+	transition:
+		background var(--dur-med) var(--ease-ui),
+		color var(--dur-med) var(--ease-ui);
+}
+
+.open-status-badge .status-dot-small {
+	position: relative;
+	width: 0.4rem;
+	height: 0.4rem;
+	border-radius: 50%;
+	background: currentColor;
+	flex-shrink: 0;
+}
+
+.open-status-badge.is-open .status-dot-small::before,
+.open-status-badge.is-closing-soon .status-dot-small::before,
+.open-status-badge.is-lunch-break .status-dot-small::before {
+	content: "";
+	position: absolute;
+	inset: -2px;
+	border-radius: 50%;
+	border: 1.5px solid currentColor;
+	opacity: 0.4;
+	animation: dotPulseSmall 2.4s ease-out infinite;
+	pointer-events: none;
+}
+
+@keyframes dotPulseSmall {
+	0% {
+		transform: scale(0.6);
+		opacity: 0.55;
+	}
+	100% {
+		transform: scale(1.8);
+		opacity: 0;
+	}
+}
+
+.open-status-badge.is-open {
+	background: #dcfce7;
+	color: #15803d;
+}
+.open-status-badge.is-closing-soon {
+	background: #fef3c7;
+	color: #b45309;
+}
+.open-status-badge.is-lunch-break {
+	background: #e0f2fe;
+	color: #0369a1;
+}
+.open-status-badge.is-closed {
+	background: #fee2e2;
+	color: #b91c1c;
+}
+
+/* ------------------------------------------------------------
+   8.8 TABELLA ORARI
+   ------------------------------------------------------------ */
+.schedule-list li {
+	display: flex;
+	flex-direction: column; /* mobile-first: stack */
+	align-items: flex-start;
+	gap: 0.15rem;
+	padding: 0.7rem;
+	margin: 0 -0.7rem;
+	border-bottom: 1px solid var(--border);
+	font-size: 0.9rem;
+	border-radius: 8px;
+}
+
+.schedule-list li:last-child {
+	border-bottom: none;
+}
+
+.schedule-list .day {
+	font-weight: 600;
+	color: var(--primary);
+	white-space: nowrap;
+}
+
+.schedule-list .time {
+	color: var(--text-light);
+	font-size: 0.85rem;
+}
+
+.schedule-list .closed {
+	color: #c0392b;
+	font-weight: 600;
+	font-size: 0.85rem;
+}
+
+.schedule-list li.is-today {
+	background: #eef4fb;
+	border-bottom-color: transparent;
+}
+
+.schedule-list li.is-today .day {
+	color: var(--primary);
+	font-weight: 800;
+}
+
+.schedule-list li.is-today .time,
+.schedule-list li.is-today .closed {
+	color: var(--primary);
+	font-weight: 600;
+}
+
+.today-tag {
+	display: inline-block;
+	background: var(--primary);
+	color: #fff;
+	font-size: 0.58rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	padding: 0.1rem 0.4rem;
+	border-radius: 20px;
+	line-height: 1.2;
+	margin-left: 0.4rem;
+	vertical-align: middle;
+}
+
+/* ------------------------------------------------------------
+   8.9 MAPPA
+   ------------------------------------------------------------ */
 .map-wrap {
 	border-radius: 14px;
 	overflow: hidden;
@@ -1668,7 +1650,7 @@ body {
 
 .map-overlay-btn {
 	background: var(--primary);
-	color: #ffffff;
+	color: #fff;
 	border: none;
 	border-radius: 50px;
 	padding: 0.75rem 1.3rem;
@@ -1689,7 +1671,6 @@ body {
 .map-overlay-btn:hover {
 	background: var(--primary-dark);
 }
-
 .map-overlay-btn:active {
 	transform: translateY(0) scale(0.97);
 }
@@ -1700,213 +1681,9 @@ body {
 	flex-shrink: 0;
 }
 
-/* ============================================================
-   BOTTOM NAV
-   ============================================================ */
-.bottom-nav {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background: rgba(255, 255, 255, 0.95);
-	backdrop-filter: blur(12px);
-	-webkit-backdrop-filter: blur(12px);
-	border-top: 1px solid var(--border);
-	padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 0.5rem;
-	z-index: 20;
-}
-
-.nav-btn {
-	width: 2.625rem;
-	height: 2.625rem;
-	border-radius: 50%;
-	border: 1.5px solid var(--border);
-	background: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-	transition:
-		background-color var(--dur-ui) var(--ease-ui),
-		border-color var(--dur-ui) var(--ease-ui),
-		transform var(--dur-ui) var(--ease-ui);
-}
-
-.nav-btn:focus-visible,
-.dot:focus-visible {
-	outline: 2px solid var(--primary);
-	outline-offset: 3px;
-	border-radius: 50%;
-}
-.dot.active:focus-visible {
-	border-radius: 4px;
-}
-
-.nav-btn .ico {
-	width: 1.125rem;
-	height: 1.125rem;
-	color: var(--primary);
-	transition: color var(--dur-ui) var(--ease-ui);
-}
-
-.nav-btn:hover {
-	background: var(--primary);
-	border-color: var(--primary);
-}
-
-.nav-btn:hover .ico {
-	color: #fff;
-}
-
-.nav-btn:active {
-	transform: scale(0.92);
-}
-
-.nav-btn.disabled {
-	opacity: 0.3;
-	pointer-events: none;
-	cursor: default;
-}
-
-.dots {
-	display: flex;
-	gap: 0.4rem;
-	align-items: center;
-}
-
-.dot {
-	width: 0.4375rem;
-	height: 0.4375rem;
-	border-radius: 50%;
-	border: none;
-	background: var(--border);
-	transition:
-		background var(--dur-med) var(--ease-ui),
-		width var(--dur-med) var(--ease-ui),
-		border-radius var(--dur-med) var(--ease-ui),
-		transform var(--dur-ui) var(--ease-ui);
-	display: block;
-}
-
-.dot:hover {
-	transform: scale(1.25);
-}
-
-.dot:active {
-	transform: scale(0.9);
-}
-
-.dot.active {
-	background: var(--primary);
-	width: 1.25rem;
-	border-radius: 4px;
-}
-
-/* ============================================================
-   FAB — Pulsanti flottanti (solo mobile)
-   ============================================================ */
-.fab {
-	position: fixed;
-	right: 1rem;
-	bottom: calc(5.25rem + env(safe-area-inset-bottom));
-	display: flex;
-	flex-direction: column;
-	gap: 0.55rem;
-	z-index: 40;
-}
-
-.fab-btn {
-	width: 3.25rem;
-	height: 3.25rem;
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
-	transition:
-		transform var(--dur-ui) var(--ease-ui),
-		box-shadow var(--dur-ui) var(--ease-ui);
-}
-
-.fab-btn .ico {
-	width: 1.375rem;
-	height: 1.375rem;
-	color: #ffffff;
-}
-
-.fab-btn:active {
-	transform: scale(0.92);
-}
-
-.fab-btn.call {
-	background: var(--primary);
-}
-
-.fab-btn.call:hover {
-	box-shadow: 0 8px 22px rgba(42, 55, 87, 0.45);
-}
-
-.fab-btn.wa {
-	background: var(--wa);
-}
-
-.fab-btn.wa:hover {
-	box-shadow: 0 8px 22px rgba(37, 211, 102, 0.5);
-}
-
-/* ============================================================
-   SWIPE HINT
-   ============================================================ */
-.swipe-hint {
-	position: fixed;
-	bottom: calc(6.25rem + env(safe-area-inset-bottom));
-	left: 50%;
-	transform: translateX(-50%);
-	background: rgba(42, 55, 87, 0.92);
-	color: #ffffff;
-	padding: 0.5rem 1rem;
-	border-radius: 50px;
-	font-size: 0.78rem;
-	font-weight: 600;
-	display: flex;
-	align-items: center;
-	gap: 0.4rem;
-	z-index: 30;
-	pointer-events: none;
-	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-	animation: hintPulse 2.4s ease-in-out infinite;
-	animation-delay: 1.2s;
-}
-
-.swipe-hint .ico {
-	width: 0.875rem;
-	height: 0.875rem;
-	color: #ffffff;
-}
-
-.swipe-hint.hidden {
-	display: none;
-}
-
-@keyframes hintPulse {
-	0%,
-	100% {
-		transform: translateX(-50%);
-		opacity: 1;
-	}
-	50% {
-		transform: translateX(calc(-50% + 10px));
-		opacity: 0.65;
-	}
-}
-
-/* ============================================================
-   GUIDA PICENA
-   ============================================================ */
+/* ------------------------------------------------------------
+   8.10 GUIDA PICENA
+   ------------------------------------------------------------ */
 .slide.gp-theme {
 	background: linear-gradient(
 		160deg,
@@ -1916,10 +1693,7 @@ body {
 	);
 }
 
-.slide.gp-theme .slide-label {
-	color: var(--gp-oliva);
-}
-
+.slide.gp-theme .slide-label,
 .slide.gp-theme .slide-label .ico {
 	color: var(--gp-oliva);
 }
@@ -1983,7 +1757,7 @@ body {
 	width: 6rem;
 	height: 6rem;
 	border-radius: 50%;
-	background: #ffffff;
+	background: #fff;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -2007,7 +1781,7 @@ body {
 
 .gp-name {
 	font-family: var(--font-display);
-	color: #ffffff;
+	color: #fff;
 	font-size: 1.65rem;
 	font-weight: 800;
 	line-height: 1.15;
@@ -2043,7 +1817,7 @@ body {
 	display: flex;
 	align-items: flex-start;
 	gap: 0.75rem;
-	background: #ffffff;
+	background: #fff;
 	border: 1px solid #ecdccc;
 	border-left: 4px solid var(--gp-oliva);
 	border-radius: 12px;
@@ -2083,7 +1857,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	gap: 0.55rem;
-	background: #ffffff;
+	background: #fff;
 	border: 1px solid #ecdccc;
 	border-radius: 12px;
 	padding: 1rem 0.75rem;
@@ -2108,7 +1882,7 @@ body {
 	width: 100%;
 	padding: 0.9rem 1.2rem;
 	background: var(--gp-terracotta-dark);
-	color: #ffffff;
+	color: #fff;
 	border-radius: 50px;
 	font-size: 0.92rem;
 	font-weight: 800;
@@ -2145,9 +1919,9 @@ body {
 	letter-spacing: 0.2px;
 }
 
-/* ============================================================
-   NOTE LEGALI
-   ============================================================ */
+/* ------------------------------------------------------------
+   8.11 NOTE LEGALI
+   ------------------------------------------------------------ */
 .legal-stack {
 	display: flex;
 	flex-direction: column;
@@ -2262,25 +2036,223 @@ body {
 .policy-links a:hover {
 	color: var(--primary);
 }
-
 .policy-links a:active {
 	opacity: 0.6;
 }
-
 .policy-links a .ico {
 	width: 0.75rem;
 	height: 0.75rem;
 }
 
 /* ============================================================
-   COOKIE BANNER
+   9. CHROME UI — Nav, FAB, Hint, Cookie, Modali
    ============================================================ */
+
+/* ------------------------------------------------------------
+   9.1 BOTTOM NAV
+   ------------------------------------------------------------ */
+.bottom-nav {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border-top: 1px solid var(--border);
+	padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	z-index: 20;
+}
+
+.nav-btn {
+	width: 2.625rem;
+	height: 2.625rem;
+	border-radius: 50%;
+	border: 1.5px solid var(--border);
+	background: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	transition:
+		background-color var(--dur-ui) var(--ease-ui),
+		border-color var(--dur-ui) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
+}
+
+.nav-btn:focus-visible,
+.dot:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 3px;
+	border-radius: 50%;
+}
+
+.dot.active:focus-visible {
+	border-radius: 4px;
+}
+
+.nav-btn .ico {
+	width: 1.125rem;
+	height: 1.125rem;
+	color: var(--primary);
+	transition: color var(--dur-ui) var(--ease-ui);
+}
+
+.nav-btn:hover {
+	background: var(--primary);
+	border-color: var(--primary);
+}
+.nav-btn:hover .ico {
+	color: #fff;
+}
+.nav-btn:active {
+	transform: scale(0.92);
+}
+.nav-btn.disabled {
+	opacity: 0.3;
+	pointer-events: none;
+	cursor: default;
+}
+
+.dots {
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+}
+
+.dot {
+	width: 0.4375rem;
+	height: 0.4375rem;
+	border-radius: 50%;
+	border: none;
+	background: var(--border);
+	transition:
+		background var(--dur-med) var(--ease-ui),
+		width var(--dur-med) var(--ease-ui),
+		border-radius var(--dur-med) var(--ease-ui),
+		transform var(--dur-ui) var(--ease-ui);
+	display: block;
+}
+
+.dot:hover {
+	transform: scale(1.25);
+}
+.dot:active {
+	transform: scale(0.9);
+}
+.dot.active {
+	background: var(--primary);
+	width: 1.25rem;
+	border-radius: 4px;
+}
+
+/* ------------------------------------------------------------
+   9.2 FAB — pulsanti flottanti (solo mobile)
+   ------------------------------------------------------------ */
+.fab {
+	position: fixed;
+	right: 1rem;
+	bottom: calc(5.25rem + env(safe-area-inset-bottom));
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+	z-index: 40;
+}
+
+.fab-btn {
+	width: 3.25rem;
+	height: 3.25rem;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+	transition:
+		transform var(--dur-ui) var(--ease-ui),
+		box-shadow var(--dur-ui) var(--ease-ui);
+}
+
+.fab-btn .ico {
+	width: 1.375rem;
+	height: 1.375rem;
+	color: #fff;
+}
+
+.fab-btn:active {
+	transform: scale(0.92);
+}
+.fab-btn.call {
+	background: var(--primary);
+}
+.fab-btn.call:hover {
+	box-shadow: 0 8px 22px rgba(42, 55, 87, 0.45);
+}
+.fab-btn.wa {
+	background: var(--wa);
+}
+.fab-btn.wa:hover {
+	box-shadow: 0 8px 22px rgba(37, 211, 102, 0.5);
+}
+
+/* ------------------------------------------------------------
+   9.3 SWIPE HINT
+   ------------------------------------------------------------ */
+.swipe-hint {
+	position: fixed;
+	bottom: calc(6.25rem + env(safe-area-inset-bottom));
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(42, 55, 87, 0.92);
+	color: #fff;
+	padding: 0.5rem 1rem;
+	border-radius: 50px;
+	font-size: 0.78rem;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	z-index: 30;
+	pointer-events: none;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+	animation: hintPulse 2.4s ease-in-out infinite;
+	animation-delay: 1.2s;
+}
+
+.swipe-hint .ico {
+	width: 0.875rem;
+	height: 0.875rem;
+	color: #fff;
+}
+
+.swipe-hint.hidden {
+	display: none;
+}
+
+@keyframes hintPulse {
+	0%,
+	100% {
+		transform: translateX(-50%);
+		opacity: 1;
+	}
+	50% {
+		transform: translateX(calc(-50% + 10px));
+		opacity: 0.65;
+	}
+}
+
+/* ------------------------------------------------------------
+   9.4 COOKIE BANNER
+   ------------------------------------------------------------ */
 .cookie-banner {
 	position: absolute;
 	top: 100%;
 	left: 0;
 	right: 0;
-	background: #ffffff;
+	background: #fff;
 	border-bottom: 1px solid var(--border);
 	padding: 1rem 1.15rem;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -2325,7 +2297,6 @@ body {
 	border-radius: 50px;
 	font-size: 0.86rem;
 	font-weight: 700;
-	cursor: pointer;
 	transition:
 		background-color var(--dur-ui) var(--ease-ui),
 		transform var(--dur-ui) var(--ease-ui);
@@ -2335,29 +2306,25 @@ body {
 .cookie-btn:active {
 	transform: translateY(0) scale(0.97);
 }
-
 .cookie-btn.accept {
 	background: var(--primary);
-	color: #ffffff;
+	color: #fff;
 }
-
 .cookie-btn.accept:hover {
 	background: var(--primary-dark);
 }
-
 .cookie-btn.reject {
 	background: transparent;
 	color: var(--text-light);
 	border: 1px solid var(--border);
 }
-
 .cookie-btn.reject:hover {
 	background: var(--bg-alt);
 }
 
-/* ============================================================
-   MODALI
-   ============================================================ */
+/* ------------------------------------------------------------
+   9.5 MODALI
+   ------------------------------------------------------------ */
 .modal-backdrop {
 	position: fixed;
 	inset: 0;
@@ -2382,7 +2349,7 @@ body {
 }
 
 .modal-box {
-	background: #ffffff;
+	background: #fff;
 	border-radius: 22px;
 	padding: 2rem 1.5rem 1.6rem;
 	max-width: 26.25rem;
@@ -2422,17 +2389,15 @@ body {
 .modal-close:hover {
 	background: var(--bg-alt);
 }
-
 .modal-close:active {
 	transform: scale(0.92);
 }
-
 .modal-close .ico {
 	width: 1rem;
 	height: 1rem;
 }
 
-/* --- Modale policy --- */
+/* Modale policy */
 .modal-box.policy {
 	max-width: 35rem;
 	text-align: left;
@@ -2476,11 +2441,9 @@ body {
 .policy-content::-webkit-scrollbar {
 	width: 6px;
 }
-
 .policy-content::-webkit-scrollbar-track {
 	background: transparent;
 }
-
 .policy-content::-webkit-scrollbar-thumb {
 	background: var(--border);
 	border-radius: 3px;
@@ -2509,6 +2472,7 @@ body {
 	color: var(--text);
 	padding-left: 1.2rem;
 	margin-bottom: 0.6rem;
+	list-style: disc;
 }
 
 .policy-content ul li {
@@ -2545,7 +2509,7 @@ body {
 	font-style: italic;
 }
 
-/* --- Modale recensione --- */
+/* Modale recensione */
 .modal-box:not(.policy) {
 	text-align: center;
 	padding: 2.2rem 1.75rem 1.6rem;
@@ -2597,11 +2561,9 @@ body {
 	color: #5c4300;
 	box-shadow: 0 4px 12px rgba(245, 179, 1, 0.35);
 }
-
 .btn-review:hover {
 	background: #e0a400;
 }
-
 .btn-review .ico {
 	color: #5c4300;
 }
@@ -2625,14 +2587,48 @@ body {
 .modal-dismiss:hover {
 	color: var(--primary);
 }
-
 .modal-dismiss:active {
 	opacity: 0.6;
 }
 
 /* ============================================================
-   DESKTOP
+   10. RESPONSIVE
    ============================================================ */
+
+/* ------------------------------------------------------------
+   10.1 MOBILE MEDIUM — da 421px in su
+   Passa dai layout stacked a quelli affiancati.
+   ------------------------------------------------------------ */
+@media (min-width: 421px) {
+	.reviews-header {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+	}
+
+	.services-grid {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.schedule-list li {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+		padding: 0.6rem 0.7rem;
+	}
+
+	.schedule-list .time,
+	.schedule-list .closed {
+		text-align: right;
+		font-size: 0.9rem;
+	}
+}
+
+/* ------------------------------------------------------------
+   10.2 DESKTOP — da 541px in su
+   ------------------------------------------------------------ */
 @media (min-width: 541px) {
 	.app {
 		max-width: none;
@@ -2696,6 +2692,7 @@ body {
 		display: none;
 	}
 
+	/* Bottom nav come pill flottante centrata */
 	.bottom-nav {
 		left: 50%;
 		right: auto;
@@ -2708,23 +2705,21 @@ body {
 		padding: 0.5rem 1rem;
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 		gap: 1rem;
-		transition:
-			opacity 0.25s ease,
-			transform 0.25s ease;
-	}
-
-	.bottom-nav:focus-within {
-		opacity: 1;
-		transform: translateX(-50%) translateY(0);
-		pointer-events: auto;
 	}
 }
 
+/* ------------------------------------------------------------
+   10.3 DESKTOP CON MOUSE — hot zone per la nav
+   La nav si mostra solo quando il mouse si avvicina al fondo.
+   ------------------------------------------------------------ */
 @media (min-width: 541px) and (hover: hover) and (pointer: fine) {
 	.bottom-nav {
 		opacity: 0;
 		transform: translateX(-50%) translateY(150%);
 		pointer-events: none;
+		transition:
+			opacity var(--dur-med) var(--ease-ui),
+			transform var(--dur-med) var(--ease-ui);
 	}
 
 	.bottom-nav.is-visible,
@@ -2735,6 +2730,9 @@ body {
 	}
 }
 
+/* ------------------------------------------------------------
+   10.4 PREFERS-REDUCED-MOTION
+   ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
@@ -2743,5 +2741,9 @@ body {
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
+	}
+
+	.slideshow-track img {
+		transition: none;
 	}
 }
