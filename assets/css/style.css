@@ -2762,7 +2762,7 @@ body {
 	}
 
 	.bottom-nav.is-visible,
-	.bottom-nav:focus-within {
+	.bottom-nav:has(:focus-visible) {
 		opacity: 1;
 		transform: translateX(-50%) translateY(0);
 		pointer-events: auto;

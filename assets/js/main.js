@@ -873,8 +873,8 @@
 		const nav = document.querySelector(".bottom-nav");
 		if (!nav) return;
 
-		const HOT_ZONE_HEIGHT = 120; // px dal bordo inferiore
-		const HIDE_DELAY = 400; // ms prima di nascondere
+		const HOT_ZONE_HEIGHT = 120;
+		const HIDE_DELAY = 400;
 
 		let hideTimer = null;
 
@@ -887,8 +887,10 @@
 		function hideNavDelayed() {
 			if (hideTimer) return;
 			hideTimer = setTimeout(() => {
-				// Non nascondere se il focus è dentro la nav (tastiera)
-				if (nav.contains(document.activeElement)) return;
+				const focusIsKeyboard =
+					nav.contains(document.activeElement) &&
+					document.activeElement.matches(":focus-visible");
+				if (focusIsKeyboard) return;
 				nav.classList.remove("is-visible");
 				hideTimer = null;
 			}, HIDE_DELAY);
@@ -906,13 +908,10 @@
 
 		document.addEventListener("mousemove", (e) => {
 			const fromBottom = window.innerHeight - e.clientY;
-
 			if (fromBottom <= HOT_ZONE_HEIGHT) {
 				showNav();
 				return;
 			}
-
-			// Fuori dalla hot zone: nascondi solo se non sopra la nav
 			if (!isPointerInNav(e)) {
 				hideNavDelayed();
 			} else {
@@ -920,13 +919,10 @@
 			}
 		});
 
-		// Quando il mouse esce dalla finestra, nascondi
 		document.addEventListener("mouseleave", hideNavDelayed);
 
-		// Tastiera: se la nav riceve focus, resta visibile
 		nav.addEventListener("focusin", showNav);
 		nav.addEventListener("focusout", () => {
-			// Nascondi solo se il nuovo elemento attivo è fuori
 			setTimeout(() => {
 				if (!nav.contains(document.activeElement)) hideNavDelayed();
 			}, 0);
