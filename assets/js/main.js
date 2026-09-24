@@ -379,7 +379,6 @@
 
 		const DURATION = CONFIG.decadeSlideshowDuration;
 		let idx = 0;
-		let timeoutId = null;
 
 		function show(index) {
 			photos.forEach((p, i) => p.classList.toggle("is-visible", i === index));
@@ -388,18 +387,14 @@
 			}
 		}
 
-		function next() {
+		function loop() {
 			idx = (idx + 1) % photos.length;
 			show(idx);
-		}
-
-		function loop() {
-			next();
-			timeoutId = setTimeout(loop, DURATION);
+			setTimeout(loop, DURATION);
 		}
 
 		show(0);
-		timeoutId = setTimeout(loop, DURATION);
+		setTimeout(loop, DURATION);
 	}
 
 	/* ============================================================
