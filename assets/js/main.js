@@ -6,8 +6,7 @@
 	   ============================================================ */
 
 	const CONFIG = {
-		// TODO: sostituire con l'ID reale di Google Analytics prima del deploy
-		gaMeasurementId: "G-XXXXXXXXXX",
+		gaMeasurementId: "G-ME2G5VJ8BB",
 
 		cookieKey: "cookie_consent",
 		cookieDurationDays: 180,
