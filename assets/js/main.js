@@ -171,6 +171,15 @@
 			if (index < 0 || index >= total) return;
 			if (index === currentIndex && !isProgrammaticScroll) return;
 
+			// Traccia la visualizzazione della nuova slide
+			if (window.gtag) {
+				gtag("event", "slide_view", {
+					slide_id: slides[index].id,
+					slide_index: index + 1,
+					slide_title: titles[index],
+				});
+			}
+
 			currentIndex = index;
 			isProgrammaticScroll = true;
 			updateUI();
@@ -930,6 +939,38 @@
 	}
 
 	/* ============================================================
+   MODULO: TRACKING CONTATTI — clic su tel: e WhatsApp
+   ============================================================ */
+
+	function initContactTracking() {
+		const links = document.querySelectorAll(
+			'a[href^="tel:"], a[href*="wa.me"]',
+		);
+
+		links.forEach((link) => {
+			link.addEventListener("click", () => {
+				if (typeof window.gtag !== "function") return;
+
+				const isTel = link.href.startsWith("tel:");
+				const isWa = link.href.includes("wa.me");
+				if (!isTel && !isWa) return;
+
+				// Contesto: data-ga-context → sezione → "global"
+				let context = link.dataset.gaContext;
+				if (!context) {
+					const section = link.closest("section[id]");
+					context = section ? section.id : "global";
+				}
+
+				window.gtag("event", isTel ? "click_telefono" : "click_whatsapp", {
+					event_category: "contatti",
+					event_label: context,
+				});
+			});
+		});
+	}
+
+	/* ============================================================
 	   BOOT — avvia i moduli nell'ordine corretto
 	   ============================================================ */
 
@@ -937,6 +978,7 @@
 		initNavigation();
 		initDecadeSlideshow();
 		initNavHotZone();
+		initContactTracking();
 
 		// Cookie e modali sono legati: modali riceve l'API di cookie
 		const cookieApi = initCookieConsent();
