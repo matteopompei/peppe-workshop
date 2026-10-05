@@ -271,25 +271,42 @@
 		deck.addEventListener(
 			"scroll",
 			() => {
+				const ratio = deck.scrollLeft / getSlideWidth();
+				const newIndex = Math.round(ratio);
+
+				// Fine dello scroll programmatico?
 				if (isProgrammaticScroll) {
-					const ratio = deck.scrollLeft / getSlideWidth();
 					if (Math.abs(ratio - currentIndex) < 0.02) {
+						releaseProgrammaticScroll();
+					} else if (
+						newIndex !== currentIndex &&
+						newIndex >= 0 &&
+						newIndex < total
+					) {
+						// L'utente ha ripreso il controllo durante l'animazione:
+						// rilascia subito così i dots tornano a seguire lo scroll reale
 						releaseProgrammaticScroll();
 					}
 				}
 
+				// Aggiorna i dots in tempo reale, senza debounce
+				if (
+					!isProgrammaticScroll &&
+					newIndex >= 0 &&
+					newIndex < total &&
+					newIndex !== currentIndex
+				) {
+					currentIndex = newIndex;
+					updateUI();
+				}
+
+				// Solo l'URL resta con debounce, per non spammare replaceState
 				clearTimeout(scrollDebounceTimer);
 				scrollDebounceTimer = setTimeout(() => {
 					if (isProgrammaticScroll) return;
-					const newIndex = Math.round(deck.scrollLeft / getSlideWidth());
-					if (newIndex >= 0 && newIndex < total && newIndex !== currentIndex) {
-						currentIndex = newIndex;
-						updateUI();
-						// Aggiorna l'URL senza creare una nuova voce nella cronologia
-						const slideId = slides[currentIndex].id;
-						history.replaceState({ slide: currentIndex }, "", "#" + slideId);
-					}
-				}, 100);
+					const slideId = slides[currentIndex].id;
+					history.replaceState({ slide: currentIndex }, "", "#" + slideId);
+				}, 150);
 			},
 			{ passive: true },
 		);
