@@ -573,10 +573,6 @@ body {
 		border-color var(--dur-ui) var(--ease-ui);
 }
 
-.btn:hover {
-	transform: translateY(-1px);
-}
-
 .btn:active {
 	transform: translateY(0) scale(0.97);
 }
@@ -591,26 +587,17 @@ body {
 	color: #fff;
 	box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
 }
-.btn-call:hover {
-	background: var(--primary-dark);
-}
 
 .btn-wa {
 	background: var(--wa);
 	color: #fff;
 	box-shadow: 0 4px 12px rgba(var(--wa-rgb), 0.35);
 }
-.btn-wa:hover {
-	background: var(--wa-dark);
-}
 
 .btn-ghost {
 	background: #fff;
 	color: var(--primary);
 	border: 1.5px solid var(--primary);
-}
-.btn-ghost:hover {
-	background: #f0f3fa;
 }
 
 .btn-full {
@@ -716,9 +703,6 @@ body {
 	}
 }
 
-.rating-wrap:hover .rating-pill {
-	transform: translateY(-1px);
-}
 .rating-wrap:active .rating-pill {
 	transform: translateY(0) scale(0.97);
 }
@@ -1356,12 +1340,6 @@ body {
 		transform var(--dur-ui) var(--ease-ui);
 }
 
-.btn-reviews:hover {
-	background: var(--bg-alt);
-	border-color: #cdd5e3;
-	transform: translateY(-1px);
-}
-
 .btn-reviews:active {
 	transform: translateY(0) scale(0.97);
 }
@@ -1707,9 +1685,6 @@ body {
 		transform var(--dur-ui) var(--ease-ui);
 }
 
-.map-overlay-btn:hover {
-	background: var(--primary-dark);
-}
 .map-overlay-btn:active {
 	transform: translateY(0) scale(0.97);
 }
@@ -1932,12 +1907,6 @@ body {
 		box-shadow var(--dur-ui) var(--ease-ui);
 }
 
-.gp-cta:hover {
-	background: #a84f28;
-	transform: translateY(-1px);
-	box-shadow: 0 8px 22px rgba(var(--gp-rgb), 0.45);
-}
-
 .gp-cta:active {
 	transform: translateY(0) scale(0.97);
 }
@@ -2042,11 +2011,6 @@ body {
 	white-space: nowrap;
 }
 
-.legal-block p a:hover,
-.legal-block .disclaimer-note a:hover {
-	color: var(--primary);
-}
-
 .policy-links {
 	display: flex;
 	gap: 1rem;
@@ -2072,9 +2036,6 @@ body {
 	padding: 0.2rem 0;
 }
 
-.policy-links a:hover {
-	color: var(--primary);
-}
 .policy-links a:active {
 	opacity: 0.6;
 }
@@ -2141,13 +2102,6 @@ body {
 	transition: color var(--dur-ui) var(--ease-ui);
 }
 
-.nav-btn:hover {
-	background: var(--primary);
-	border-color: var(--primary);
-}
-.nav-btn:hover .ico {
-	color: #fff;
-}
 .nav-btn:active {
 	transform: scale(0.92);
 }
@@ -2177,9 +2131,6 @@ body {
 	display: block;
 }
 
-.dot:hover {
-	transform: scale(1.25);
-}
 .dot:active {
 	transform: scale(0.9);
 }
@@ -2227,14 +2178,8 @@ body {
 .fab-btn.call {
 	background: var(--primary);
 }
-.fab-btn.call:hover {
-	box-shadow: 0 8px 22px rgba(var(--primary-rgb), 0.45);
-}
 .fab-btn.wa {
 	background: var(--wa);
-}
-.fab-btn.wa:hover {
-	box-shadow: 0 8px 22px rgba(var(--wa-rgb), 0.5);
 }
 
 /* ------------------------------------------------------------
@@ -2349,16 +2294,10 @@ body {
 	background: var(--primary);
 	color: #fff;
 }
-.cookie-btn.accept:hover {
-	background: var(--primary-dark);
-}
 .cookie-btn.reject {
 	background: transparent;
 	color: var(--text-light);
 	border: 1px solid var(--border);
-}
-.cookie-btn.reject:hover {
-	background: var(--bg-alt);
 }
 
 /* ------------------------------------------------------------
@@ -2425,9 +2364,6 @@ body {
 		transform var(--dur-ui) var(--ease-ui);
 }
 
-.modal-close:hover {
-	background: var(--bg-alt);
-}
 .modal-close:active {
 	transform: scale(0.92);
 }
@@ -2600,9 +2536,6 @@ body {
 	color: var(--rating-ink);
 	box-shadow: 0 4px 12px rgba(245, 179, 1, 0.35);
 }
-.btn-review:hover {
-	background: var(--rating-hover);
-}
 .btn-review .ico {
 	color: var(--rating-ink);
 }
@@ -2623,19 +2556,109 @@ body {
 		opacity var(--dur-fast) var(--ease-ui);
 }
 
-.modal-dismiss:hover {
-	color: var(--primary);
-}
 .modal-dismiss:active {
 	opacity: 0.6;
 }
 
 /* ============================================================
-   10. RESPONSIVE
+   10. HOVER — solo dispositivi con puntatore preciso
+   Su touch gli stati :hover diventano "sticky" e restano
+   applicati dopo il tap (es. frecce nav che restano blu).
+   ============================================================ */
+@media (hover: hover) and (pointer: fine) {
+	/* Bottoni generici */
+	.btn:hover {
+		transform: translateY(-1px);
+	}
+	.btn-call:hover {
+		background: var(--primary-dark);
+	}
+	.btn-wa:hover {
+		background: var(--wa-dark);
+	}
+	.btn-ghost:hover {
+		background: #f0f3fa;
+	}
+
+	/* Rating pill */
+	.rating-wrap:hover .rating-pill {
+		transform: translateY(-1px);
+	}
+
+	/* Recensioni — link a Google */
+	.btn-reviews:hover {
+		background: var(--bg-alt);
+		border-color: #cdd5e3;
+		transform: translateY(-1px);
+	}
+
+	/* Mappa — bottone overlay */
+	.map-overlay-btn:hover {
+		background: var(--primary-dark);
+	}
+
+	/* Guida Picena */
+	.gp-cta:hover {
+		background: #a84f28;
+		transform: translateY(-1px);
+		box-shadow: 0 8px 22px rgba(var(--gp-rgb), 0.45);
+	}
+
+	/* Link nelle note legali */
+	.legal-block p a:hover,
+	.legal-block .disclaimer-note a:hover {
+		color: var(--primary);
+	}
+	.policy-links a:hover {
+		color: var(--primary);
+	}
+
+	/* Nav */
+	.nav-btn:hover {
+		background: var(--primary);
+		border-color: var(--primary);
+	}
+	.nav-btn:hover .ico {
+		color: #fff;
+	}
+	.dot:hover {
+		transform: scale(1.25);
+	}
+
+	/* FAB */
+	.fab-btn.call:hover {
+		box-shadow: 0 8px 22px rgba(var(--primary-rgb), 0.45);
+	}
+	.fab-btn.wa:hover {
+		box-shadow: 0 8px 22px rgba(var(--wa-rgb), 0.5);
+	}
+
+	/* Cookie */
+	.cookie-btn.accept:hover {
+		background: var(--primary-dark);
+	}
+	.cookie-btn.reject:hover {
+		background: var(--bg-alt);
+	}
+
+	/* Modali */
+	.modal-close:hover {
+		background: var(--bg-alt);
+	}
+	.btn-review:hover {
+		background: var(--rating-hover);
+	}
+	.modal-dismiss:hover {
+		color: var(--primary);
+	}
+}
+
+/* ============================================================
+   11. RESPONSIVE
    ============================================================ */
 
 /* ------------------------------------------------------------
-   10.1 MOBILE MEDIUM — da 421px in su
+   11.1 MOBILE MEDIUM — da 421px in su
    Passa dai layout stacked a quelli affiancati.
    ------------------------------------------------------------ */
 @media (min-width: 421px) {
@@ -2666,7 +2689,7 @@ body {
 }
 
 /* ------------------------------------------------------------
-   10.2 DESKTOP — da 541px in su
+   11.2 DESKTOP — da 541px in su
    ------------------------------------------------------------ */
 @media (min-width: 541px) {
 	.app {
@@ -2748,7 +2771,7 @@ body {
 }
 
 /* ------------------------------------------------------------
-   10.3 DESKTOP CON MOUSE — hot zone per la nav
+   11.3 DESKTOP CON MOUSE — hot zone per la nav
    La nav si mostra solo quando il mouse si avvicina al fondo.
    ------------------------------------------------------------ */
 @media (min-width: 541px) and (hover: hover) and (pointer: fine) {
@@ -2770,7 +2793,7 @@ body {
 }
 
 /* ------------------------------------------------------------
-   10.4 PREFERS-REDUCED-MOTION
+   11.4 PREFERS-REDUCED-MOTION
    ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
 	*,
