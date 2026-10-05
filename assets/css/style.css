@@ -587,17 +587,26 @@ body {
 	color: #fff;
 	box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
 }
+.btn-call:active {
+	background: var(--primary-dark);
+}
 
 .btn-wa {
 	background: var(--wa);
 	color: #fff;
 	box-shadow: 0 4px 12px rgba(var(--wa-rgb), 0.35);
 }
+.btn-wa:active {
+	background: var(--wa-dark);
+}
 
 .btn-ghost {
 	background: #fff;
 	color: var(--primary);
 	border: 1.5px solid var(--primary);
+}
+.btn-ghost:active {
+	background: #f0f3fa;
 }
 
 .btn-full {
@@ -1341,6 +1350,8 @@ body {
 }
 
 .btn-reviews:active {
+	background: var(--bg-alt);
+	border-color: #cdd5e3;
 	transform: translateY(0) scale(0.97);
 }
 
@@ -1686,6 +1697,7 @@ body {
 }
 
 .map-overlay-btn:active {
+	background: var(--primary-dark);
 	transform: translateY(0) scale(0.97);
 }
 
@@ -1908,6 +1920,7 @@ body {
 }
 
 .gp-cta:active {
+	background: #a84f28;
 	transform: translateY(0) scale(0.97);
 }
 
@@ -2011,6 +2024,11 @@ body {
 	white-space: nowrap;
 }
 
+.legal-block p a:active,
+.legal-block .disclaimer-note a:active {
+	color: var(--primary);
+}
+
 .policy-links {
 	display: flex;
 	gap: 1rem;
@@ -2102,9 +2120,17 @@ body {
 	transition: color var(--dur-ui) var(--ease-ui);
 }
 
+/* Feedback al tap: attivo su tutti i device (touch + mouse).
+   Si attiva al press e si spegne al rilascio. */
 .nav-btn:active {
+	background: var(--primary);
+	border-color: var(--primary);
 	transform: scale(0.92);
 }
+.nav-btn:active .ico {
+	color: #fff;
+}
+
 .nav-btn.disabled {
 	opacity: 0.3;
 	pointer-events: none;
@@ -2133,6 +2159,9 @@ body {
 
 .dot:active {
 	transform: scale(0.9);
+}
+.dot:active:not(.active) {
+	background: var(--primary-light);
 }
 .dot.active {
 	background: var(--primary);
@@ -2294,10 +2323,16 @@ body {
 	background: var(--primary);
 	color: #fff;
 }
+.cookie-btn.accept:active {
+	background: var(--primary-dark);
+}
 .cookie-btn.reject {
 	background: transparent;
 	color: var(--text-light);
 	border: 1px solid var(--border);
+}
+.cookie-btn.reject:active {
+	background: var(--bg-alt);
 }
 
 /* ------------------------------------------------------------
@@ -2365,6 +2400,7 @@ body {
 }
 
 .modal-close:active {
+	background: var(--bg-alt);
 	transform: scale(0.92);
 }
 .modal-close .ico {
@@ -2536,6 +2572,9 @@ body {
 	color: var(--rating-ink);
 	box-shadow: 0 4px 12px rgba(245, 179, 1, 0.35);
 }
+.btn-review:active {
+	background: var(--rating-hover);
+}
 .btn-review .ico {
 	color: var(--rating-ink);
 }
@@ -2564,6 +2603,7 @@ body {
    10. HOVER — solo dispositivi con puntatore preciso
    Su touch gli stati :hover diventano "sticky" e restano
    applicati dopo il tap (es. frecce nav che restano blu).
+   Il feedback al tap è gestito separatamente con :active.
    ============================================================ */
 @media (hover: hover) and (pointer: fine) {
 	/* Bottoni generici */
