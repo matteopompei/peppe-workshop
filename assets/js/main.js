@@ -109,10 +109,13 @@
 		let isProgrammaticScroll = false;
 		let programmaticScrollTimer = null;
 		let scrollDebounceTimer = null;
+		let scrollRafPending = false;
 
 		const getSlideWidth = () => deck.clientWidth || 1;
 
-		function updateUI() {
+		/* --- Aggiornamento LEGGERO: solo i pallini ---
+		   Chiamato ad ogni frame durante lo scroll manuale. */
+		function updateDots() {
 			dots.forEach((dot, i) => {
 				const isActive = i === currentIndex;
 				dot.classList.toggle("active", isActive);
@@ -120,6 +123,12 @@
 				if (isActive) dot.setAttribute("aria-current", "true");
 				else dot.removeAttribute("aria-current");
 			});
+		}
+
+		/* --- Aggiornamento PESANTE: bottoni nav, inert, live region ---
+		   Chiamato solo quando lo scroll si è fermato. */
+		function updateUI() {
+			updateDots();
 
 			const atStart = currentIndex === 0;
 			const atEnd = currentIndex === total - 1;
@@ -192,7 +201,7 @@
 			}
 
 			clearTimeout(programmaticScrollTimer);
-			programmaticScrollTimer = setTimeout(releaseProgrammaticScroll, 800);
+			programmaticScrollTimer = setTimeout(releaseProgrammaticScroll, 900);
 
 			deck.scrollTo({ left: index * getSlideWidth(), behavior: "smooth" });
 		}
@@ -267,46 +276,76 @@
 			if (e.key === "ArrowRight") goTo(currentIndex + 1);
 		});
 
-		/* --- Eventi: scroll --- */
+		/* --- Interruzione utente dello scroll programmatico ---
+		   Rilevata tramite eventi di input diretto, NON tramite
+		   la posizione dello scroll (che durante un goTo multi-slide
+		   attraversa legittimamente indici intermedi). */
+		function cancelOnUserInput() {
+			if (isProgrammaticScroll) releaseProgrammaticScroll();
+		}
+		deck.addEventListener("touchstart", cancelOnUserInput, { passive: true });
+		deck.addEventListener("wheel", cancelOnUserInput, { passive: true });
+
+		/* --- Eventi: scroll ---
+		   Throttle con requestAnimationFrame (max 1 update per frame).
+		   - Durante scroll programmatico: nessun aggiornamento dots.
+		   - Durante scroll manuale: aggiornamento leggero dei dots con
+		     isteresi, poi updateUI() completo a scroll fermo. */
 		deck.addEventListener(
 			"scroll",
 			() => {
-				const ratio = deck.scrollLeft / getSlideWidth();
-				const newIndex = Math.round(ratio);
+				if (scrollRafPending) return;
+				scrollRafPending = true;
 
-				// Fine dello scroll programmatico?
-				if (isProgrammaticScroll) {
-					if (Math.abs(ratio - currentIndex) < 0.02) {
-						releaseProgrammaticScroll();
-					} else if (
-						newIndex !== currentIndex &&
-						newIndex >= 0 &&
-						newIndex < total
-					) {
-						// L'utente ha ripreso il controllo durante l'animazione:
-						// rilascia subito così i dots tornano a seguire lo scroll reale
-						releaseProgrammaticScroll();
+				requestAnimationFrame(() => {
+					scrollRafPending = false;
+
+					const rawRatio = deck.scrollLeft / getSlideWidth();
+
+					// Scroll programmatico: rilascia SOLO quando siamo
+					// arrivati vicini alla slide di destinazione.
+					if (isProgrammaticScroll) {
+						if (Math.abs(rawRatio - currentIndex) < 0.02) {
+							releaseProgrammaticScroll();
+						}
+						return;
 					}
-				}
 
-				// Aggiorna i dots in tempo reale, senza debounce
-				if (
-					!isProgrammaticScroll &&
-					newIndex >= 0 &&
-					newIndex < total &&
-					newIndex !== currentIndex
-				) {
-					currentIndex = newIndex;
-					updateUI();
-				}
+					// Scroll manuale: isteresi per evitare flip-flop
+					// dell'indice attorno al punto medio.
+					const delta = rawRatio - currentIndex;
+					let newIndex = currentIndex;
+					if (delta > 0.55) {
+						newIndex = Math.floor(rawRatio + 0.45);
+					} else if (delta < -0.55) {
+						newIndex = Math.ceil(rawRatio - 0.45);
+					}
 
-				// Solo l'URL resta con debounce, per non spammare replaceState
-				clearTimeout(scrollDebounceTimer);
-				scrollDebounceTimer = setTimeout(() => {
-					if (isProgrammaticScroll) return;
-					const slideId = slides[currentIndex].id;
-					history.replaceState({ slide: currentIndex }, "", "#" + slideId);
-				}, 150);
+					if (newIndex !== currentIndex && newIndex >= 0 && newIndex < total) {
+						currentIndex = newIndex;
+						updateDots();
+					}
+
+					// UpdateUI pesante: solo a scroll fermo.
+					clearTimeout(scrollDebounceTimer);
+					scrollDebounceTimer = setTimeout(() => {
+						if (isProgrammaticScroll) return;
+
+						const settledIndex = Math.round(deck.scrollLeft / getSlideWidth());
+						if (
+							settledIndex >= 0 &&
+							settledIndex < total &&
+							settledIndex !== currentIndex
+						) {
+							currentIndex = settledIndex;
+						}
+
+						updateUI();
+
+						const slideId = slides[currentIndex].id;
+						history.replaceState({ slide: currentIndex }, "", "#" + slideId);
+					}, 120);
+				});
 			},
 			{ passive: true },
 		);
@@ -883,8 +922,8 @@
 	}
 
 	/* ============================================================
-   MODULO: HOT ZONE NAV — mostra la nav solo avvicinandosi col mouse
-   ============================================================ */
+	   MODULO: HOT ZONE NAV — mostra la nav solo avvicinandosi col mouse
+	   ============================================================ */
 
 	function initNavHotZone() {
 		// Solo su desktop con mouse (non su touch)
@@ -956,8 +995,8 @@
 	}
 
 	/* ============================================================
-   MODULO: TRACKING CONTATTI — clic su tel: e WhatsApp
-   ============================================================ */
+	   MODULO: TRACKING CONTATTI — clic su tel: e WhatsApp
+	   ============================================================ */
 
 	function initContactTracking() {
 		const links = document.querySelectorAll(
