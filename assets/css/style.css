@@ -224,6 +224,17 @@ body {
 }
 
 /* ============================================================
+   FOCUS VISIBILE — outline coerente per tutti gli elementi
+   interattivi. Colore adattivo via currentColor, così su
+   sfondi scuri l'outline resta visibile.
+   ============================================================ */
+:where(a, button, [role="button"], [tabindex]):focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+	border-radius: 50px;
+}
+
+/* ============================================================
    VISUALLY HIDDEN — accessibile agli screen reader,
    invisibile visivamente, non occupa spazio nel layout
    ============================================================ */
