@@ -519,6 +519,35 @@ body {
 	padding: var(--slide-pad-y-top) var(--slide-pad-x) var(--slide-pad-y-bottom);
 }
 
+/* Testo selezionabile: consente di copiare orari, indirizzo,
+   contatti, note legali. Il cursore cambia da "grab" a "text"
+   per comunicare all'utente che qui si seleziona, non si trascina. */
+.slide-inner .hero-subtitle,
+.slide-inner .hero-location,
+.slide-inner .body-text,
+.slide-inner .card-desc,
+.slide-inner .schedule-list,
+.slide-inner .review-text,
+.slide-inner .legal-block,
+.slide-inner .gp-body,
+.slide-inner .gp-saving p,
+.slide-inner .gp-disclaimer,
+.slide-inner .trade-note p,
+.slide-inner .policy-content,
+.slide-inner code {
+	user-select: text;
+	-webkit-user-select: text;
+	cursor: text;
+}
+
+/* Ripristina il cursore "mano" sugli elementi interattivi,
+   anche se annidati dentro la whitelist sopra (link nelle
+   note legali, link nelle policy, ecc.). */
+.slide-inner a,
+.slide-inner button {
+	cursor: pointer;
+}
+
 /* ============================================================
    7. COMPONENTI CONDIVISI
    ============================================================ */

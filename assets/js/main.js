@@ -358,6 +358,12 @@
 
 		deck.addEventListener("mousedown", (e) => {
 			if (e.button !== 0) return;
+
+			// Il drag parte SOLO dove il cursore è "grab".
+			// Testo (cursor: text), link e bottoni (cursor: pointer)
+			// non innescano lo scroll del carosello.
+			if (window.getComputedStyle(e.target).cursor !== "grab") return;
+
 			if (isProgrammaticScroll) releaseProgrammaticScroll();
 			isDragging = true;
 			wasDragged = false;
