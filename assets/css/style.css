@@ -2572,23 +2572,6 @@ html.cookie-chosen .cookie-banner {
 	padding: 2.2rem 1.75rem 1.6rem;
 }
 
-.modal-stars {
-	display: inline-flex;
-	gap: 4px;
-	align-self: center;
-	margin: 0 auto 1rem;
-	background: linear-gradient(135deg, var(--rating-tint), #ffffff);
-	padding: 0.7rem 1rem;
-	border-radius: 50px;
-	box-shadow: 0 4px 12px rgba(212, 160, 23, 0.2);
-}
-
-.modal-stars .ico {
-	width: 1.4rem;
-	height: 1.4rem;
-	color: var(--star);
-}
-
 .modal-box:not(.policy) h3 {
 	font-family: var(--font-display);
 	color: var(--primary);
