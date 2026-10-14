@@ -932,7 +932,6 @@
 	   ============================================================ */
 
 	function initNavHotZone() {
-		// Solo su desktop con mouse (non su touch)
 		if (
 			!window.matchMedia(
 				"(min-width: 541px) and (hover: hover) and (pointer: fine)",
@@ -946,8 +945,11 @@
 
 		const HOT_ZONE_HEIGHT = 120;
 		const HIDE_DELAY = 400;
+		const INTRO_DURATION = 5000; // ms — quanto resta visibile all'avvio
 
 		let hideTimer = null;
+		let introTimer = null;
+		let introActive = true;
 
 		function showNav() {
 			clearTimeout(hideTimer);
@@ -967,6 +969,13 @@
 			}, HIDE_DELAY);
 		}
 
+		function endIntro() {
+			if (!introActive) return;
+			introActive = false;
+			clearTimeout(introTimer);
+			introTimer = null;
+		}
+
 		function isPointerInNav(e) {
 			const rect = nav.getBoundingClientRect();
 			return (
@@ -977,22 +986,39 @@
 			);
 		}
 
+		/* --- Intro: nav visibile all'avvio, si chiude da sola --- */
+		nav.classList.add("is-visible");
+		introTimer = setTimeout(endIntro, INTRO_DURATION);
+
 		document.addEventListener("mousemove", (e) => {
 			const fromBottom = window.innerHeight - e.clientY;
-			if (fromBottom <= HOT_ZONE_HEIGHT) {
-				showNav();
-				return;
+			const inHotZone = fromBottom <= HOT_ZONE_HEIGHT;
+
+			// L'utente si sta avvicinando alla nav: ha capito che esiste.
+			// Terminiamo subito l'intro e passiamo al comportamento normale.
+			if (introActive && inHotZone) {
+				endIntro();
 			}
-			if (!isPointerInNav(e)) {
-				hideNavDelayed();
-			} else {
+
+			// Durante l'intro, ignora il resto: la nav resta visibile.
+			if (introActive) return;
+
+			if (inHotZone || isPointerInNav(e)) {
 				showNav();
+			} else {
+				hideNavDelayed();
 			}
 		});
 
-		document.addEventListener("mouseleave", hideNavDelayed);
+		document.addEventListener("mouseleave", () => {
+			if (!introActive) hideNavDelayed();
+		});
 
-		nav.addEventListener("focusin", showNav);
+		nav.addEventListener("focusin", () => {
+			endIntro();
+			showNav();
+		});
+
 		nav.addEventListener("focusout", () => {
 			setTimeout(() => {
 				if (!nav.contains(document.activeElement)) hideNavDelayed();

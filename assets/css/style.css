@@ -2719,6 +2719,10 @@ html.cookie-chosen .cookie-banner {
 		box-shadow: 0 8px 22px rgba(var(--wa-rgb), 0.5);
 	}
 
+	.swipe-hint {
+		display: none;
+	}
+
 	/* Cookie */
 	.cookie-btn.accept:hover {
 		background: var(--primary-dark);
