@@ -222,8 +222,14 @@
 				history.replaceState({ slide: index }, "", "#" + slideId);
 			}
 
+			// Fallback di sicurezza: se per qualche motivo l'arrivo non viene
+			// rilevato (browser che interrompe l'animazione, evento perso, ecc.),
+			// rilasciamo comunque il flag dopo un tempo generoso.
+			// Il meccanismo primario resta il check di arrivo in scroll handler:
+			// "Math.abs(rawRatio - currentIndex) < 0.02".
+			// 1800ms copre con margine i casi peggiori (Safari iOS, dispositivi lenti).
 			clearTimeout(programmaticScrollTimer);
-			programmaticScrollTimer = setTimeout(releaseProgrammaticScroll, 900);
+			programmaticScrollTimer = setTimeout(releaseProgrammaticScroll, 1800);
 
 			deck.scrollTo({ left: index * getSlideWidth(), behavior: "smooth" });
 		}
