@@ -498,7 +498,6 @@
 			getConsent: getConsent,
 			setConsent: setConsent,
 			showBanner: showBanner,
-			revokeConsent: revokeConsent,
 			updateMap: updateMap,
 		};
 
@@ -630,13 +629,6 @@
 			document.documentElement.classList.remove("cookie-chosen");
 			const rejectBtn = document.getElementById("rejectCookies");
 			if (rejectBtn) rejectBtn.focus();
-		}
-
-		function revokeConsent() {
-			localStorage.removeItem(CONFIG.cookieKey);
-			unloadGoogleAnalytics();
-			updateMap(false);
-			showBanner();
 		}
 
 		/* --- Stato iniziale --- */
