@@ -284,8 +284,23 @@
 
 		/* --- Eventi: tastiera globale --- */
 		document.addEventListener("keydown", (e) => {
+			// I dot hanno la loro gestione tastiera dedicata (vedi sopra)
 			if (e.target.closest && e.target.closest(".dots")) return;
 
+			// Non interferire con elementi interattivi: se il focus è su un
+			// link, un bottone, un input, o comunque su qualcosa che risponde
+			// a Enter/Spazio, le frecce restano al browser (scroll del testo,
+			// navigazione interna al controllo, ecc.).
+			if (
+				e.target.closest &&
+				e.target.closest(
+					'a, button, input, textarea, select, [contenteditable], [role="button"]',
+				)
+			) {
+				return;
+			}
+
+			// Non cambiare slide se un modale è aperto
 			const policyOpen = document
 				.getElementById("policyModal")
 				?.classList.contains("show");
