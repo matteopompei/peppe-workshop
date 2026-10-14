@@ -459,7 +459,14 @@
 		let idx = 0;
 
 		function show(index) {
-			photos.forEach((p, i) => p.classList.toggle("is-visible", i === index));
+			photos.forEach((p, i) => {
+				const isVisible = i === index;
+				p.classList.toggle("is-visible", isVisible);
+				// Solo l'immagine visibile è annunciata dallo screen reader.
+				// Le altre restano nel DOM (per la transizione CSS) ma
+				// vengono ignorate dalle tecnologie assistive.
+				p.setAttribute("aria-hidden", isVisible ? "false" : "true");
+			});
 			if (decadeValue) {
 				decadeValue.textContent = photos[index].dataset.decade || "";
 			}
