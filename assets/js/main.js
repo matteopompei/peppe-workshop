@@ -64,10 +64,32 @@
 	   UTILS — funzioni pure condivise
 	   ============================================================ */
 
+	const romeFormatter = new Intl.DateTimeFormat("en-GB", {
+		timeZone: "Europe/Rome",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+		hour12: false,
+	});
+
 	function getRomeNow() {
 		try {
-			const s = new Date().toLocaleString("en-US", { timeZone: "Europe/Rome" });
-			return new Date(s);
+			const parts = romeFormatter.formatToParts(new Date());
+			const o = {};
+			for (let i = 0; i < parts.length; i++) {
+				if (parts[i].type !== "literal") o[parts[i].type] = parts[i].value;
+			}
+			return new Date(
+				Number(o.year),
+				Number(o.month) - 1, // JS: mesi 0-indexed
+				Number(o.day),
+				Number(o.hour),
+				Number(o.minute),
+				Number(o.second),
+			);
 		} catch (e) {
 			return new Date();
 		}
