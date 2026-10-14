@@ -841,6 +841,7 @@
 	function initOpeningStatus() {
 		const locationDot = document.getElementById("locationDot");
 		const heroLocation = document.getElementById("heroLocation");
+		const heroStatusText = document.getElementById("heroStatusText");
 		const openStatusBadge = document.getElementById("openStatusBadge");
 		const openStatusText = document.getElementById("openStatusText");
 
@@ -916,6 +917,10 @@
 					"title",
 					"Bivio Offida, Via Salaria, Castorano. " + status.full + ".",
 				);
+			}
+
+			if (heroStatusText) {
+				heroStatusText.textContent = status.full;
 			}
 
 			if (openStatusBadge && openStatusText) {
