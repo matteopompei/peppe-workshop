@@ -251,6 +251,22 @@ body {
 }
 
 /* ============================================================
+   LINK-BUTTON — <button> stilizzato come link.
+   Usato per azioni che sembrano link ma non navigano
+   (apri modale, mostra banner cookie). Reset del <button>
+   + ereditarietà tipografica dal contesto.
+   ============================================================ */
+.link-button {
+	background: transparent;
+	border: none;
+	padding: 0;
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+	text-align: left;
+}
+
+/* ============================================================
    5. ICONE — CSS mask + currentColor
    ============================================================ */
 .ico {
@@ -2103,7 +2119,7 @@ body {
 	flex-wrap: wrap;
 }
 
-.policy-links a {
+.policy-links .link-button {
 	font-size: 0.78rem;
 	color: var(--text-light);
 	font-weight: 600;
@@ -2111,7 +2127,6 @@ body {
 	text-decoration-style: dotted;
 	text-underline-offset: 0.25em;
 	text-decoration-thickness: 1px;
-	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.35rem;
@@ -2121,10 +2136,10 @@ body {
 	padding: 0.2rem 0;
 }
 
-.policy-links a:active {
+.policy-links .link-button:active {
 	opacity: 0.6;
 }
-.policy-links a .ico {
+.policy-links .link-button .ico {
 	width: 0.75rem;
 	height: 0.75rem;
 }
@@ -2357,11 +2372,12 @@ html.cookie-chosen .cookie-banner {
 	color: var(--primary);
 }
 
-.cookie-banner-text a {
+.cookie-banner-text .link-button {
 	font-weight: 600;
 	text-decoration: underline;
-	cursor: pointer;
+	text-underline-offset: 0.2em;
 	color: var(--accent);
+	transition: color var(--dur-fast) var(--ease-ui);
 }
 
 .cookie-banner-actions {
@@ -2699,7 +2715,7 @@ html.cookie-chosen .cookie-banner {
 	.legal-block .disclaimer-note a:hover {
 		color: var(--primary);
 	}
-	.policy-links a:hover {
+	.policy-links .link-button:hover {
 		color: var(--primary);
 	}
 
