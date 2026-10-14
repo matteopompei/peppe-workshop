@@ -119,11 +119,11 @@ ul {
 	--wa-dark: #0a6430;
 	--star: #f5b301;
 	--gold: #d4a017;
-	--terracotta: #b8603a;
+	--terracotta: #9c4a26;
 
 	/* Palette Guida Picena */
-	--gp-terracotta: #d17c47;
-	--gp-terracotta-dark: #c15f33;
+	--gp-terracotta: #b8642c;
+	--gp-terracotta-dark: #9c4a1e;
 	--gp-oliva: #9aa26f;
 	--gp-cream: #fdf6ee;
 	--gp-cream-alt: #f8f2e8;
@@ -135,7 +135,7 @@ ul {
 
 	/* Stati apertura — verde (aperto) */
 	--status-open-bg: #dcfce7;
-	--status-open-text: #15803d;
+	--status-open-text: #0f6b32;
 	--status-open-dot: #22c55e;
 
 	/* Stati apertura — giallo (in chiusura) */
@@ -164,7 +164,7 @@ ul {
 	/* RGB — per comporre rgba(var(--*-rgb), alpha) nelle shadow */
 	--primary-rgb: 42, 55, 87;
 	--wa-rgb: 13, 125, 58;
-	--gp-rgb: 193, 95, 51;
+	--gp-rgb: 156, 74, 30;
 	--signage-rgb: 26, 34, 56;
 
 	/* Ombre */
@@ -1088,7 +1088,7 @@ body {
 
 .emergency-tag {
 	display: inline-block;
-	background: rgba(255, 255, 255, 0.22);
+	background: #fff;
 	padding: 0.15rem 0.55rem;
 	border-radius: 20px;
 	font-size: var(--fs-2xs);
@@ -1096,7 +1096,7 @@ body {
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	margin-bottom: 0.4rem;
-	color: #fff;
+	color: #9a3412;
 }
 
 /* ------------------------------------------------------------
@@ -1874,7 +1874,7 @@ body {
 }
 
 .gp-tagline {
-	color: rgba(255, 240, 225, 0.92);
+	color: #fff;
 	font-size: 0.82rem;
 	font-weight: 500;
 	line-height: 1.5;
@@ -1976,7 +1976,7 @@ body {
 }
 
 .gp-cta:active {
-	background: #a84f28;
+	background: #843c14;
 	transform: translateY(0) scale(0.97);
 }
 
@@ -1990,7 +1990,7 @@ body {
 	padding-top: 1rem;
 	border-top: 1px dashed #e0d3c0;
 	font-size: var(--fs-2xs);
-	color: #9a9080;
+	color: #6b6357;
 	line-height: 1.5;
 	text-align: center;
 	letter-spacing: 0.2px;
@@ -2678,7 +2678,7 @@ html.cookie-chosen .cookie-banner {
 
 	/* Guida Picena */
 	.gp-cta:hover {
-		background: #a84f28;
+		background: #843c14;
 		transform: translateY(-1px);
 		box-shadow: 0 8px 22px rgba(var(--gp-rgb), 0.45);
 	}
