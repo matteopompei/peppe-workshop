@@ -79,6 +79,30 @@
 			crossorigin
 		/>
 		<link rel="stylesheet" href="./assets/css/style.css" />
+		<script>
+			/*
+			 * FOUC prevention per il cookie banner.
+			 * Duplica volutamente la logica di CONFIG in main.js:
+			 * questo script gira in modo sincrono prima del primo paint,
+			 * main.js gira dopo (defer). Se cambi cookieKey o cookieDurationDays
+			 * in main.js, aggiornali anche qui.
+			 */
+			(function () {
+				try {
+					var raw = localStorage.getItem("cookie_consent");
+					if (!raw) return;
+					var data = JSON.parse(raw);
+					var MAX_AGE = 180 * 24 * 3600 * 1000;
+					if (data && data.ts && Date.now() - data.ts < MAX_AGE) {
+						document.documentElement.classList.add("cookie-chosen");
+					} else {
+						localStorage.removeItem("cookie_consent");
+					}
+				} catch (e) {
+					/* localStorage bloccato → lascia visibile il banner */
+				}
+			})();
+		</script>
 		<script src="./assets/js/main.js" defer></script>
 	</head>
 	<body>

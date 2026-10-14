@@ -605,11 +605,11 @@
 			if (analytics) loadGoogleAnalytics();
 			else unloadGoogleAnalytics();
 			updateMap(analytics);
-			if (banner) banner.classList.add("hidden");
+			document.documentElement.classList.add("cookie-chosen");
 		}
 
 		function showBanner() {
-			if (banner) banner.classList.remove("hidden");
+			document.documentElement.classList.remove("cookie-chosen");
 			const rejectBtn = document.getElementById("rejectCookies");
 			if (rejectBtn) rejectBtn.focus();
 		}

@@ -2292,7 +2292,7 @@ body {
 	z-index: 15;
 }
 
-.cookie-banner.hidden {
+html.cookie-chosen .cookie-banner {
 	display: none;
 }
 
