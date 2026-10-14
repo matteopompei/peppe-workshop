@@ -113,7 +113,7 @@
 
 	function initNavigation() {
 		const deck = document.querySelector(".deck");
-		if (!deck) return;
+		if (!deck) return null;
 
 		const slides = Array.from(deck.querySelectorAll(".slide"));
 		const dots = Array.from(document.querySelectorAll(".dot"));
@@ -122,7 +122,7 @@
 		const swipeHint = document.getElementById("swipeHint");
 		const liveRegion = document.getElementById("liveRegion");
 
-		if (!slides.length || !prevBtn || !nextBtn) return;
+		if (!slides.length || !prevBtn || !nextBtn) return null;
 
 		const total = slides.length;
 		const titles = CONFIG.slideTitles;
@@ -195,6 +195,19 @@
 			programmaticScrollTimer = null;
 		}
 
+		/* --- Tracking GA: invia slide_view se GA è pronto.
+		   Definito a livello di initNavigation per essere
+		   esposto nell'API di ritorno e usato da initCookieConsent. --- */
+		function trackSlideView(index) {
+			if (typeof window.gtag !== "function") return;
+			if (index < 0 || index >= total) return;
+			window.gtag("event", "slide_view", {
+				slide_id: slides[index].id,
+				slide_index: index + 1,
+				slide_title: titles[index],
+			});
+		}
+
 		function goTo(index, options) {
 			const opts = options || {};
 			const push = opts.push !== false;
@@ -203,13 +216,7 @@
 			if (index === currentIndex && !isProgrammaticScroll) return;
 
 			// Traccia la visualizzazione della nuova slide
-			if (window.gtag) {
-				gtag("event", "slide_view", {
-					slide_id: slides[index].id,
-					slide_index: index + 1,
-					slide_title: titles[index],
-				});
-			}
+			trackSlideView(index);
 
 			currentIndex = index;
 			isProgrammaticScroll = true;
@@ -475,6 +482,13 @@
 			const idx = indexFromHash();
 			if (idx !== currentIndex) goTo(idx, { push: false });
 		});
+
+		return {
+			trackSlideView: trackSlideView,
+			getCurrentIndex: function () {
+				return currentIndex;
+			},
+		};
 	}
 
 	/* ============================================================
@@ -530,7 +544,7 @@
 	   Espone API per essere usato da altri moduli (modali, ecc.)
 	   ============================================================ */
 
-	function initCookieConsent() {
+	function initCookieConsent(navApi) {
 		const banner = document.getElementById("cookieBanner");
 		const iframe = document.querySelector(".map-wrap iframe");
 		const mapOverlay = document.getElementById("mapOverlay");
@@ -612,6 +626,15 @@
 			gtag("consent", "update", {
 				analytics_storage: "granted",
 			});
+
+			// 6. Ora che GA è pronto, traccia la slide corrente.
+			//    Copre due casi:
+			//    - Utente con consenso pregresso che atterra direttamente su una slide
+			//    - Utente che clicca "Accetta" mentre è su una slide qualsiasi
+			//    Il check window.gtag dentro trackSlideView evita doppioni.
+			if (navApi) {
+				navApi.trackSlideView(navApi.getCurrentIndex());
+			}
 		}
 
 		function unloadGoogleAnalytics() {
@@ -1186,13 +1209,12 @@
 	   ============================================================ */
 
 	function boot() {
-		initNavigation();
+		const navApi = initNavigation();
 		initDecadeSlideshow();
 		initNavHotZone();
 		initContactTracking();
 
-		// Cookie e modali sono legati: modali riceve l'API di cookie
-		const cookieApi = initCookieConsent();
+		const cookieApi = initCookieConsent(navApi);
 		initModals(cookieApi);
 
 		initOpeningStatus();
