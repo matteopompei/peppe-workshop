@@ -550,9 +550,13 @@
 
 			// 4. Configura la proprietà
 			gtag("js", new Date());
+
+			// Il flag "Secure" impone cookie solo via HTTPS.
+			// In sviluppo (http://localhost) rompe il tracciamento GA in silenzio.
+			// Lo attiviamo solo quando il protocollo è davvero HTTPS.
+			const isHttps = location.protocol === "https:";
 			gtag("config", CONFIG.gaMeasurementId, {
-				anonymize_ip: true,
-				cookie_flags: "SameSite=Lax;Secure",
+				cookie_flags: isHttps ? "SameSite=Lax;Secure" : "SameSite=Lax",
 			});
 
 			// 5. Dichiara il consenso come CONCESSO (l'utente ha cliccato Accetta)
