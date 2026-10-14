@@ -687,15 +687,76 @@
 
 		let lastFocused = null;
 
+		// Selettore per gli elementi focusabili all'interno di un modale.
+		// Esclude elementi con tabindex="-1", disabled, o nascosti.
+		const FOCUSABLE_SELECTOR = [
+			"a[href]",
+			"button:not([disabled])",
+			"input:not([disabled])",
+			"textarea:not([disabled])",
+			"select:not([disabled])",
+			'[tabindex]:not([tabindex="-1"])',
+		].join(",");
+
+		function getFocusableElements(container) {
+			const all = Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR));
+			// Filtra elementi non visibili (offsetParent null) o con visibility:hidden
+			return all.filter((el) => {
+				if (el.hasAttribute("hidden")) return false;
+				const style = window.getComputedStyle(el);
+				if (style.display === "none" || style.visibility === "hidden") {
+					return false;
+				}
+				return true;
+			});
+		}
+
+		function trapFocus(modal, e) {
+			if (e.key !== "Tab") return;
+
+			const focusable = getFocusableElements(modal);
+			if (focusable.length === 0) {
+				e.preventDefault();
+				return;
+			}
+
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
+			const active = document.activeElement;
+
+			// Shift+Tab sul primo → vai all'ultimo
+			if (e.shiftKey && active === first) {
+				e.preventDefault();
+				last.focus();
+				return;
+			}
+
+			// Tab sull'ultimo → vai al primo
+			if (!e.shiftKey && active === last) {
+				e.preventDefault();
+				first.focus();
+				return;
+			}
+
+			// Se il focus è fuori dal modale (edge case), riportalo dentro
+			if (!modal.contains(active)) {
+				e.preventDefault();
+				first.focus();
+			}
+		}
+
 		function openModal(modal) {
 			if (!modal) return;
 			lastFocused = document.activeElement;
 			modal.classList.add("show");
 			if (appEl) appEl.setAttribute("inert", "");
-			const focusable = modal.querySelector(
-				".modal-close, .modal-dismiss, .btn",
-			);
-			if (focusable) focusable.focus();
+
+			// Focus iniziale: primo elemento focusabile del modale.
+			// setTimeout per aspettare che la transizione CSS renda l'elemento visibile.
+			setTimeout(() => {
+				const focusable = getFocusableElements(modal);
+				if (focusable.length > 0) focusable[0].focus();
+			}, 50);
 		}
 
 		function closeModal(modal) {
@@ -706,6 +767,10 @@
 				lastFocused.focus();
 			}
 		}
+
+		/* --- Focus trap: gestione Tab all'interno di ciascun modale --- */
+		policyModal?.addEventListener("keydown", (e) => trapFocus(policyModal, e));
+		reviewModal?.addEventListener("keydown", (e) => trapFocus(reviewModal, e));
 
 		function openPolicy() {
 			openModal(policyModal);
