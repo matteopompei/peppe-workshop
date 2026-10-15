@@ -1269,9 +1269,7 @@ body {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	background: rgba(255, 255, 255, 0.2);
-	backdrop-filter: blur(4px);
-	-webkit-backdrop-filter: blur(4px);
+	background: rgba(0, 0, 0, 0.4);
 	padding: 0.2rem 0.6rem;
 	border-radius: 20px;
 	font-size: var(--fs-2xs);
@@ -1742,15 +1740,47 @@ body {
 .map-overlay {
 	position: absolute;
 	inset: 0;
-	background: rgba(var(--primary-rgb), 0.15);
-	backdrop-filter: blur(2px);
-	-webkit-backdrop-filter: blur(2px);
+	background-color: #e8ecf5;
+	/* Pattern di puntini: suggerisce una griglia cartografica
+       senza costo computazionale (nessun blur, nessuna immagine). */
+	background-image: radial-gradient(
+		circle,
+		rgba(var(--primary-rgb), 0.12) 1px,
+		transparent 1px
+	);
+	background-size: 14px 14px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	z-index: 5;
 	padding: 1rem;
+	overflow: hidden;
 	transition: opacity var(--dur-med) var(--ease-ui);
+}
+
+/* Watermark: icona mappa gigante in filigrana,
+   comunica visivamente "qui c'è una mappa" anche
+   quando l'iframe è bloccato (nessun src caricato). */
+.map-overlay::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 55%;
+	aspect-ratio: 576 / 512;
+	background-color: var(--primary);
+	opacity: 0.08;
+	-webkit-mask-image: url(../img/icons/map.svg);
+	mask-image: url(../img/icons/map.svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	pointer-events: none;
+	z-index: 0;
 }
 
 .map-overlay.hidden {
@@ -1759,6 +1789,8 @@ body {
 }
 
 .map-overlay-btn {
+	position: relative;
+	z-index: 1;
 	background: var(--primary);
 	color: #fff;
 	border: none;
@@ -2155,9 +2187,7 @@ body {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background: rgba(255, 255, 255, 0.95);
-	backdrop-filter: blur(12px);
-	-webkit-backdrop-filter: blur(12px);
+	background: #fff;
 	border-top: 1px solid var(--border);
 	padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
 	display: flex;
@@ -2873,7 +2903,7 @@ html.cookie-chosen .cookie-banner {
 		width: auto;
 		border-radius: 50px;
 		border: 1px solid var(--border);
-		padding: 0.5rem 1rem;
+		padding: 0.5rem;
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 		gap: 1rem;
 	}
