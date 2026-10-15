@@ -199,6 +199,20 @@ ul {
 	--slide-pad-x: 1.35rem;
 	--slide-pad-y-bottom: 6.5rem;
 
+	/* Z-INDEX — layers dell'interfaccia.
+	   Spaziati in modo da permettere l'inserimento di layer intermedi
+	   senza dover rinumerare. Solo i layer che competono tra loro sullo
+	   stacking context root usano questi token; i valori interni ai
+	   singoli componenti (z-index 0/1/2) restano hardcoded perché
+	   isolati nel proprio stacking context. */
+	--z-map-overlay: 5;
+	--z-header: 10;
+	--z-cookie: 15;
+	--z-nav: 20;
+	--z-hint: 30;
+	--z-fab: 40;
+	--z-modal: 200;
+
 	/* Timing interazioni */
 	--dur-fast: 0.15s;
 	--dur-ui: 0.18s;
@@ -409,7 +423,7 @@ body {
 .header-wrap {
 	position: relative;
 	flex-shrink: 0;
-	z-index: 10;
+	z-index: var(--z-header);
 }
 
 .app-header {
@@ -1764,7 +1778,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 5;
+	z-index: var(--z-map-overlay);
 	padding: 1rem;
 	overflow: hidden;
 	transition: opacity var(--dur-med) var(--ease-ui);
@@ -2206,7 +2220,7 @@ body {
 	align-items: center;
 	justify-content: space-between;
 	gap: 0.5rem;
-	z-index: 20;
+	z-index: var(--z-nav);
 }
 
 .nav-btn {
@@ -2302,7 +2316,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 0.55rem;
-	z-index: 40;
+	z-index: var(--z-fab);
 }
 
 .fab-btn {
@@ -2351,7 +2365,7 @@ body {
 	display: flex;
 	align-items: center;
 	gap: 0.4rem;
-	z-index: 30;
+	z-index: var(--z-hint);
 	pointer-events: none;
 	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 	animation: hintPulse 2.4s ease-in-out infinite;
@@ -2395,7 +2409,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 0.85rem;
-	z-index: 15;
+	z-index: var(--z-cookie);
 }
 
 html.cookie-chosen .cookie-banner {
@@ -2471,7 +2485,7 @@ html.cookie-chosen .cookie-banner {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 200;
+	z-index: var(--z-modal);
 	padding: 1rem;
 	opacity: 0;
 	visibility: hidden;
