@@ -202,6 +202,16 @@ ul {
 	--radius-xl: 22px; /* contenitori grandi: gp-hero, modali */
 	--radius-pill: 999px; /* pill: bottoni, badge, tag, nav desktop */
 
+	/* Scala dimensioni icone — 5 step semantici.
+	   La regola base .ico usa 1em (scala col testo).
+	   Gli override qui sotto fissano la dimensione in rem
+	   quando serve coerenza indipendente dal contesto. */
+	--icon-xs: 0.75rem; /* 12.0px — dentro badge/meta microscopici */
+	--icon-sm: 0.875rem; /* 14.0px — accanto a testo normale */
+	--icon-md: 1rem; /* 16.0px — default: stars, bottoni secondari */
+	--icon-lg: 1.125rem; /* 18.0px — bottoni principali, nav, badge medi */
+	--icon-xl: 1.5rem; /* 24.0px — icone grandi: FAB, featured */
+
 	/* Layout */
 	--app-max: 540px;
 	--header-pad-y: 0.9rem;
@@ -639,8 +649,8 @@ body {
 }
 
 .slide-label .ico {
-	width: 0.875rem;
-	height: 0.875rem;
+	width: var(--icon-sm);
+	height: var(--icon-sm);
 	color: var(--gold);
 }
 
@@ -696,8 +706,8 @@ body {
 }
 
 .btn .ico {
-	width: 1.0625rem;
-	height: 1.0625rem;
+	width: var(--icon-lg);
+	height: var(--icon-lg);
 }
 
 .btn-call {
@@ -847,8 +857,8 @@ body {
 	color: var(--star);
 }
 .stars-row .ico {
-	width: 1rem;
-	height: 1rem;
+	width: var(--icon-md);
+	height: var(--icon-md);
 }
 
 .rating-value {
@@ -942,8 +952,8 @@ body {
 }
 
 .hero-location .ico {
-	width: 0.8125rem;
-	height: 0.8125rem;
+	width: var(--icon-sm);
+	height: var(--icon-sm);
 	color: var(--accent);
 }
 
@@ -1026,8 +1036,8 @@ body {
 }
 
 .featured-icon .ico {
-	width: 1.5rem;
-	height: 1.5rem;
+	width: var(--icon-xl);
+	height: var(--icon-xl);
 }
 
 .service-featured h3 {
@@ -1099,8 +1109,8 @@ body {
 }
 
 .service-badge .ico {
-	width: 1.15rem;
-	height: 1.15rem;
+	width: var(--icon-lg);
+	height: var(--icon-lg);
 }
 
 .service-card h4 {
@@ -1356,8 +1366,8 @@ body {
 }
 
 .reviews-header .reviews-source .ico {
-	width: 0.75rem;
-	height: 0.75rem;
+	width: var(--icon-xs);
+	height: var(--icon-xs);
 	color: var(--star);
 }
 
@@ -1423,8 +1433,8 @@ body {
 }
 
 .review-stars .ico {
-	width: 0.72rem;
-	height: 0.72rem;
+	width: var(--icon-xs);
+	height: var(--icon-xs);
 	color: var(--star);
 }
 
@@ -1472,8 +1482,8 @@ body {
 }
 
 .btn-reviews .ico {
-	width: 0.9rem;
-	height: 0.9rem;
+	width: var(--icon-sm);
+	height: var(--icon-sm);
 	color: currentColor;
 }
 
@@ -1515,8 +1525,8 @@ body {
 }
 
 .info-block .block-label .ico {
-	width: 0.9375rem;
-	height: 0.9375rem;
+	width: var(--icon-md);
+	height: var(--icon-md);
 	color: var(--gold);
 }
 
@@ -1560,8 +1570,8 @@ body {
 }
 
 .trade-note .ico {
-	width: 1.1rem;
-	height: 1.1rem;
+	width: var(--icon-lg);
+	height: var(--icon-lg);
 	color: #b8964a;
 	flex-shrink: 0;
 }
@@ -1583,8 +1593,8 @@ body {
 
 .trade-note.payment .ico {
 	color: var(--gold);
-	width: 1rem;
-	height: 1rem;
+	width: var(--icon-md);
+	height: var(--icon-md);
 }
 
 .trade-note.payment p {
@@ -1853,8 +1863,8 @@ body {
 }
 
 .map-overlay-btn .ico {
-	width: 1.0625rem;
-	height: 1.0625rem;
+	width: var(--icon-lg);
+	height: var(--icon-lg);
 	flex-shrink: 0;
 }
 
@@ -2003,8 +2013,8 @@ body {
 }
 
 .gp-saving .ico {
-	width: 1.25rem;
-	height: 1.25rem;
+	width: var(--icon-xl);
+	height: var(--icon-xl);
 	color: var(--gp-oliva);
 	flex-shrink: 0;
 	margin-top: 2px;
@@ -2045,8 +2055,8 @@ body {
 }
 
 .gp-feature .ico {
-	width: 1.15rem;
-	height: 1.15rem;
+	width: var(--icon-lg);
+	height: var(--icon-lg);
 	color: var(--gp-oliva);
 	flex-shrink: 0;
 }
@@ -2076,8 +2086,8 @@ body {
 }
 
 .gp-cta .ico {
-	width: 1rem;
-	height: 1rem;
+	width: var(--icon-md);
+	height: var(--icon-md);
 }
 
 .gp-disclaimer {
@@ -2122,8 +2132,8 @@ body {
 }
 
 .legal-block h3 .ico {
-	width: 1rem;
-	height: 1rem;
+	width: var(--icon-md);
+	height: var(--icon-md);
 	color: var(--gold);
 	flex-shrink: 0;
 }
@@ -2137,8 +2147,8 @@ body {
 
 .legal-block p .ico {
 	display: inline-block;
-	width: 0.85rem;
-	height: 0.85rem;
+	width: var(--icon-sm);
+	height: var(--icon-sm);
 	vertical-align: -0.15em;
 	margin-left: 0.25rem;
 	color: currentColor;
@@ -2208,8 +2218,8 @@ body {
 	opacity: 0.6;
 }
 .policy-links .link-button .ico {
-	width: 0.75rem;
-	height: 0.75rem;
+	width: var(--icon-xs);
+	height: var(--icon-xs);
 }
 
 /* ============================================================
@@ -2262,8 +2272,8 @@ body {
 }
 
 .nav-btn .ico {
-	width: 1.125rem;
-	height: 1.125rem;
+	width: var(--icon-lg);
+	height: var(--icon-lg);
 	color: var(--primary);
 	transition: color var(--dur-ui) var(--ease-ui);
 }
@@ -2344,8 +2354,8 @@ body {
 }
 
 .fab-btn .ico {
-	width: 1.375rem;
-	height: 1.375rem;
+	width: var(--icon-xl);
+	height: var(--icon-xl);
 	color: #fff;
 }
 
@@ -2384,8 +2394,8 @@ body {
 }
 
 .swipe-hint .ico {
-	width: 0.875rem;
-	height: 0.875rem;
+	width: var(--icon-sm);
+	height: var(--icon-sm);
 	color: #fff;
 }
 
@@ -2553,8 +2563,8 @@ html.cookie-chosen .cookie-banner {
 	transform: scale(0.92);
 }
 .modal-close .ico {
-	width: 1rem;
-	height: 1rem;
+	width: var(--icon-md);
+	height: var(--icon-md);
 }
 
 /* Modale policy */
@@ -2575,8 +2585,8 @@ html.cookie-chosen .cookie-banner {
 }
 
 .policy-header .ico {
-	width: 1.375rem;
-	height: 1.375rem;
+	width: var(--icon-lg);
+	height: var(--icon-lg);
 	color: var(--primary);
 	flex-shrink: 0;
 }
