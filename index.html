@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="it">
 	<head>
+		<!-- ============================================================
+		     META ESSENZIALI
+		     Modificare qui lang, charset, viewport, description, title.
+		     - description: usata da Google nei risultati di ricerca.
+		     - title: mostrato nella tab del browser e nei risultati Google.
+		     ============================================================ -->
 		<meta charset="UTF-8" />
 		<meta
 			name="viewport"
@@ -12,6 +18,14 @@
 		/>
 		<title>Elettrauto Giuseppe Lelli</title>
 
+		<!-- ============================================================
+		     FAVICON & PWA
+		     Tutti i percorsi sono relativi (./assets/...) per funzionare
+		     anche se il sito viene deployato su un sottopercorso.
+		     I file referenziati sono in ./assets/img/favicon/.
+		     Il manifest (site.webmanifest) contiene nome, icone e colori
+		     per l'installazione come app su Android/iOS.
+		     ============================================================ -->
 		<link
 			rel="icon"
 			type="image/png"
@@ -32,7 +46,14 @@
 		<meta name="apple-mobile-web-app-title" content="Elettrauto Lelli" />
 		<link rel="manifest" href="./assets/img/favicon/site.webmanifest" />
 
-		<!-- Open Graph / Facebook -->
+		<!-- ============================================================
+		     OPEN GRAPH / FACEBOOK
+		     Anteprima quando il link viene condiviso su Facebook,
+		     WhatsApp, LinkedIn, ecc.
+		     - og:url e og:image usano URL assoluti: vanno aggiornati
+		       se il sito cambia dominio.
+		     - og:image è il file ./assets/img/og-image.jpg (1200x630).
+		     ============================================================ -->
 		<meta property="og:type" content="website" />
 		<meta
 			property="og:url"
@@ -50,7 +71,10 @@
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 
-		<!-- Twitter -->
+		<!-- ============================================================
+		     TWITTER CARD
+		     Anteprima quando il link viene condiviso su X/Twitter.
+		     ============================================================ -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="Elettrauto Giuseppe Lelli" />
 		<meta
@@ -62,8 +86,24 @@
 			content="https://elettrautogiuseppelelli.pages.dev/assets/img/og-image.jpg"
 		/>
 
+		<!-- ============================================================
+		     TEMA & COLOR SCHEME
+		     - theme-color: colore della barra di stato su Android/iOS
+		       e della title bar quando il sito è installato come PWA.
+		     - color-scheme: dichiara che il sito è solo light.
+		       Impedisce a Firefox e a estensioni tipo Dark Reader di
+		       applicare auto-darkening (che romperebbe il brand).
+		     ============================================================ -->
+		<meta name="color-scheme" content="light only" />
 		<meta name="theme-color" content="#2a3757" />
 
+		<!-- ============================================================
+		     FONT PRELOAD
+		     Precarica i due font critici per il primo paint:
+		     Bitter 800 (titoli) e Manrope 400 (body).
+		     Riduce il "flash of unstyled text" (FOUT).
+		     Gli altri pesi vengono caricati su richiesta dal CSS.
+		     ============================================================ -->
 		<link
 			rel="preload"
 			href="./assets/fonts/bitter-800.woff2"
@@ -78,21 +118,32 @@
 			type="font/woff2"
 			crossorigin
 		/>
+
+		<!-- Foglio di stile principale. Contiene tutti i design token
+		     (colori, font, spaziature, radius, z-index) in :root. -->
 		<link rel="stylesheet" href="./assets/css/style.css" />
+
+		<!-- ============================================================
+		     FOUC PREVENTION — COOKIE BANNER
+		     Script sincrono che gira PRIMA del primo paint.
+		     Legge localStorage e, se l'utente ha già scelto, aggiunge
+		     la classe .cookie-chosen a <html> nascondendo il banner
+		     senza che appaia nemmeno per un frame.
+
+		     ! ATTENZIONE — DUPLICAZIONE VOLUTA !
+		     Questo script duplica i valori cookieKey e cookieDurationDays
+		     definiti in ./assets/js/main.js (CONFIG).
+		     Se cambi uno dei due in main.js, aggiornalo anche qui.
+		     Il motivo della duplicazione: main.js è caricato con defer,
+		     quindi gira troppo tardi per prevenire il flash iniziale.
+		     ============================================================ -->
 		<script>
-			/*
-			 * FOUC prevention per il cookie banner.
-			 * Duplica volutamente la logica di CONFIG in main.js:
-			 * questo script gira in modo sincrono prima del primo paint,
-			 * main.js gira dopo (defer). Se cambi cookieKey o cookieDurationDays
-			 * in main.js, aggiornali anche qui.
-			 */
 			(function () {
 				try {
 					var raw = localStorage.getItem("cookie_consent");
 					if (!raw) return;
 					var data = JSON.parse(raw);
-					var MAX_AGE = 180 * 24 * 3600 * 1000;
+					var MAX_AGE = 180 * 24 * 3600 * 1000; // 180 giorni
 					if (data && data.ts && Date.now() - data.ts < MAX_AGE) {
 						document.documentElement.classList.add("cookie-chosen");
 					} else {
@@ -103,10 +154,35 @@
 				}
 			})();
 		</script>
+
+		<!-- Script principale. Contiene tutta la logica:
+		     - navigazione slide (carosello, dot, frecce, drag)
+		     - slideshow decennale
+		     - consenso cookie + caricamento GA/Maps
+		     - modali (policy, recensione)
+		     - stato apertura officina + "oggi" nella tabella orari
+		     - insegna notturna
+		     - hot zone nav desktop
+		     - tracking GA contatti -->
 		<script src="./assets/js/main.js" defer></script>
 	</head>
+
 	<body>
+		<!-- ============================================================
+		     APP CONTAINER
+		     .app è il wrapper che simula la viewport di un'app mobile.
+		     Su desktop è centrato con max-width 540px; su mobile occupa
+		     tutto lo schermo. Contiene header, deck (carosello), nav.
+		     ============================================================ -->
 		<div class="app">
+			<!-- ============================================================
+			     REGIONE AUSILIARIA PER SCREEN READER
+			     Non visibile. main.js ci scrive "Slide N di M: <Titolo>"
+			     ad ogni cambio slide. aria-live="polite" fa sì che lo
+			     screen reader annunci il cambio senza interrompere
+			     quello che sta leggendo.
+			     NON RIMUOVERE: è essenziale per l'accessibilità.
+			     ============================================================ -->
 			<div
 				id="liveRegion"
 				class="visually-hidden"
@@ -114,11 +190,35 @@
 				aria-atomic="true"
 			></div>
 
+			<!-- ============================================================
+			     HEADER — INSEGNA
+			     .header-wrap tiene insieme l'insegna (logo) e il banner
+			     cookie, che è posizionato assoluto subito sotto l'header.
+
+			     Il logo è un <div> con mask-image: la forma e il colore
+			     vengono dal CSS (assets/img/elettrauto-ricambi-logo.svg).
+			     Di notte, main.js aggiunge .is-lit e l'insegna si accende.
+
+			     ID REFERENZIATI DA main.js:
+			     - #appHeader → usato da initSignage() per .is-lit / .is-paused
+			     ============================================================ -->
 			<div class="header-wrap">
 				<header class="app-header" id="appHeader">
 					<div class="logo" role="img" aria-label="Elettrauto Ricambi"></div>
 				</header>
 
+				<!-- ============================================================
+				     COOKIE BANNER
+				     Mostrato di default. Viene nascosto quando <html> ha
+				     la classe .cookie-chosen (aggiunta dallo script inline
+				     sopra o da main.js dopo la scelta dell'utente).
+
+				     ID REFERENZIATI DA main.js:
+				     - #acceptCookies → setConsent(true) + carica GA + mappa
+				     - #rejectCookies → setConsent(false) + blocco GA + mappa
+				     - #openPolicyFromBanner → apre il modale Privacy
+				     Non cambiare gli ID senza aggiornare main.js.
+				     ============================================================ -->
 				<div
 					class="cookie-banner"
 					id="cookieBanner"
@@ -145,7 +245,36 @@
 				</div>
 			</div>
 
+			<!-- ============================================================
+			     DECK — CAROSELLO ORIZZONTALE
+			     .deck è lo scroll container orizzontale. Ogni <section>
+			     figlia è una slide. Il CSS applica scroll-snap per
+			     agganciare ogni slide a tutto schermo.
+
+			     main.js legge automaticamente:
+			     - tutte le .slide dentro .deck
+			     - gli .id di ogni slide (usati per hash URL e deep link)
+
+			     Per aggiungere una nuova slide:
+			     1. Aggiungere <section id="nuova-sezione" class="slide">
+			     2. Aggiungere un nuovo <button class="dot"> nella nav
+			        con aria-label="Vai alla sezione: <Titolo>"
+			     3. (Opzionale) aggiornare slideTitles in main.js —
+			        in realtà viene derivato dagli aria-label dei dot.
+			     ============================================================ -->
 			<main class="deck">
+				<!-- ------------------------------------------------------------
+				     SLIDE 1 — HERO (Benvenuto)
+				     Rating, titolo, location pill con stato apertura, CTA.
+
+				     ID REFERENZIATI DA main.js:
+				     - #ratingTrigger → apre il modale recensione (click o Enter/Spazio)
+				     - #heroLocation → riceve un attributo title con lo stato apertura
+				     - #locationDot → riceve classi .is-open/.is-closed/ecc.
+				     - #heroStatusText → riceve il testo dello stato (screen reader)
+				     - .btn con data-goto="#contatti" → main.js intercetta il click
+				       e naviga alla slide con quell'ID
+				     ------------------------------------------------------------ -->
 				<section id="home" class="slide hero">
 					<div class="slide-inner">
 						<div class="hero-content">
@@ -208,6 +337,25 @@
 					</div>
 				</section>
 
+				<!-- ------------------------------------------------------------
+				     SLIDE 2 — STORIA (La nostra storia)
+				     Timeline + slideshow foto decennali + recensioni clienti.
+
+				     ELEMENTI MANIPOLATI DA main.js:
+				     - .office-slideshow → main.js cicla le <img> al suo interno
+				       ogni CONFIG.decadeSlideshowDuration ms (default 1500).
+				       Per aggiungere/togliere un decennio: aggiungere/rimuovere
+				       un <img> con attributo data-decade="<anno>".
+				       Il numero nell'attributo appare nel badge sovrapposto.
+				     - .decade-value → main.js ci scrive l'anno corrente
+				     - Il pulsante "Leggi tutte le recensioni" è un link
+				       esterno (non manipolato dal JS).
+
+				     Per aggiornare le recensioni: sostituire i blocchi
+				     .review-card mantenendo la stessa struttura. Il numero
+				     di stelle (aria-label="5 stelle su 5") è solo informativo
+				     per screen reader, le stelle visive sono .ico-star.
+				     ------------------------------------------------------------ -->
 				<section id="storia" class="slide">
 					<div class="slide-inner">
 						<div class="slide-label">
@@ -227,6 +375,10 @@
 							Offida.
 						</p>
 
+						<!-- Slideshow foto storiche. Ogni <img> ha data-decade
+						     che viene mostrato nel badge della caption.
+						     Per cambiare la foto: sostituire src e alt.
+						     Per aggiungere un decennio: copiare un blocco <img>. -->
 						<figure class="office-photo office-slideshow">
 							<div class="slideshow-track">
 								<img
@@ -288,6 +440,8 @@
 							</figcaption>
 						</figure>
 
+						<!-- Timeline storica. Ogni .timeline-item è indipendente,
+						     non manipolato dal JS. Modifica libera. -->
 						<div class="timeline">
 							<div class="timeline-item">
 								<span class="timeline-year">1973</span>
@@ -317,6 +471,11 @@
 								</p>
 							</div>
 						</div>
+
+						<!-- Blocco recensioni. Per aggiungere una recensione:
+						     copiare un .review-card e modificare iniziale avatar,
+						     nome e testo. Il numero di stelle (aria-label) è per
+						     screen reader. Per 4 stelle: rimuovere un .ico-star. -->
 						<div class="reviews-header">
 							<h3>Cosa dicono i clienti</h3>
 							<span class="reviews-source">
@@ -395,6 +554,8 @@
 							</div>
 						</div>
 
+						<!-- Link esterno alle recensioni Google Maps. Il placeid
+						     è quello dell'officina, non va modificato. -->
 						<a
 							href="https://search.google.com/local/reviews?placeid=ChIJk45O9HH6MRMR8ZWG6RLXQUs"
 							target="_blank"
@@ -407,6 +568,17 @@
 					</div>
 				</section>
 
+				<!-- ------------------------------------------------------------
+				     SLIDE 3 — SERVIZI
+				     Card dei servizi offerti. Nessun elemento è manipolato
+				     da main.js: modifica libera, sia dei testi che delle card.
+
+				     Per aggiungere un servizio: copiare una .service-card e
+				     modificare icona (.ico-*), titolo e descrizione.
+				     Le classi .is-warning / .is-electric / .is-board / .is-power
+				     colorano lo sfondo del badge. Per un colore neutro, nessuna
+				     di queste classi (usa il blu --primary).
+				     ------------------------------------------------------------ -->
 				<section id="servizi" class="slide white">
 					<div class="slide-inner">
 						<div class="slide-label">
@@ -420,6 +592,7 @@
 							Dalla diagnostica elettronica al soccorso sul posto con booster.
 						</p>
 
+						<!-- Card "in evidenza" — il servizio principale. -->
 						<div class="service-featured">
 							<div class="featured-icon">
 								<span class="ico ico-microchip" aria-hidden="true"></span>
@@ -435,6 +608,7 @@
 							</div>
 						</div>
 
+						<!-- Griglia servizi. Su mobile 1 colonna, da 421px 2 colonne. -->
 						<div class="services-grid">
 							<div class="service-card">
 								<div class="service-badge is-warning">
@@ -480,6 +654,8 @@
 								</p>
 							</div>
 
+							<!-- Card emergenza: sfondo a gradiente, occupa tutta la
+							     larghezza della griglia (classe .wide). -->
 							<div class="service-card wide emergency">
 								<div class="service-badge">
 									<span
@@ -501,6 +677,36 @@
 					</div>
 				</section>
 
+				<!-- ------------------------------------------------------------
+				     SLIDE 4 — CONTATTI (Dove e quando trovarci)
+				     Orari, contatti, mappa, note aggiuntive.
+
+				     ELEMENTI MANIPOLATI DA main.js:
+				     - #openStatusBadge → riceve classi di stato
+				       (.is-open/.is-closing-soon/.is-lunch-break/.is-closed)
+				       e viene aggiornato ogni minuto da initOpeningStatus.
+				     - #openStatusText → riceve il testo breve dello stato.
+				     - #scheduleList → main.js aggiunge la classe .is-today
+				       all'<li> corrispondente al giorno corrente, in base
+				       all'attributo data-days (0=domenica, 1=lunedì, ... 6=sabato).
+
+				     GLI ORARI SONO DEFINITI IN DUE POSTI:
+				     1. Visivamente qui, nel testo HTML (con gli attributi
+				        data-days per il giorno corrente).
+				     2. Logicamente in ./assets/js/main.js → CONFIG.schedule
+				        (in minuti dalla mezzanotte) per calcolare lo stato
+				        "aperto/chiuso" in tempo reale.
+				     Se cambi un orario, aggiornalo in ENTRAMBI i posti.
+
+				     ELEMENTI MANIPOLATI DAL COOKIE JS:
+				     - #mapOverlay → riceve/toglie la classe .hidden per
+				       bloccare/sbloccare la mappa.
+				     - #activateMap → click mostra il banner cookie se
+				       l'utente non ha ancora acconsentito.
+				     - #activateMapLabel → testo che cambia in base allo stato.
+				     - .map-wrap iframe → src letto/scritto da data-src
+				       quando il consenso viene dato/revocato.
+				     ------------------------------------------------------------ -->
 				<section id="contatti" class="slide">
 					<div class="slide-inner">
 						<div class="slide-label">
@@ -511,12 +717,15 @@
 						<h2 class="slide-title accent-line">Dove e quando<br />trovarci</h2>
 
 						<div class="info-stack">
+							<!-- --- CARD ORARI --- -->
 							<div class="info-block">
 								<div class="block-label">
 									<span class="block-label-left">
 										<span class="ico ico-clock" aria-hidden="true"></span>
 										Orari di apertura
 									</span>
+									<!-- Badge di stato: il contenuto testuale ("Verifica…")
+									     viene sostituito da main.js all'avvio. -->
 									<span
 										class="open-status-badge"
 										id="openStatusBadge"
@@ -527,6 +736,9 @@
 										<span id="openStatusText">Verifica…</span>
 									</span>
 								</div>
+								<!-- data-days: lista dei giorni (0=domenica) a cui
+								     si applica la riga. main.js evidenzia quella
+								     contenente il giorno corrente. -->
 								<ul class="schedule-list" id="scheduleList">
 									<li data-days="1,2,3,4,5">
 										<span class="day">Lunedì – Venerdì</span>
@@ -543,6 +755,7 @@
 								</ul>
 							</div>
 
+							<!-- --- CARD CONTATTI --- -->
 							<div class="info-block">
 								<div class="block-label">
 									<span class="block-label-left">
@@ -556,6 +769,8 @@
 									costantemente le mani impegnate. Suggeriamo di lasciare un
 									messaggio su WhatsApp se non è un'emergenza.
 								</p>
+								<!-- Link tel: e wa.me sono tracciati da main.js
+								     (initContactTracking) se GA è caricato. -->
 								<div class="contact-buttons">
 									<a href="tel:+393519717054" class="btn btn-call">
 										<span class="ico ico-phone" aria-hidden="true"></span>
@@ -573,6 +788,7 @@
 								</div>
 							</div>
 
+							<!-- --- CARD MAPPA --- -->
 							<div class="info-block">
 								<div class="block-label">
 									<span class="block-label-left">
@@ -588,6 +804,9 @@
 									prossimità della rotatoria del bivio per Offida.
 								</p>
 								<div class="map-wrap">
+									<!-- Overlay bloccante: visibile finché l'utente non
+									     accetta i cookie. Contiene il watermark mappa
+									     (icona in filigrana) e il bottone di attivazione. -->
 									<div class="map-overlay" id="mapOverlay">
 										<button
 											class="map-overlay-btn"
@@ -601,6 +820,9 @@
 											>
 										</button>
 									</div>
+									<!-- L'iframe NON ha src: viene caricato solo dopo
+									     il consenso. L'URL è in data-src. Il cookie JS
+									     copia data-src in src quando serve. -->
 									<iframe
 										data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2924.337738295955!2d13.7259315!3d42.865715099999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1331fa71f44e8e93%3A0x4b41d712e98695f1!2sElettrauto%20Lelli%20Giuseppe!5e0!3m2!1sit!2sit!4v1788773290863!5m2!1sit!2sit"
 										loading="lazy"
@@ -620,6 +842,7 @@
 								</a>
 							</div>
 
+							<!-- --- CARD NOTE AGGIUNTIVE --- -->
 							<div class="info-block info-extra">
 								<h3 class="info-extra-title">Buono a sapersi</h3>
 								<div class="trade-notes">
@@ -642,6 +865,15 @@
 					</div>
 				</section>
 
+				<!-- ------------------------------------------------------------
+				     SLIDE 5 — GUIDA PICENA
+				     Slide promozionale del progetto "Guida Picena".
+				     Ha un tema colore diverso (classe .gp-theme, vedi CSS):
+				     terracotta e oliva invece di blu navy.
+
+				     Nessun elemento manipolato da main.js. Modifica libera.
+				     Il link finale ha parametri UTM per il tracking referral.
+				     ------------------------------------------------------------ -->
 				<section id="guida-picena" class="slide gp-theme">
 					<div class="slide-inner">
 						<div class="slide-label">
@@ -722,6 +954,19 @@
 					</div>
 				</section>
 
+				<!-- ------------------------------------------------------------
+				     SLIDE 6 — NOTE LEGALI
+				     Disclaimer, credits, link a privacy policy e cookie settings.
+
+				     PULSANTI MANIPOLATI DA main.js:
+				     - #openPrivacyLink → apre il modale #policyModal
+				     - #reopenCookieSettings → richiama cookieApi.showBanner()
+				       (mostra di nuovo il banner cookie per cambiare scelta)
+
+				     Sono <button>, non <a href="#">, perché scatenano azioni
+				     (non navigano). Non convertirli in link: romperebbe
+				     accessibilità da tastiera e screen reader.
+				     ------------------------------------------------------------ -->
 				<section id="note-legali" class="slide white">
 					<div class="slide-inner">
 						<div class="slide-label">
@@ -732,6 +977,8 @@
 						<h2 class="slide-title accent-line">Informazioni sul sito</h2>
 
 						<div class="legal-stack">
+							<!-- Blocco avviso: importante che rimanga chiaro che
+							     questo NON è il sito ufficiale dell'officina. -->
 							<div class="legal-block">
 								<h3>
 									<span class="ico ico-warning" aria-hidden="true"></span>
@@ -748,6 +995,8 @@
 								</div>
 							</div>
 
+							<!-- Blocco credits: autore del progetto + link al
+							     repository GitHub. Le icone sono dentro i link. -->
 							<div class="legal-block">
 								<h3>
 									<span class="ico ico-heart" aria-hidden="true"></span>
@@ -783,6 +1032,8 @@
 								</p>
 							</div>
 
+							<!-- Blocco privacy: due bottoni che aprono
+							     rispettivamente il modale policy e il banner cookie. -->
 							<div class="legal-block">
 								<h3>
 									<span class="ico ico-user-shield" aria-hidden="true"></span>
@@ -812,6 +1063,24 @@
 				</section>
 			</main>
 
+			<!-- ============================================================
+			     BOTTOM NAV
+			     Barra di navigazione tra le slide. Su mobile è fissa in
+			     basso. Su desktop è un "pill" flottante centrato che si
+			     mostra solo quando il mouse si avvicina al fondo
+			     (vedi initNavHotZone in main.js).
+
+			     ID REFERENZIATI DA main.js:
+			     - #prevBtn / #nextBtn → frecce avanti/indietro
+			     - #dots → container dei pallini
+			     - Ogni .dot deve avere un aria-label nel formato:
+			       "Vai alla sezione: <Titolo>"
+			       main.js estrae il titolo da qui per il live region
+			       e per l'evento GA slide_view. Il formato è vincolante.
+
+			     Per aggiungere/rimuovere una slide, ricordarsi di
+			     aggiungere/rimuovere anche il .dot corrispondente.
+			     ============================================================ -->
 			<nav class="bottom-nav" aria-label="Navigazione slide">
 				<button
 					type="button"
@@ -866,6 +1135,13 @@
 				</button>
 			</nav>
 
+			<!-- ============================================================
+			     FAB — Pulsanti flottanti (solo mobile)
+			     Chiama e WhatsApp sempre a portata di pollice.
+			     Su desktop (≥541px) vengono nascosti dal CSS.
+
+			     I link tel: e wa.me sono tracciati da main.js se GA è attivo.
+			     ============================================================ -->
 			<div class="fab">
 				<a
 					href="tel:+393519717054"
@@ -885,12 +1161,35 @@
 				</a>
 			</div>
 
+			<!-- ============================================================
+			     SWIPE HINT
+			     Suggerimento "Scorri per continuare" mostrato solo al
+			     primo avvio su mobile. Viene nascosto da main.js
+			     (classe .hidden) al primo cambio slide, e dal CSS su
+			     desktop (dove lo swipe non ha senso).
+
+			     ID: #swipeHint → manipolato da main.js in updateUI().
+			     ============================================================ -->
 			<div class="swipe-hint" id="swipeHint" aria-hidden="true">
 				<span>Scorri per continuare</span>
 				<span class="ico ico-chevron-right"></span>
 			</div>
 		</div>
 
+		<!-- ============================================================
+		     MODALE PRIVACY & COOKIE POLICY
+		     Si apre dai bottoni #openPolicyFromBanner e #openPrivacyLink.
+		     Chiude con click su X, click sul backdrop, o tasto Escape.
+
+		     ID REFERENZIATI DA main.js:
+		     - #policyModal → il backdrop (role="dialog")
+		     - #policyClose → bottone X di chiusura
+		     - #policyTitle → titolo referenziato da aria-labelledby
+
+		     Il contenuto della policy è testo statico: modifica libera.
+		     Se cambi la data di aggiornamento, aggiorna anche
+		     <p class="policy-meta">.
+		     ============================================================ -->
 		<div
 			class="modal-backdrop"
 			id="policyModal"
@@ -1041,6 +1340,22 @@
 			</div>
 		</div>
 
+		<!-- ============================================================
+		     MODALE RECENSIONE
+		     Si apre dal rating pill nell'hero (#ratingTrigger) o dal
+		     pulsante corrispondente. Il link "Scrivi una recensione"
+		     porta direttamente al form Google Maps dell'officina.
+
+		     Il testo NON chiede esplicitamente 5 stelle (policy Google
+		     vieta il "review gating"). Se in futuro vuoi cambiare il
+		     testo, mantieni questa neutralità.
+
+		     ID REFERENZIATI DA main.js:
+		     - #reviewModal → il backdrop
+		     - #reviewTitle → titolo referenziato da aria-labelledby
+		     - #reviewDismiss → bottone "Forse un'altra volta"
+		     - #ratingTrigger (nella hero) → apre questo modale
+		     ============================================================ -->
 		<div
 			class="modal-backdrop"
 			id="reviewModal"

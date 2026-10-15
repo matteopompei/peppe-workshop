@@ -1,5 +1,9 @@
 /* ============================================================
    1. RESET
+   Normalizza i margini e i box model su tutti gli elementi.
+   Imposta html/body a tutta altezza e blocca lo scroll della
+   pagina: il sito è pensato come un'app "fissa", lo scroll
+   avviene solo dentro le singole slide o nel deck orizzontale.
    ============================================================ */
 * {
 	box-sizing: border-box;
@@ -37,6 +41,11 @@ ul {
 
 /* ============================================================
    2. FONT SELF-HOSTED
+   Font caricati localmente, nessuna richiesta a Google Fonts
+   (privacy + performance + offline-ready).
+   I file .woff2 sono in ./assets/fonts/.
+   Se aggiungi un nuovo peso, aggiungi il blocco @font-face
+   e preload in <head> i pesi critici (400, 800).
    ============================================================ */
 @font-face {
 	font-family: "Bitter";
@@ -97,63 +106,61 @@ ul {
 
 /* ============================================================
    3. DESIGN TOKENS
+   Tutti i valori riutilizzabili del design system.
+   Modificare un token qui aggiorna il sito intero.
+   Nessuna regola sotto :root deve contenere valori "magici".
    ============================================================ */
 :root {
-	/* Palette principale */
+	/* --- Palette principale --- */
 	--primary: #2a3757;
 	--primary-dark: #1e2841;
 	--primary-light: #3d4d78;
 	--accent: #4a5a8a;
 
-	/* Testo */
+	/* --- Testo --- */
 	--text: #2c2c2c;
 	--text-light: #5a5a5a;
 
-	/* Superfici */
+	/* --- Superfici --- */
 	--bg: #ffffff;
 	--bg-alt: #f6f8fb;
 	--border: #e3e7ee;
 
-	/* Accenti semantici */
+	/* --- Accenti semantici --- */
 	--wa: #0d7d3a;
 	--wa-dark: #0a6430;
 	--star: #f5b301;
 	--gold: #d4a017;
 	--terracotta: #9c4a26;
 
-	/* Palette Guida Picena */
+	/* --- Palette Guida Picena --- */
 	--gp-terracotta: #b8642c;
 	--gp-terracotta-dark: #9c4a1e;
 	--gp-oliva: #9aa26f;
 	--gp-cream: #fdf6ee;
 	--gp-cream-alt: #f8f2e8;
 
-	/* Header insegna */
+	/* --- Header insegna --- */
 	--signage-off: #1a2238;
 	--signage-on: #354d7d;
 	--signage-logo-off: #e0e7f2;
 
-	/* Stati apertura — verde (aperto) */
+	/* --- Stati apertura officina --- */
+	/* Verde: aperto. Giallo: in chiusura. Azzurro: pausa pranzo. Rosso: chiuso. */
 	--status-open-bg: #dcfce7;
 	--status-open-text: #0f6b32;
 	--status-open-dot: #22c55e;
-
-	/* Stati apertura — giallo (in chiusura) */
 	--status-closing-bg: #fef3c7;
 	--status-closing-text: #b45309;
 	--status-closing-dot: #f59e0b;
-
-	/* Stati apertura — azzurro (pausa pranzo) */
 	--status-lunch-bg: #e0f2fe;
 	--status-lunch-text: #0369a1;
 	--status-lunch-dot: #0ea5e9;
-
-	/* Stati apertura — rosso (chiuso) */
 	--status-closed-bg: #fee2e2;
 	--status-closed-text: #b91c1c;
 	--status-closed-dot: #ef4444;
 
-	/* Rating / gold */
+	/* --- Rating e oro --- */
 	--rating-border: #f0e2b5;
 	--rating-divider: #e8d89c;
 	--rating-text: #8a6500;
@@ -161,26 +168,30 @@ ul {
 	--rating-hover: #e0a400;
 	--rating-tint: #fff8e6;
 
-	/* RGB — per comporre rgba(var(--*-rgb), alpha) nelle shadow */
+	/* --- RGB per comporre rgba(var(--*-rgb), alpha) --- */
+	/* Servono per creare ombre e overlay con trasparenza
+	   senza ripetere i valori. Se cambi un colore principale,
+	   aggiorna anche il corrispondente *-rgb qui sotto. */
 	--primary-rgb: 42, 55, 87;
 	--wa-rgb: 13, 125, 58;
 	--gp-rgb: 156, 74, 30;
 	--signage-rgb: 26, 34, 56;
 
-	/* Ombre */
+	/* --- Ombre --- */
 	--shadow: 0 2px 12px rgba(var(--primary-rgb), 0.08);
 	--shadow-lg: 0 8px 24px rgba(var(--primary-rgb), 0.12);
 
-	/* Tipografia */
+	/* --- Famiglie tipografiche --- */
 	--font-display: "Bitter", Georgia, "Times New Roman", serif;
 	--font-body:
 		"Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
 		Arial, sans-serif;
 
-	/* Scala dimensioni font — 8 step semantici.
-	   Tutti i testi del sito usano questi token, senza eccezioni.
-	   --fs-hero è responsive (clamp) perché il titolo dell'hero
-	   scala col viewport per design. */
+	/* --- Scala dimensioni font (8 step) --- */
+	/* Ogni testo del sito usa uno di questi token. Non aggiungere
+	   font-size hardcoded nelle regole: se serve una nuova misura,
+	   aggiungi un token qui e usalo. L'unica eccezione documentata
+	   è html { font-size: clamp(...) } che definisce la base rem. */
 	--fs-2xs: 0.75rem; /* 12.0px — micro: tag, badge, meta, disclaimer */
 	--fs-xs: 0.78rem; /* 12.5px — label uppercase, kicker, piccole note */
 	--fs-sm: 0.82rem; /* 13.1px — testo secondario (banner cookie, policy) */
@@ -191,10 +202,9 @@ ul {
 	--fs-2xl: 1.85rem; /* 29.6px — h2 slide title, brand Guida Picena */
 	--fs-hero: clamp(2.2rem, 8vw, 3.1rem); /* Titolo hero responsive */
 
-	/* Scala border-radius — 6 step semantici.
-	   I cerchi perfetti (avatar, dot, badge rotondi) usano
-	   50% direttamente, non un token: sono "cerchi", non
-	   "raggi scalari". */
+	/* --- Scala border-radius (6 step) --- */
+	/* I cerchi perfetti (avatar, dot, badge rotondi) usano
+	   direttamente "50%" e non un token: sono cerchi, non raggi. */
 	--radius-xs: 4px; /* micro: code, dot attivo, linea decorativa */
 	--radius-sm: 8px; /* piccoli: disclaimer-note, schedule li */
 	--radius-md: 12px; /* card medie: timeline, review, trade-note, gp-feature */
@@ -202,17 +212,17 @@ ul {
 	--radius-xl: 22px; /* contenitori grandi: gp-hero, modali */
 	--radius-pill: 999px; /* pill: bottoni, badge, tag, nav desktop */
 
-	/* Scala dimensioni icone — 5 step semantici.
-	   La regola base .ico usa 1em (scala col testo).
-	   Gli override qui sotto fissano la dimensione in rem
-	   quando serve coerenza indipendente dal contesto. */
+	/* --- Scala dimensioni icone (5 step) --- */
+	/* La regola base .ico usa 1em (scala col testo).
+	   Questi token servono per gli override fissi quando serve
+	   coerenza indipendente dal contesto tipografico. */
 	--icon-xs: 0.75rem; /* 12.0px — dentro badge/meta microscopici */
 	--icon-sm: 0.875rem; /* 14.0px — accanto a testo normale */
 	--icon-md: 1rem; /* 16.0px — default: stars, bottoni secondari */
 	--icon-lg: 1.125rem; /* 18.0px — bottoni principali, nav, badge medi */
 	--icon-xl: 1.5rem; /* 24.0px — icone grandi: FAB, featured */
 
-	/* Layout */
+	/* --- Layout globale --- */
 	--app-max: 540px;
 	--header-pad-y: 0.9rem;
 	--header-pad-x: 1rem;
@@ -220,12 +230,11 @@ ul {
 	--slide-pad-x: 1.35rem;
 	--slide-pad-y-bottom: 6.5rem;
 
-	/* Z-INDEX — layers dell'interfaccia.
-	   Spaziati in modo da permettere l'inserimento di layer intermedi
-	   senza dover rinumerare. Solo i layer che competono tra loro sullo
-	   stacking context root usano questi token; i valori interni ai
-	   singoli componenti (z-index 0/1/2) restano hardcoded perché
-	   isolati nel proprio stacking context. */
+	/* --- Z-INDEX (layers dell'interfaccia) --- */
+	/* Spaziati di 5-10 unità per permettere inserimenti futuri
+	   senza rinumerare. Solo i layer che competono tra loro sul
+	   root stacking context usano questi token; i valori interni
+	   (z-index: 0/1/2) nei componenti isolati restano hardcoded. */
 	--z-map-overlay: 5;
 	--z-header: 10;
 	--z-cookie: 15;
@@ -234,19 +243,22 @@ ul {
 	--z-fab: 40;
 	--z-modal: 200;
 
-	/* Timing interazioni */
+	/* --- Timing interazioni --- */
 	--dur-fast: 0.15s;
 	--dur-ui: 0.18s;
 	--dur-med: 0.25s;
 	--dur-slow: 0.8s;
 	--dur-modal: 0.3s;
 
+	/* --- Easing --- */
 	--ease-ui: ease;
 	--ease-modal: cubic-bezier(0.2, 0.9, 0.3, 1.2);
 }
 
 /* ============================================================
    4. BASE
+   Font-size root responsive: definisce la base rem per tutto
+   il sito. Non toccare: è il perno di tutta la scala --fs-*.
    ============================================================ */
 html {
 	font-size: clamp(1rem, 0.35vw + 0.85rem, 1.375rem);
@@ -262,9 +274,13 @@ body {
 }
 
 /* ============================================================
-   FOCUS VISIBILE — outline coerente per tutti gli elementi
-   interattivi. Colore adattivo via currentColor, così su
-   sfondi scuri l'outline resta visibile.
+   FOCUS VISIBILE
+   Outline coerente per tutti gli elementi interattivi.
+   Usa currentColor così su sfondi colorati l'outline eredita
+   il colore del testo (es. bianco su bottone verde) e resta
+   sempre visibile.
+   :where() ha specificity zero → non sovrascrive gli eventuali
+   :focus-visible specifici definiti più sotto.
    ============================================================ */
 :where(a, button, [role="button"], [tabindex]):focus-visible {
 	outline: 2px solid currentColor;
@@ -273,8 +289,10 @@ body {
 }
 
 /* ============================================================
-   VISUALLY HIDDEN — accessibile agli screen reader,
-   invisibile visivamente, non occupa spazio nel layout
+   VISUALLY HIDDEN
+   Nasconde visivamente un elemento mantenendolo leggibile
+   dallo screen reader. Usato per la live region delle slide
+   (#liveRegion) e per il testo di stato nell'hero.
    ============================================================ */
 .visually-hidden {
 	position: absolute;
@@ -289,10 +307,11 @@ body {
 }
 
 /* ============================================================
-   LINK-BUTTON — <button> stilizzato come link.
-   Usato per azioni che sembrano link ma non navigano
-   (apri modale, mostra banner cookie). Reset del <button>
-   + ereditarietà tipografica dal contesto.
+   LINK-BUTTON
+   <button> stilizzato come link testuale. Usato per azioni
+   che sembrano link ma non navigano (apri modale, mostra
+   banner cookie). font: inherit è essenziale: senza, il
+   bottone userebbe il font di default del browser.
    ============================================================ */
 .link-button {
 	background: transparent;
@@ -305,7 +324,13 @@ body {
 }
 
 /* ============================================================
-   5. ICONE — CSS mask + currentColor
+   5. ICONE
+   Ogni icona è un <span class="ico ico-{nome}">. La forma
+   arriva da una mask-image SVG in --src, il colore da
+   currentColor. Il vantaggio: cambiare il colore del testo
+   cambia automaticamente l'icona.
+   Per aggiungere un'icona: aggiungi un file SVG in
+   ./assets/img/icons/ e registra la classe .ico-{nome} sotto.
    ============================================================ */
 .ico {
 	display: inline-block;
@@ -323,7 +348,7 @@ body {
 	mask-size: contain;
 }
 
-/* Registrazione icone */
+/* --- Registrazione icone --- */
 .ico-star {
 	--src: url(../img/icons/star.svg);
 }
@@ -428,7 +453,9 @@ body {
    6. LAYOUT — App, Header, Deck, Slide
    ============================================================ */
 
-/* --- App container --- */
+/* --- App container ---
+   Simula la viewport di un'app mobile. Su desktop è centrato
+   con max-width 540px, su mobile occupa tutto lo schermo. */
 .app {
 	height: 100vh;
 	height: 100dvh;
@@ -440,7 +467,11 @@ body {
 	overflow: hidden;
 }
 
-/* --- Header (insegna) --- */
+/* --- Header (insegna) ---
+   Contiene il logo dell'officina. Di notte (calcolato in JS)
+   riceve la classe .is-lit e si "accende" con un effetto neon.
+   .header-wrap è position: relative per ancorare il banner
+   cookie che è posizionato assoluto subito sotto l'header. */
 .header-wrap {
 	position: relative;
 	flex-shrink: 0;
@@ -473,6 +504,8 @@ body {
 	z-index: 0;
 }
 
+/* Stato "insegna accesa". Classe togglata da initSignage() in main.js
+   in base all'orario di Roma (tramonto/alba). */
 .app-header.is-lit {
 	background-color: var(--signage-on);
 	box-shadow:
@@ -493,10 +526,10 @@ body {
 		drop-shadow(0 0 12px rgba(160, 200, 255, 0.4));
 }
 
-/* Quando la tab è in background, l'animazione del neon
-   va in pausa per risparmiare CPU/GPU/batteria. Lo stato
-   visivo resta congelato: al ritorno l'animazione riprende
-   senza flash né sfarfallii. */
+/* Stato "animazione in pausa". Togglato quando la tab del browser
+   passa in background, per non consumare CPU/GPU inutilmente.
+   animation-play-state: paused congela il frame corrente invece
+   di rimuovere l'animazione: al ritorno riprende dal punto esatto. */
 .app-header.is-paused {
 	animation-play-state: paused;
 }
@@ -534,6 +567,9 @@ body {
 	}
 }
 
+/* Logo dell'officina: nessuna <img>, solo una mask-image.
+   Il colore del logo viene da background-color e cambia
+   quando l'insegna si accende. */
 .app-header .logo {
 	width: min(22rem, 90%);
 	aspect-ratio: 738 / 54;
@@ -552,7 +588,12 @@ body {
 		filter var(--dur-slow) var(--ease-ui);
 }
 
-/* --- Deck (carosello orizzontale) --- */
+/* --- Deck (carosello orizzontale) ---
+   Container dello scroll orizzontale. Ogni .slide figlia
+   occupa tutta la larghezza. scroll-snap manda ogni slide
+   a filo quando l'utente smette di trascinare.
+   Il drag col mouse è gestito da main.js: parte solo dove il
+   cursore è "grab" (vedi whitelist sotto). */
 .deck {
 	flex: 1;
 	display: flex;
@@ -577,7 +618,9 @@ body {
 	display: none;
 }
 
-/* --- Slide --- */
+/* --- Slide ---
+   Una slide = una sezione del sito. Scroll verticale interno
+   indipendente per ogni slide. */
 .slide {
 	flex: 0 0 100%;
 	width: 100%;
@@ -602,9 +645,13 @@ body {
 	padding: var(--slide-pad-y-top) var(--slide-pad-x) var(--slide-pad-y-bottom);
 }
 
-/* Testo selezionabile: consente di copiare orari, indirizzo,
-   contatti, note legali. Il cursore cambia da "grab" a "text"
-   per comunicare all'utente che qui si seleziona, non si trascina. */
+/* --- Testo selezionabile ---
+   Il .deck applica user-select: none per non selezionare il
+   testo durante il drag del carosello. Questa whitelist
+   riabilita la selezione sui testi che l'utente vorrà copiare
+   (indirizzo, orari, contatti, note legali). Cambia anche il
+   cursore da "grab" a "text": main.js usa questo per decidere
+   se partire col drag o lasciar selezionare. */
 .slide-inner .hero-subtitle,
 .slide-inner .hero-location,
 .slide-inner .body-text,
@@ -623,9 +670,9 @@ body {
 	cursor: text;
 }
 
-/* Ripristina il cursore "mano" sugli elementi interattivi,
-   anche se annidati dentro la whitelist sopra (link nelle
-   note legali, link nelle policy, ecc.). */
+/* Ripristina il cursore "mano" sui controlli interattivi
+   dentro le aree di testo selezionabile (es. link nelle
+   note legali). */
 .slide-inner a,
 .slide-inner button {
 	cursor: pointer;
@@ -635,7 +682,9 @@ body {
    7. COMPONENTI CONDIVISI
    ============================================================ */
 
-/* --- Label di sezione --- */
+/* --- Label di sezione ---
+   Piccola etichetta uppercase sopra ogni titolo di slide.
+   Es: "LA NOSTRA STORIA" sopra "Più di 50 anni di passione". */
 .slide-label {
 	display: inline-flex;
 	align-items: center;
@@ -654,7 +703,9 @@ body {
 	color: var(--gold);
 }
 
-/* --- Titolo di sezione --- */
+/* --- Titolo di sezione ---
+   h2 di ogni slide. La classe .accent-line aggiunge una
+   piccola barra dorata sotto il titolo. */
 .slide-title {
 	font-family: var(--font-display);
 	font-size: var(--fs-2xl);
@@ -675,7 +726,7 @@ body {
 	margin-top: 0.65rem;
 }
 
-/* --- Paragrafo --- */
+/* --- Paragrafo di testo --- */
 .body-text {
 	font-size: var(--fs-md);
 	color: var(--text-light);
@@ -683,7 +734,10 @@ body {
 	line-height: 1.6;
 }
 
-/* --- Bottoni --- */
+/* --- Bottoni ---
+   Tutti i bottoni condividono forma a pill, altezza e padding.
+   Le varianti colore (.btn-call, .btn-wa, .btn-ghost) vanno
+   aggiunte in coppia con .btn. */
 .btn {
 	display: inline-flex;
 	align-items: center;
@@ -746,7 +800,9 @@ body {
    ============================================================ */
 
 /* ------------------------------------------------------------
-   8.1 HERO
+   8.1 HERO (slide "home")
+   Rating + titolo + location + CTA. Sfondo con due gradienti
+   radiali decorativi e un gradiente lineare diagonale.
    ------------------------------------------------------------ */
 .slide.hero {
 	position: relative;
@@ -773,7 +829,10 @@ body {
 	padding: 1rem 0 0.5rem;
 }
 
-/* Rating pill */
+/* --- Rating pill ---
+   Piccola pill cliccabile che mostra la valutazione Google.
+   Al click (o Enter/Spazio) apre il modale recensione.
+   L'animazione edgeGlow crea un alone dorato pulsante. */
 .rating-wrap {
 	display: inline-block;
 	margin: 0 auto 1.5rem;
@@ -796,6 +855,7 @@ body {
 	animation: edgeGlow 2.4s ease-in-out infinite;
 }
 
+/* Effetto "glint" (riflesso di luce che attraversa la pill). */
 .rating-pill::after {
 	content: "";
 	position: absolute;
@@ -869,7 +929,10 @@ body {
 	padding-left: 0.55rem;
 }
 
-/* Titolo con gradiente animato — responsive via --fs-hero */
+/* --- Titolo hero ---
+   Gradiente animato (titleGradient) che si sposta lento.
+   La dimensione usa --fs-hero (clamp responsive): scala tra
+   2.2rem e 3.1rem in base al viewport. */
 .hero-title {
 	font-family: var(--font-display);
 	font-size: var(--fs-hero);
@@ -903,7 +966,9 @@ body {
 	}
 }
 
-/* Kicker "Dal 1973" */
+/* --- Kicker "Dal 1973" ---
+   Piccolo testo uppercase con due linee decorative ai lati
+   (generate con ::before e ::after). */
 .hero-kicker {
 	display: flex;
 	justify-content: center;
@@ -926,7 +991,6 @@ body {
 	border-radius: var(--radius-xs);
 }
 
-/* Sottotitolo */
 .hero-subtitle {
 	font-size: var(--fs-md);
 	color: var(--text-light);
@@ -935,7 +999,11 @@ body {
 	line-height: 1.55;
 }
 
-/* Location pill */
+/* --- Location pill ---
+   Mostra l'indirizzo dell'officina. Contiene un dot colorato
+   (#locationDot) che riflette lo stato di apertura.
+   Il testo dello stato è in #heroStatusText (visually-hidden,
+   letto solo dallo screen reader). */
 .hero-location {
 	display: inline-flex;
 	align-items: center;
@@ -963,6 +1031,9 @@ body {
 	white-space: nowrap;
 }
 
+/* --- Dot di stato nell'hero ---
+   Colore diverso in base allo stato. Le classi .is-* vengono
+   togglate da initOpeningStatus() in main.js ogni minuto. */
 .location-dot {
 	width: 0.5rem;
 	height: 0.5rem;
@@ -992,7 +1063,7 @@ body {
 	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
-/* CTA row */
+/* --- CTA row nell'hero --- */
 .cta-row {
 	display: flex;
 	gap: 0.6rem;
@@ -1010,6 +1081,8 @@ body {
 
 /* ------------------------------------------------------------
    8.2 SERVIZI
+   Card "in evidenza" + griglia di 4 card + card emergenza
+   a piena larghezza con gradiente arancio-rosso.
    ------------------------------------------------------------ */
 .service-featured {
 	background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -1069,6 +1142,7 @@ body {
 	margin-bottom: 0.6rem;
 }
 
+/* Griglia servizi. Su mobile 1 colonna, da 421px 2 colonne. */
 .services-grid {
 	display: grid;
 	grid-template-columns: 1fr;
@@ -1083,6 +1157,8 @@ body {
 	box-shadow: var(--shadow);
 }
 
+/* Badge quadrato con icona sopra il titolo.
+   Le classi .is-* cambiano il colore di sfondo. */
 .service-badge {
 	width: 2.5rem;
 	height: 2.5rem;
@@ -1130,10 +1206,12 @@ body {
 	line-height: 1.5;
 }
 
+/* Card che occupa tutta la larghezza della griglia. */
 .service-card.wide {
 	grid-column: 1 / -1;
 }
 
+/* Card emergenza: sfondo gradient arancio-rosso. */
 .service-card.emergency {
 	background: linear-gradient(135deg, #f97316, #ef4444);
 	border: none;
@@ -1159,6 +1237,7 @@ body {
 	color: rgba(255, 255, 255, 0.92);
 }
 
+/* Tag "Emergenza" bianco su sfondo scuro (contrasto AA). */
 .emergency-tag {
 	display: inline-block;
 	background: #fff;
@@ -1174,6 +1253,8 @@ body {
 
 /* ------------------------------------------------------------
    8.3 STORIA / TIMELINE
+   Timeline verticale con linea decorativa a sinistra e
+   pallini ai nodi. Puramente HTML/CSS, nessun JS.
    ------------------------------------------------------------ */
 .timeline {
 	position: relative;
@@ -1181,6 +1262,7 @@ body {
 	margin: 0.5rem 0 2rem;
 }
 
+/* Linea verticale della timeline (gradiente blu → azzurro). */
 .timeline::before {
 	content: "";
 	position: absolute;
@@ -1206,6 +1288,7 @@ body {
 	margin-bottom: 0;
 }
 
+/* Pallino sul nodo della timeline. */
 .timeline-item::before {
 	content: "";
 	position: absolute;
@@ -1219,6 +1302,7 @@ body {
 	box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
 }
 
+/* Badge "1973", "Oggi" ecc. */
 .timeline-year {
 	display: inline-block;
 	background: var(--primary);
@@ -1249,6 +1333,10 @@ body {
 
 /* ------------------------------------------------------------
    8.4 SLIDESHOW FOTO OFFICINA
+   Slideshow automatico delle foto storiche. Le <img> sono
+   impilate in position: absolute. Solo quella con .is-visible
+   è a opacity 1. La classe viene togglata da initDecadeSlideshow()
+   in main.js ogni CONFIG.decadeSlideshowDuration ms.
    ------------------------------------------------------------ */
 .office-photo {
 	margin: 0 0 2rem;
@@ -1281,10 +1369,13 @@ body {
 	transition: opacity 0.4s ease;
 }
 
+/* Solo questa immagine è visibile. Cambia via JS. */
 .slideshow-track img.is-visible {
 	opacity: 1;
 }
 
+/* Caption sovrapposta in basso con gradient scuro → trasparente
+   per garantire leggibilità del testo bianco sulla foto. */
 .slideshow-caption {
 	position: absolute;
 	bottom: 0;
@@ -1312,6 +1403,9 @@ body {
 	white-space: nowrap;
 }
 
+/* Badge con l'anno (es. "1973"). Sfondo nero trasparente
+   per contrasto ottimale su qualsiasi foto. Il valore
+   interno (.decade-value) è aggiornato da main.js. */
 .decade-badge {
 	display: inline-flex;
 	align-items: center;
@@ -1334,6 +1428,8 @@ body {
 
 /* ------------------------------------------------------------
    8.5 RECENSIONI
+   Lista di card con avatar, nome, stelle e testo.
+   Su mobile 1 colonna, da 541px 2 colonne.
    ------------------------------------------------------------ */
 .reviews-header {
 	display: flex;
@@ -1402,6 +1498,8 @@ body {
 	min-width: 0;
 }
 
+/* Avatar: cerchio con la prima lettera del nome.
+   Sfondo con gradiente blu, testo bianco. */
 .review-avatar {
 	width: 2rem;
 	height: 2rem;
@@ -1438,6 +1536,8 @@ body {
 	color: var(--star);
 }
 
+/* Testo della recensione con virgolette tipografiche
+   decorative (U+201C e U+201D) generate via ::before/::after. */
 .review-text {
 	font-size: var(--fs-base);
 	color: var(--text);
@@ -1455,6 +1555,7 @@ body {
 	margin-left: 0.1em;
 }
 
+/* Bottone "Leggi tutte le recensioni su Google". */
 .btn-reviews {
 	display: flex;
 	align-items: center;
@@ -1489,6 +1590,7 @@ body {
 
 /* ------------------------------------------------------------
    8.6 CONTATTI / INFO
+   Card con orari, contatti, mappa e note aggiuntive.
    ------------------------------------------------------------ */
 .info-stack {
 	display: flex;
@@ -1627,6 +1729,9 @@ body {
 
 /* ------------------------------------------------------------
    8.7 BADGE STATO APERTURA
+   Badge "APERTO", "CHIUDE 19:30" ecc. vicino al titolo "Orari".
+   Le classi .is-* vengono togglate da initOpeningStatus() in main.js.
+   I colori sono definiti nei token --status-*.
    ------------------------------------------------------------ */
 .open-status-badge {
 	display: inline-flex;
@@ -1655,6 +1760,9 @@ body {
 	flex-shrink: 0;
 }
 
+/* Animazione "pulse" del dot solo quando l'officina è
+   aperta / in chiusura / in pausa pranzo. Quando è chiuso
+   il dot resta statico. */
 .open-status-badge.is-open .status-dot-small::before,
 .open-status-badge.is-closing-soon .status-dot-small::before,
 .open-status-badge.is-lunch-break .status-dot-small::before {
@@ -1698,6 +1806,8 @@ body {
 
 /* ------------------------------------------------------------
    8.8 TABELLA ORARI
+   Lista giorni. La riga del giorno corrente riceve la classe
+   .is-today da main.js (in base all'attributo data-days in HTML).
    ------------------------------------------------------------ */
 .schedule-list li {
 	display: flex;
@@ -1732,6 +1842,7 @@ body {
 	font-size: var(--fs-sm);
 }
 
+/* Riga del giorno corrente: sfondo azzurro chiaro per evidenziarla. */
 .schedule-list li.is-today {
 	background: #eef4fb;
 	border-bottom-color: transparent;
@@ -1748,6 +1859,7 @@ body {
 	font-weight: 600;
 }
 
+/* Tag "OGGI" che main.js aggiunge accanto al nome del giorno. */
 .today-tag {
 	display: inline-block;
 	background: var(--primary);
@@ -1765,6 +1877,10 @@ body {
 
 /* ------------------------------------------------------------
    8.9 MAPPA
+   Blocco mappa con overlay bloccante finché l'utente non
+   accetta i cookie. L'overlay è decorato con un pattern a
+   puntini (griglia cartografica) e un watermark di icona
+   mappa in filigrana. Nessuna immagine richiesta: tutto CSS.
    ------------------------------------------------------------ */
 .map-wrap {
 	border-radius: var(--radius-lg);
@@ -1784,12 +1900,14 @@ body {
 	display: block;
 }
 
+/* Overlay bloccante. Viene nascosto da main.js quando l'utente
+   accetta i cookie (classe .hidden → opacity 0 + pointer-events:
+   none, così l'iframe sottostante diventa cliccabile).
+   La transition di opacity rende fluida la comparsa/scomparsa. */
 .map-overlay {
 	position: absolute;
 	inset: 0;
 	background-color: #e8ecf5;
-	/* Pattern di puntini: suggerisce una griglia cartografica
-       senza costo computazionale (nessun blur, nessuna immagine). */
 	background-image: radial-gradient(
 		circle,
 		rgba(var(--primary-rgb), 0.12) 1px,
@@ -1805,9 +1923,9 @@ body {
 	transition: opacity var(--dur-med) var(--ease-ui);
 }
 
-/* Watermark: icona mappa gigante in filigrana,
-   comunica visivamente "qui c'è una mappa" anche
-   quando l'iframe è bloccato (nessun src caricato). */
+/* Watermark decorativo: icona mappa gigante in filigrana.
+   Dimensione proporzionale al contenitore (55%), centrata.
+   aspect-ratio è il viewBox del file map.svg (Font Awesome). */
 .map-overlay::before {
 	content: "";
 	position: absolute;
@@ -1830,11 +1948,13 @@ body {
 	z-index: 0;
 }
 
+/* Stato "mappa sbloccata". Classe togglata da main.js. */
 .map-overlay.hidden {
 	opacity: 0;
 	pointer-events: none;
 }
 
+/* Bottone "Accetta i cookie per vedere la mappa". */
 .map-overlay-btn {
 	position: relative;
 	z-index: 1;
@@ -1870,6 +1990,9 @@ body {
 
 /* ------------------------------------------------------------
    8.10 GUIDA PICENA
+   Slide promozionale del progetto "Guida Picena" con palette
+   dedicata (terracotta + oliva). Applica le variazioni tramite
+   il modificatore .gp-theme sul .slide.
    ------------------------------------------------------------ */
 .slide.gp-theme {
 	background: linear-gradient(
@@ -1908,6 +2031,8 @@ body {
 	box-shadow: 0 12px 32px rgba(var(--gp-rgb), 0.28);
 }
 
+/* Decorazioni radiali: un alone chiaro in alto a destra e
+   uno oliva in basso a sinistra. Puramente estetiche. */
 .gp-hero::before {
 	content: "";
 	position: absolute;
@@ -2000,6 +2125,7 @@ body {
 	color: var(--gp-terracotta-dark);
 }
 
+/* Blocco "Come funziona" con bordo sinistro oliva. */
 .gp-saving {
 	display: flex;
 	align-items: flex-start;
@@ -2061,6 +2187,7 @@ body {
 	flex-shrink: 0;
 }
 
+/* CTA principale della slide Guida Picena. */
 .gp-cta {
 	display: flex;
 	align-items: center;
@@ -2103,6 +2230,10 @@ body {
 
 /* ------------------------------------------------------------
    8.11 NOTE LEGALI
+   Blocchi avviso, credits, link a privacy e cookie settings.
+   I pulsanti #openPrivacyLink e #reopenCookieSettings sono
+   <button> con classe .link-button, non <a>: scatenano azioni
+   (main.js gestisce il click).
    ------------------------------------------------------------ */
 .legal-stack {
 	display: flex;
@@ -2145,6 +2276,7 @@ body {
 	margin: 0;
 }
 
+/* Icona inline dentro un paragrafo (es. icona GitHub dopo "GitHub"). */
 .legal-block p .ico {
 	display: inline-block;
 	width: var(--icon-sm);
@@ -2154,6 +2286,7 @@ body {
 	color: currentColor;
 }
 
+/* Box avviso giallo pallido con bordo dorato. */
 .legal-block .disclaimer-note {
 	background: var(--rating-tint);
 	border-left: 3px solid var(--gold);
@@ -2224,10 +2357,17 @@ body {
 
 /* ============================================================
    9. CHROME UI — Nav, FAB, Hint, Cookie, Modali
+   Tutti gli elementi di "chrome" (controlli di sistema) che
+   stanno sopra il contenuto: bottom nav, pulsanti flottanti,
+   hint di swipe, banner cookie, modali.
    ============================================================ */
 
 /* ------------------------------------------------------------
    9.1 BOTTOM NAV
+   Barra di navigazione tra le slide. Su mobile è fissa in
+   basso a piena larghezza. Su desktop diventa una pill
+   flottante centrata che si mostra solo in prossimità del
+   fondo (vedi media query 11.3).
    ------------------------------------------------------------ */
 .bottom-nav {
 	position: absolute;
@@ -2244,6 +2384,7 @@ body {
 	z-index: var(--z-nav);
 }
 
+/* Frecce prev/next. */
 .nav-btn {
 	width: 2.625rem;
 	height: 2.625rem;
@@ -2278,8 +2419,6 @@ body {
 	transition: color var(--dur-ui) var(--ease-ui);
 }
 
-/* Feedback al tap: attivo su tutti i device (touch + mouse).
-   Si attiva al press e si spegne al rilascio. */
 .nav-btn:active {
 	background: var(--primary);
 	border-color: var(--primary);
@@ -2289,18 +2428,24 @@ body {
 	color: #fff;
 }
 
+/* Stato "disabilitato": la freccia è a inizio o fine carosello.
+   Toggla da main.js. pointer-events: none impedisce il click. */
 .nav-btn.disabled {
 	opacity: 0.3;
 	pointer-events: none;
 	cursor: default;
 }
 
+/* Container dei pallini. */
 .dots {
 	display: flex;
 	gap: 0.4rem;
 	align-items: center;
 }
 
+/* Pallino singolo. Il pallino attivo diventa più largo
+   (effetto pill) e prende il colore primario. La classe
+   .active è togglata da main.js. */
 .dot {
 	width: 0.4375rem;
 	height: 0.4375rem;
@@ -2329,6 +2474,8 @@ body {
 
 /* ------------------------------------------------------------
    9.2 FAB — pulsanti flottanti (solo mobile)
+   Pulsanti Chiama e WhatsApp in basso a destra. Visibili solo
+   su mobile: su desktop (>=541px) sono nascosti.
    ------------------------------------------------------------ */
 .fab {
 	position: fixed;
@@ -2371,6 +2518,10 @@ body {
 
 /* ------------------------------------------------------------
    9.3 SWIPE HINT
+   Suggerimento "Scorri per continuare" mostrato solo al primo
+   avvio. Viene nascosto da main.js (classe .hidden) al primo
+   cambio slide, e dal CSS su desktop (dove lo swipe non ha
+   senso, vedi media query 10).
    ------------------------------------------------------------ */
 .swipe-hint {
 	position: fixed;
@@ -2417,6 +2568,9 @@ body {
 
 /* ------------------------------------------------------------
    9.4 COOKIE BANNER
+   Banner sotto l'header. Nascosto quando <html> ha la classe
+   .cookie-chosen (aggiunta dallo script inline in <head> o
+   da main.js dopo la scelta dell'utente).
    ------------------------------------------------------------ */
 .cookie-banner {
 	position: absolute;
@@ -2433,6 +2587,8 @@ body {
 	z-index: var(--z-cookie);
 }
 
+/* Stato "scelta fatta". Classe su <html> per gestire anche
+   lo script di FOUC prevention in <head>. */
 html.cookie-chosen .cookie-banner {
 	display: none;
 }
@@ -2496,7 +2652,10 @@ html.cookie-chosen .cookie-banner {
 
 /* ------------------------------------------------------------
    9.5 MODALI
-   ------------------------------------------------------------ */
+   Backdrop + box centrato. Il backdrop riceve la classe .show
+   da main.js quando il modale è aperto. Con .show diventa
+   visibile e attiva la transition di opacity.
+   ============================================================ */
 .modal-backdrop {
 	position: fixed;
 	inset: 0;
@@ -2520,6 +2679,8 @@ html.cookie-chosen .cookie-banner {
 	visibility: visible;
 }
 
+/* Box del modale. La transform iniziale (translateY + scale)
+   viene annullata con .show, producendo un effetto "pop". */
 .modal-box {
 	background: #fff;
 	border-radius: var(--radius-xl);
@@ -2567,7 +2728,8 @@ html.cookie-chosen .cookie-banner {
 	height: var(--icon-md);
 }
 
-/* Modale policy */
+/* Variante modale policy: più largo, testo a sinistra,
+   contenuto scrollabile. */
 .modal-box.policy {
 	max-width: 35rem;
 	text-align: left;
@@ -2600,6 +2762,8 @@ html.cookie-chosen .cookie-banner {
 	letter-spacing: -0.3px;
 }
 
+/* Contenuto policy con scroll verticale interno e scrollbar
+   personalizzata discreta. */
 .policy-content {
 	overflow-y: auto;
 	flex: 1;
@@ -2679,7 +2843,7 @@ html.cookie-chosen .cookie-banner {
 	font-style: italic;
 }
 
-/* Modale recensione */
+/* Variante modale recensione: testo centrato. */
 .modal-box:not(.policy) {
 	text-align: center;
 	padding: 2.2rem 1.75rem 1.6rem;
@@ -2742,13 +2906,17 @@ html.cookie-chosen .cookie-banner {
 }
 
 /* ============================================================
-   10. HOVER — solo dispositivi con puntatore preciso
-   Su touch gli stati :hover diventano "sticky" e restano
-   applicati dopo il tap (es. frecce nav che restano blu).
-   Il feedback al tap è gestito separatamente con :active.
+   10. HOVER
+   Applicato SOLO ai dispositivi con puntatore preciso
+   (mouse/trackpad). Su touch gli stati :hover diventano
+   "sticky" e restano attivi dopo il tap: questo media query
+   li isola dove ha senso.
+   Il feedback al tap è gestito separatamente con :active
+   (che funziona su tutti i device).
+   Nota: .swipe-hint viene nascosto su desktop perché lo swipe
+   non ha senso con mouse/trackpad.
    ============================================================ */
 @media (hover: hover) and (pointer: fine) {
-	/* Bottoni generici */
 	.btn:hover {
 		transform: translateY(-1px);
 	}
@@ -2762,31 +2930,26 @@ html.cookie-chosen .cookie-banner {
 		background: #f0f3fa;
 	}
 
-	/* Rating pill */
 	.rating-wrap:hover .rating-pill {
 		transform: translateY(-1px);
 	}
 
-	/* Recensioni — link a Google */
 	.btn-reviews:hover {
 		background: var(--bg-alt);
 		border-color: #cdd5e3;
 		transform: translateY(-1px);
 	}
 
-	/* Mappa — bottone overlay */
 	.map-overlay-btn:hover {
 		background: var(--primary-dark);
 	}
 
-	/* Guida Picena */
 	.gp-cta:hover {
 		background: #843c14;
 		transform: translateY(-1px);
 		box-shadow: 0 8px 22px rgba(var(--gp-rgb), 0.45);
 	}
 
-	/* Link nelle note legali */
 	.legal-block p a:hover,
 	.legal-block .disclaimer-note a:hover {
 		color: var(--primary);
@@ -2795,7 +2958,6 @@ html.cookie-chosen .cookie-banner {
 		color: var(--primary);
 	}
 
-	/* Nav */
 	.nav-btn:hover {
 		background: var(--primary);
 		border-color: var(--primary);
@@ -2807,7 +2969,6 @@ html.cookie-chosen .cookie-banner {
 		transform: scale(1.25);
 	}
 
-	/* FAB */
 	.fab-btn.call:hover {
 		box-shadow: 0 8px 22px rgba(var(--primary-rgb), 0.45);
 	}
@@ -2819,7 +2980,6 @@ html.cookie-chosen .cookie-banner {
 		display: none;
 	}
 
-	/* Cookie */
 	.cookie-btn.accept:hover {
 		background: var(--primary-dark);
 	}
@@ -2827,7 +2987,6 @@ html.cookie-chosen .cookie-banner {
 		background: var(--bg-alt);
 	}
 
-	/* Modali */
 	.modal-close:hover {
 		background: var(--bg-alt);
 	}
@@ -2876,6 +3035,10 @@ html.cookie-chosen .cookie-banner {
 
 /* ------------------------------------------------------------
    11.2 DESKTOP — da 541px in su
+   L'app si allarga a tutta larghezza. Il contenuto delle
+   slide è centrato con max-width. Cambiano i padding header
+   e slide, i FAB vengono nascosti, la bottom nav diventa
+   una pill flottante centrata.
    ------------------------------------------------------------ */
 @media (min-width: 541px) {
 	.app {
@@ -2883,6 +3046,7 @@ html.cookie-chosen .cookie-banner {
 		box-shadow: none;
 	}
 
+	/* Override dei padding base per il desktop. */
 	:root {
 		--header-pad-y: 1.25rem;
 		--header-pad-x: 1.5rem;
@@ -2932,11 +3096,12 @@ html.cookie-chosen .cookie-banner {
 		padding: 0.55rem 1.1rem;
 	}
 
+	/* FAB nascosti su desktop: i contatti sono già visibili. */
 	.fab {
 		display: none;
 	}
 
-	/* Bottom nav come pill flottante centrata */
+	/* Bottom nav diventa una pill flottante centrata. */
 	.bottom-nav {
 		left: 50%;
 		right: auto;
@@ -2954,7 +3119,13 @@ html.cookie-chosen .cookie-banner {
 
 /* ------------------------------------------------------------
    11.3 DESKTOP CON MOUSE — hot zone per la nav
-   La nav si mostra solo quando il mouse si avvicina al fondo.
+   Su desktop con mouse la nav è nascosta di default e si
+   mostra solo quando il cursore si avvicina al fondo dello
+   schermo. Il comportamento è gestito da initNavHotZone() in
+   main.js, che aggiunge/rimuove la classe .is-visible.
+   La regola :has(:focus-visible) garantisce che la nav sia
+   visibile anche quando un suo elemento riceve focus da
+   tastiera (accessibilità).
    ------------------------------------------------------------ */
 @media (min-width: 541px) and (hover: hover) and (pointer: fine) {
 	.bottom-nav {
@@ -2976,7 +3147,12 @@ html.cookie-chosen .cookie-banner {
 
 /* ------------------------------------------------------------
    11.4 PREFERS-REDUCED-MOTION
-   ------------------------------------------------------------ */
+   Rispetta la preferenza di sistema per animazioni ridotte
+   (WCAG 2.3.3). Disattiva tutte le animazioni e transizioni
+   impostandole a durata quasi zero. Lo stato finale di ogni
+   animazione è preservato (animation-duration: 0.01ms significa
+   che l'animazione salta direttamente al keyframe finale).
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
