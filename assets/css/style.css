@@ -177,15 +177,19 @@ ul {
 		"Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
 		Arial, sans-serif;
 
-	/* Scala dimensioni font — 7 step semantici */
+	/* Scala dimensioni font — 8 step semantici.
+	   Tutti i testi del sito usano questi token, senza eccezioni.
+	   --fs-hero è responsive (clamp) perché il titolo dell'hero
+	   scala col viewport per design. */
 	--fs-2xs: 0.75rem; /* 12.0px — micro: tag, badge, meta, disclaimer */
 	--fs-xs: 0.78rem; /* 12.5px — label uppercase, kicker, piccole note */
 	--fs-sm: 0.82rem; /* 13.1px — testo secondario (banner cookie, policy) */
 	--fs-base: 0.88rem; /* 14.1px — body compatto (schedule, card desc, note) */
 	--fs-md: 0.92rem; /* 14.7px — body principale, bottoni, paragrafi */
 	--fs-lg: 1.05rem; /* 16.8px — h4, sottotitoli di card */
-	--fs-xl: 1.2rem; /* 19.2px — h3 medi (recensioni header, legali) */
-	--fs-2xl: 1.85rem; /* 29.6px — h2 slide title */
+	--fs-xl: 1.2rem; /* 19.2px — h3 medi (recensioni header, legali, modali) */
+	--fs-2xl: 1.85rem; /* 29.6px — h2 slide title, brand Guida Picena */
+	--fs-hero: clamp(2.2rem, 8vw, 3.1rem); /* Titolo hero responsive */
 
 	/* Layout */
 	--app-max: 540px;
@@ -618,7 +622,7 @@ body {
 /* --- Titolo di sezione --- */
 .slide-title {
 	font-family: var(--font-display);
-	font-size: 1.85rem;
+	font-size: var(--fs-2xl);
 	font-weight: 700;
 	color: var(--primary);
 	line-height: 1.15;
@@ -638,7 +642,7 @@ body {
 
 /* --- Paragrafo --- */
 .body-text {
-	font-size: 0.92rem;
+	font-size: var(--fs-md);
 	color: var(--text-light);
 	margin-bottom: 1.5rem;
 	line-height: 1.6;
@@ -653,7 +657,7 @@ body {
 	padding: 0.75rem 1.25rem;
 	border-radius: 50px;
 	font-weight: 700;
-	font-size: 0.92rem;
+	font-size: var(--fs-md);
 	border: none;
 	transition:
 		background-color var(--dur-ui) var(--ease-ui),
@@ -825,15 +829,15 @@ body {
 .rating-value {
 	font-weight: 800;
 	color: var(--rating-text);
-	font-size: 0.9rem;
+	font-size: var(--fs-base);
 	border-left: 1px solid var(--rating-divider);
 	padding-left: 0.55rem;
 }
 
-/* Titolo con gradiente animato */
+/* Titolo con gradiente animato — responsive via --fs-hero */
 .hero-title {
 	font-family: var(--font-display);
-	font-size: clamp(2.2rem, 8vw, 3.1rem);
+	font-size: var(--fs-hero);
 	font-weight: 800;
 	line-height: 1.05;
 	letter-spacing: -0.3px;
@@ -889,7 +893,7 @@ body {
 
 /* Sottotitolo */
 .hero-subtitle {
-	font-size: 0.95rem;
+	font-size: var(--fs-md);
 	color: var(--text-light);
 	margin: 0 auto 1.75rem;
 	max-width: 21rem;
@@ -905,7 +909,7 @@ body {
 	border: 1px solid var(--border);
 	padding: 0.4rem 0.9rem;
 	border-radius: 50px;
-	font-size: 0.8rem;
+	font-size: var(--fs-xs);
 	color: var(--text-light);
 	font-weight: 600;
 	margin-bottom: 1.75rem;
@@ -1004,7 +1008,7 @@ body {
 .service-featured h3 {
 	font-family: var(--font-display);
 	color: #fff;
-	font-size: 1.15rem;
+	font-size: var(--fs-xl);
 	font-weight: 700;
 	margin-bottom: 0.4rem;
 	line-height: 1.25;
@@ -1013,7 +1017,7 @@ body {
 
 .service-featured p {
 	color: rgba(255, 255, 255, 0.85);
-	font-size: 0.88rem;
+	font-size: var(--fs-base);
 	margin: 0;
 	line-height: 1.55;
 }
@@ -1077,7 +1081,7 @@ body {
 .service-card h4 {
 	font-family: var(--font-display);
 	color: var(--primary);
-	font-size: 1rem;
+	font-size: var(--fs-lg);
 	font-weight: 700;
 	margin-bottom: 0.45rem;
 	line-height: 1.25;
@@ -1085,7 +1089,7 @@ body {
 }
 
 .service-card p {
-	font-size: 0.78rem;
+	font-size: var(--fs-xs);
 	color: var(--text-light);
 	margin: 0;
 	line-height: 1.5;
@@ -1113,7 +1117,7 @@ body {
 
 .service-card.emergency h4 {
 	color: #fff;
-	font-size: 1.05rem;
+	font-size: var(--fs-lg);
 }
 
 .service-card.emergency p {
@@ -1195,14 +1199,14 @@ body {
 .timeline-item h4 {
 	font-family: var(--font-display);
 	color: var(--primary);
-	font-size: 1.05rem;
+	font-size: var(--fs-lg);
 	font-weight: 700;
 	margin-bottom: 0.3rem;
 	letter-spacing: -0.2px;
 }
 
 .timeline-item p {
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 	color: var(--text-light);
 	margin: 0;
 	line-height: 1.55;
@@ -1258,7 +1262,7 @@ body {
 		rgba(var(--signage-rgb), 0) 100%
 	);
 	color: #fff;
-	font-size: 0.75rem;
+	font-size: var(--fs-2xs);
 	font-weight: 600;
 	letter-spacing: 0.3px;
 	display: flex;
@@ -1309,7 +1313,7 @@ body {
 .reviews-header h3 {
 	font-family: var(--font-display);
 	color: var(--primary);
-	font-size: 1.2rem;
+	font-size: var(--fs-xl);
 	font-weight: 700;
 	line-height: 1.2;
 	margin: 0;
@@ -1372,14 +1376,14 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 0.8rem;
+	font-size: var(--fs-xs);
 	font-weight: 800;
 	flex-shrink: 0;
 	box-shadow: 0 2px 6px rgba(var(--primary-rgb), 0.18);
 }
 
 .review-name {
-	font-size: 0.83rem;
+	font-size: var(--fs-sm);
 	font-weight: 700;
 	color: var(--primary);
 	white-space: nowrap;
@@ -1400,7 +1404,7 @@ body {
 }
 
 .review-text {
-	font-size: 0.87rem;
+	font-size: var(--fs-base);
 	color: var(--text);
 	line-height: 1.55;
 	margin: 0;
@@ -1427,7 +1431,7 @@ body {
 	background: #fff;
 	border: 1.5px solid var(--border);
 	border-radius: 50px;
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 	font-weight: 700;
 	color: var(--primary);
 	transition:
@@ -1470,7 +1474,7 @@ body {
 	justify-content: space-between;
 	align-items: center;
 	gap: 0.75rem;
-	font-size: 0.78rem;
+	font-size: var(--fs-xs);
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.8px;
@@ -1492,7 +1496,7 @@ body {
 }
 
 .card-desc {
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 	color: var(--text-light);
 	line-height: 1.55;
 	margin: 0 0 0.9rem;
@@ -1510,7 +1514,7 @@ body {
 .contact-buttons .btn {
 	flex: 1;
 	padding: 0.6rem;
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 }
 
 /* --- Note "pagamento" e "caffè" --- */
@@ -1539,7 +1543,7 @@ body {
 
 .trade-note p {
 	margin: 0;
-	font-size: 0.83rem;
+	font-size: var(--fs-sm);
 	color: var(--text-light);
 	line-height: 1.55;
 }
@@ -1562,7 +1566,7 @@ body {
 	font-style: italic;
 	color: var(--text);
 	font-weight: 600;
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 }
 
 .trade-note.coffee {
@@ -1579,7 +1583,7 @@ body {
 .info-extra-title {
 	font-family: var(--font-display);
 	color: var(--primary);
-	font-size: 1.05rem;
+	font-size: var(--fs-lg);
 	font-weight: 700;
 	letter-spacing: -0.2px;
 	margin: 0 0 0.9rem;
@@ -1668,7 +1672,7 @@ body {
 	padding: 0.7rem;
 	margin: 0 -0.7rem;
 	border-bottom: 1px solid var(--border);
-	font-size: 0.9rem;
+	font-size: var(--fs-base);
 	border-radius: 8px;
 }
 
@@ -1684,13 +1688,13 @@ body {
 
 .schedule-list .time {
 	color: var(--text-light);
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 }
 
 .schedule-list .closed {
 	color: #c0392b;
 	font-weight: 600;
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 }
 
 .schedule-list li.is-today {
@@ -1805,7 +1809,7 @@ body {
 	border-radius: 50px;
 	padding: 0.75rem 1.3rem;
 	font-weight: 700;
-	font-size: 0.9rem;
+	font-size: var(--fs-base);
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
@@ -1930,7 +1934,7 @@ body {
 .gp-name {
 	font-family: var(--font-display);
 	color: #fff;
-	font-size: 1.65rem;
+	font-size: var(--fs-2xl);
 	font-weight: 800;
 	line-height: 1.15;
 	margin-bottom: 0.4rem;
@@ -1941,7 +1945,7 @@ body {
 
 .gp-tagline {
 	color: #fff;
-	font-size: 0.82rem;
+	font-size: var(--fs-sm);
 	font-weight: 500;
 	line-height: 1.5;
 	max-width: 18rem;
@@ -1951,7 +1955,7 @@ body {
 }
 
 .gp-body {
-	font-size: 0.92rem;
+	font-size: var(--fs-md);
 	color: var(--text-light);
 	line-height: 1.65;
 	margin-bottom: 1.5rem;
@@ -1983,7 +1987,7 @@ body {
 
 .gp-saving p {
 	margin: 0;
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 	color: var(--text);
 	line-height: 1.6;
 }
@@ -2009,7 +2013,7 @@ body {
 	border: 1px solid #ecdccc;
 	border-radius: 12px;
 	padding: 1rem 0.75rem;
-	font-size: 0.82rem;
+	font-size: var(--fs-sm);
 	font-weight: 700;
 	color: var(--gp-terracotta-dark);
 	text-align: center;
@@ -2032,7 +2036,7 @@ body {
 	background: var(--gp-terracotta-dark);
 	color: #fff;
 	border-radius: 50px;
-	font-size: 0.92rem;
+	font-size: var(--fs-md);
 	font-weight: 800;
 	box-shadow: 0 6px 18px rgba(var(--gp-rgb), 0.35);
 	transition:
@@ -2083,7 +2087,7 @@ body {
 .legal-block h3 {
 	font-family: var(--font-display);
 	color: var(--primary);
-	font-size: 1.05rem;
+	font-size: var(--fs-lg);
 	font-weight: 700;
 	margin-bottom: 0.6rem;
 	display: flex;
@@ -2100,7 +2104,7 @@ body {
 }
 
 .legal-block p {
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 	color: var(--text-light);
 	line-height: 1.6;
 	margin: 0;
@@ -2120,14 +2124,14 @@ body {
 	border-left: 3px solid var(--gold);
 	border-radius: 8px;
 	padding: 0.8rem 0.95rem;
-	font-size: 0.83rem;
+	font-size: var(--fs-sm);
 	color: var(--text);
 	line-height: 1.6;
 }
 
 .legal-block .disclaimer-note p {
 	color: var(--text);
-	font-size: 0.83rem;
+	font-size: var(--fs-sm);
 }
 
 .legal-block .disclaimer-note strong {
@@ -2159,7 +2163,7 @@ body {
 }
 
 .policy-links .link-button {
-	font-size: 0.78rem;
+	font-size: var(--fs-xs);
 	color: var(--text-light);
 	font-weight: 600;
 	text-decoration: underline;
@@ -2342,7 +2346,7 @@ body {
 	color: #fff;
 	padding: 0.5rem 1rem;
 	border-radius: 50px;
-	font-size: 0.78rem;
+	font-size: var(--fs-xs);
 	font-weight: 600;
 	display: flex;
 	align-items: center;
@@ -2400,7 +2404,7 @@ html.cookie-chosen .cookie-banner {
 
 .cookie-banner-text {
 	flex: 1;
-	font-size: 0.82rem;
+	font-size: var(--fs-sm);
 	color: var(--text-light);
 	line-height: 1.55;
 }
@@ -2428,7 +2432,7 @@ html.cookie-chosen .cookie-banner {
 	border: none;
 	padding: 0.65rem 0.9rem;
 	border-radius: 50px;
-	font-size: 0.86rem;
+	font-size: var(--fs-base);
 	font-weight: 700;
 	transition:
 		background-color var(--dur-ui) var(--ease-ui),
@@ -2555,7 +2559,7 @@ html.cookie-chosen .cookie-banner {
 .policy-header h2 {
 	font-family: var(--font-display);
 	color: var(--primary);
-	font-size: 1.25rem;
+	font-size: var(--fs-xl);
 	font-weight: 700;
 	margin: 0;
 	letter-spacing: -0.3px;
@@ -2582,7 +2586,7 @@ html.cookie-chosen .cookie-banner {
 
 .policy-content h3 {
 	color: var(--primary);
-	font-size: 0.95rem;
+	font-size: var(--fs-md);
 	margin: 1.1rem 0 0.4rem;
 	font-weight: 700;
 }
@@ -2592,14 +2596,14 @@ html.cookie-chosen .cookie-banner {
 }
 
 .policy-content p {
-	font-size: 0.82rem;
+	font-size: var(--fs-sm);
 	color: var(--text);
 	margin-bottom: 0.6rem;
 	line-height: 1.55;
 }
 
 .policy-content ul {
-	font-size: 0.82rem;
+	font-size: var(--fs-sm);
 	color: var(--text);
 	padding-left: 1.2rem;
 	margin-bottom: 0.6rem;
@@ -2623,7 +2627,7 @@ html.cookie-chosen .cookie-banner {
 .policy-content code {
 	font-family:
 		ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-	font-size: 0.78rem;
+	font-size: var(--fs-xs);
 	background: var(--bg-alt);
 	padding: 0.1rem 0.35rem;
 	border-radius: 4px;
@@ -2650,7 +2654,7 @@ html.cookie-chosen .cookie-banner {
 	font-family: var(--font-display);
 	color: var(--primary);
 	margin-bottom: 0.7rem;
-	font-size: 1.35rem;
+	font-size: var(--fs-xl);
 	font-weight: 700;
 	text-align: center;
 	letter-spacing: -0.3px;
@@ -2658,7 +2662,7 @@ html.cookie-chosen .cookie-banner {
 
 .modal-box:not(.policy) p {
 	color: var(--text-light);
-	font-size: 0.92rem;
+	font-size: var(--fs-md);
 	margin: 0 auto 1.4rem;
 	line-height: 1.55;
 	max-width: 22rem;
@@ -2686,7 +2690,7 @@ html.cookie-chosen .cookie-banner {
 	background: transparent;
 	border: none;
 	color: var(--text-light);
-	font-size: 0.82rem;
+	font-size: var(--fs-sm);
 	cursor: pointer;
 	padding: 0.4rem 0.6rem;
 	text-decoration: underline;
@@ -2831,7 +2835,7 @@ html.cookie-chosen .cookie-banner {
 	.schedule-list .time,
 	.schedule-list .closed {
 		text-align: right;
-		font-size: 0.9rem;
+		font-size: var(--fs-base);
 	}
 }
 
@@ -2875,10 +2879,6 @@ html.cookie-chosen .cookie-banner {
 		width: 7rem;
 		height: 7rem;
 		padding: 0.85rem;
-	}
-
-	.gp-name {
-		font-size: 1.9rem;
 	}
 
 	.cookie-banner {
