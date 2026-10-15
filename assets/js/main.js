@@ -48,15 +48,6 @@
 			"sabato",
 		],
 
-		slideTitles: [
-			"Benvenuto",
-			"La nostra storia",
-			"Servizi offerti",
-			"Dove e quando trovarci",
-			"Guida Picena",
-			"Note legali e credits",
-		],
-
 		decadeSlideshowDuration: 1500, // ms per foto
 	};
 
@@ -125,7 +116,15 @@
 		if (!slides.length || !prevBtn || !nextBtn) return null;
 
 		const total = slides.length;
-		const titles = CONFIG.slideTitles;
+
+		// I titoli sono derivati dagli aria-label dei dot.
+		// Formato atteso: "Vai alla sezione: <Titolo>"
+		// Così la fonte di verità resta l'HTML, e non esiste
+		// duplicazione da tenere sincronizzata.
+		const titles = dots.map((dot) => {
+			const label = dot.getAttribute("aria-label") || "";
+			return label.replace(/^Vai alla sezione:\s*/, "").trim();
+		});
 
 		let currentIndex = 0;
 		let isProgrammaticScroll = false;
