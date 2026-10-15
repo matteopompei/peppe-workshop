@@ -1181,7 +1181,6 @@
 	   ============================================================ */
 
 	function initOpeningStatus() {
-		const locationDot = document.getElementById("locationDot");
 		const heroLocation = document.getElementById("heroLocation");
 		const heroStatusText = document.getElementById("heroStatusText");
 		const openStatusBadge = document.getElementById("openStatusBadge");
@@ -1257,16 +1256,6 @@
 		 */
 		function updateStatus() {
 			const status = getOpenStatus();
-
-			if (locationDot) {
-				locationDot.classList.remove(
-					"is-open",
-					"is-closing-soon",
-					"is-lunch-break",
-					"is-closed",
-				);
-				locationDot.classList.add("is-" + status.state);
-			}
 
 			if (heroLocation) {
 				heroLocation.setAttribute(

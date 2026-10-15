@@ -150,15 +150,22 @@ ul {
 	--status-open-bg: #dcfce7;
 	--status-open-text: #0f6b32;
 	--status-open-dot: #22c55e;
+	--status-open-rgb: 34, 197, 94;
+
 	--status-closing-bg: #fef3c7;
 	--status-closing-text: #b45309;
 	--status-closing-dot: #f59e0b;
+	--status-closing-rgb: 245, 158, 11;
+
 	--status-lunch-bg: #e0f2fe;
 	--status-lunch-text: #0369a1;
 	--status-lunch-dot: #0ea5e9;
+	--status-lunch-rgb: 14, 165, 233;
+
 	--status-closed-bg: #fee2e2;
 	--status-closed-text: #b91c1c;
 	--status-closed-dot: #ef4444;
+	--status-closed-rgb: 239, 68, 68;
 
 	/* --- Rating e oro --- */
 	--rating-border: #f0e2b5;
@@ -1031,38 +1038,6 @@ body {
 	white-space: nowrap;
 }
 
-/* --- Dot di stato nell'hero ---
-   Colore diverso in base allo stato. Le classi .is-* vengono
-   togglate da initOpeningStatus() in main.js ogni minuto. */
-.location-dot {
-	width: 0.5rem;
-	height: 0.5rem;
-	border-radius: 50%;
-	background: #9aa6be;
-	flex-shrink: 0;
-	margin-left: 0.15rem;
-	transition:
-		background var(--dur-med) var(--ease-ui),
-		box-shadow var(--dur-med) var(--ease-ui);
-}
-
-.location-dot.is-open {
-	background: var(--status-open-dot);
-	box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
-}
-.location-dot.is-closing-soon {
-	background: var(--status-closing-dot);
-	box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
-}
-.location-dot.is-lunch-break {
-	background: var(--status-lunch-dot);
-	box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
-}
-.location-dot.is-closed {
-	background: var(--status-closed-dot);
-	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
-}
-
 /* --- CTA row nell'hero --- */
 .cta-row {
 	display: flex;
@@ -1735,8 +1710,6 @@ body {
    ------------------------------------------------------------ */
 .open-status-badge {
 	display: inline-flex;
-	align-items: center;
-	gap: 0.4rem;
 	padding: 0.28rem 0.65rem;
 	border-radius: var(--radius-pill);
 	font-size: var(--fs-2xs);
@@ -1751,57 +1724,46 @@ body {
 		color var(--dur-med) var(--ease-ui);
 }
 
-.open-status-badge .status-dot-small {
-	position: relative;
-	width: 0.4rem;
-	height: 0.4rem;
-	border-radius: 50%;
-	background: currentColor;
-	flex-shrink: 0;
+/* Stati "vivi": l'animazione badgePulse emette un anello del
+   colore dello stato che si espande e svanisce, come un respiro.
+   Chiuso resta dormiente: nessuna animazione. */
+.open-status-badge.is-open,
+.open-status-badge.is-closing-soon,
+.open-status-badge.is-lunch-break {
+	animation: badgePulse 2.6s ease-out infinite;
 }
 
-/* Animazione "pulse" del dot solo quando l'officina è
-   aperta / in chiusura / in pausa pranzo. Quando è chiuso
-   il dot resta statico. */
-.open-status-badge.is-open .status-dot-small::before,
-.open-status-badge.is-closing-soon .status-dot-small::before,
-.open-status-badge.is-lunch-break .status-dot-small::before {
-	content: "";
-	position: absolute;
-	inset: -2px;
-	border-radius: 50%;
-	border: 1.5px solid currentColor;
-	opacity: 0.4;
-	animation: dotPulseSmall 2.4s ease-out infinite;
-	pointer-events: none;
-}
-
-@keyframes dotPulseSmall {
-	0% {
-		transform: scale(0.6);
-		opacity: 0.55;
-	}
-	100% {
-		transform: scale(1.8);
-		opacity: 0;
-	}
-}
-
+/* Colore dell'anello per ogni stato. Le variabili --badge-ring-rgb
+   sono usate dall'animazione per costruire rgba() con alpha. */
 .open-status-badge.is-open {
+	--badge-ring-rgb: var(--status-open-rgb);
 	background: var(--status-open-bg);
 	color: var(--status-open-text);
 }
 .open-status-badge.is-closing-soon {
+	--badge-ring-rgb: var(--status-closing-rgb);
 	background: var(--status-closing-bg);
 	color: var(--status-closing-text);
 }
 .open-status-badge.is-lunch-break {
+	--badge-ring-rgb: var(--status-lunch-rgb);
 	background: var(--status-lunch-bg);
 	color: var(--status-lunch-text);
 }
 .open-status-badge.is-closed {
+	--badge-ring-rgb: var(--status-closed-rgb);
 	background: var(--status-closed-bg);
 	color: var(--status-closed-text);
+}
+
+@keyframes badgePulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(var(--badge-ring-rgb), 0.4);
+	}
+	70%,
+	100% {
+		box-shadow: 0 0 0 6px rgba(var(--badge-ring-rgb), 0);
+	}
 }
 
 /* ------------------------------------------------------------
