@@ -454,6 +454,14 @@ body {
 		drop-shadow(0 0 12px rgba(160, 200, 255, 0.4));
 }
 
+/* Quando la tab è in background, l'animazione del neon
+   va in pausa per risparmiare CPU/GPU/batteria. Lo stato
+   visivo resta congelato: al ritorno l'animazione riprende
+   senza flash né sfarfallii. */
+.app-header.is-paused {
+	animation-play-state: paused;
+}
+
 @keyframes neonFlicker {
 	0%,
 	22% {

@@ -1086,6 +1086,14 @@
 			else appHeader.classList.remove("is-lit");
 		}
 
+		// Pausa l'animazione neon quando la tab è in background.
+		// I browser lo fanno già in modo non uniforme; pausare
+		// esplicitamente garantisce risparmio anche su Chrome,
+		// dove le animazioni su `filter` a volte continuano.
+		document.addEventListener("visibilitychange", () => {
+			appHeader.classList.toggle("is-paused", document.hidden);
+		});
+
 		updateSignage();
 		setInterval(updateSignage, 60000);
 	}
