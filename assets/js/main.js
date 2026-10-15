@@ -126,6 +126,12 @@
 			return label.replace(/^Vai alla sezione:\s*/, "").trim();
 		});
 
+		// Fallback: se i dot sono meno delle slide, riempi con "Sezione N"
+		// (protegge da un eventuale refactor futuro che dimentichi un dot)
+		while (titles.length < total) {
+			titles.push("Sezione " + (titles.length + 1));
+		}
+
 		let currentIndex = 0;
 		let isProgrammaticScroll = false;
 		let programmaticScrollTimer = null;
