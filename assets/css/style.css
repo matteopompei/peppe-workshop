@@ -200,7 +200,6 @@ ul {
 	--dur-ui: 0.18s;
 	--dur-med: 0.25s;
 	--dur-slow: 0.8s;
-	--dur-slower: 0.9s;
 	--dur-modal: 0.3s;
 
 	--ease-ui: ease;
@@ -430,7 +429,7 @@ body {
 		rgba(120, 170, 255, 0) 80%
 	);
 	opacity: 0;
-	transition: opacity var(--dur-slower) var(--ease-ui);
+	transition: opacity var(--dur-slow) var(--ease-ui);
 	pointer-events: none;
 	z-index: 0;
 }
@@ -502,8 +501,8 @@ body {
 	mask-position: center;
 	mask-size: contain;
 	transition:
-		background-color var(--dur-slower) var(--ease-ui),
-		filter var(--dur-slower) var(--ease-ui);
+		background-color var(--dur-slow) var(--ease-ui),
+		filter var(--dur-slow) var(--ease-ui);
 }
 
 /* --- Deck (carosello orizzontale) --- */
