@@ -229,8 +229,12 @@
 
 			const slideId = slides[index].id;
 			if (push) {
+				// pushState aggiunge sempre una nuova entry: non ci interessa
+				// sapere se l'hash è già quello, va aggiunta comunque.
 				history.pushState({ slide: index }, "", "#" + slideId);
-			} else {
+			} else if (location.hash !== "#" + slideId) {
+				// replaceState solo se l'hash è effettivamente cambiato.
+				// Evita chiamate no-op quando popstate ha già aggiornato l'URL.
 				history.replaceState({ slide: index }, "", "#" + slideId);
 			}
 
@@ -398,7 +402,9 @@
 						updateUI();
 
 						const slideId = slides[currentIndex].id;
-						history.replaceState({ slide: currentIndex }, "", "#" + slideId);
+						if (location.hash !== "#" + slideId) {
+							history.replaceState({ slide: currentIndex }, "", "#" + slideId);
+						}
 					}, 120);
 				});
 			},
@@ -453,7 +459,13 @@
 							currentIndex = newIndex;
 							updateUI();
 							const slideId = slides[currentIndex].id;
-							history.replaceState({ slide: currentIndex }, "", "#" + slideId);
+							if (location.hash !== "#" + slideId) {
+								history.replaceState(
+									{ slide: currentIndex },
+									"",
+									"#" + slideId,
+								);
+							}
 						}
 					}, 200);
 				}
