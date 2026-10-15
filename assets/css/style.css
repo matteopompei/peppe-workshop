@@ -191,6 +191,17 @@ ul {
 	--fs-2xl: 1.85rem; /* 29.6px — h2 slide title, brand Guida Picena */
 	--fs-hero: clamp(2.2rem, 8vw, 3.1rem); /* Titolo hero responsive */
 
+	/* Scala border-radius — 6 step semantici.
+	   I cerchi perfetti (avatar, dot, badge rotondi) usano
+	   50% direttamente, non un token: sono "cerchi", non
+	   "raggi scalari". */
+	--radius-xs: 4px; /* micro: code, dot attivo, linea decorativa */
+	--radius-sm: 8px; /* piccoli: disclaimer-note, schedule li */
+	--radius-md: 12px; /* card medie: timeline, review, trade-note, gp-feature */
+	--radius-lg: 16px; /* card grandi: service, info, legal, mappa, foto */
+	--radius-xl: 22px; /* contenitori grandi: gp-hero, modali */
+	--radius-pill: 999px; /* pill: bottoni, badge, tag, nav desktop */
+
 	/* Layout */
 	--app-max: 540px;
 	--header-pad-y: 0.9rem;
@@ -248,7 +259,7 @@ body {
 :where(a, button, [role="button"], [tabindex]):focus-visible {
 	outline: 2px solid currentColor;
 	outline-offset: 3px;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 }
 
 /* ============================================================
@@ -650,7 +661,7 @@ body {
 	width: 42px;
 	height: 3px;
 	background: var(--gold);
-	border-radius: 3px;
+	border-radius: var(--radius-xs);
 	margin-top: 0.65rem;
 }
 
@@ -669,7 +680,7 @@ body {
 	justify-content: center;
 	gap: 0.5rem;
 	padding: 0.75rem 1.25rem;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	font-weight: 700;
 	font-size: var(--fs-md);
 	border: none;
@@ -767,7 +778,7 @@ body {
 	background: #fff;
 	border: 1px solid var(--rating-border);
 	padding: 0.5rem 1.1rem;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	overflow: hidden;
 	transition:
 		transform var(--dur-ui) var(--ease-ui),
@@ -902,7 +913,7 @@ body {
 	height: 1px;
 	width: 34px;
 	background: var(--terracotta);
-	border-radius: 1px;
+	border-radius: var(--radius-xs);
 }
 
 /* Sottotitolo */
@@ -922,7 +933,7 @@ body {
 	background: #fff;
 	border: 1px solid var(--border);
 	padding: 0.4rem 0.9rem;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-xs);
 	color: var(--text-light);
 	font-weight: 600;
@@ -993,7 +1004,7 @@ body {
 .service-featured {
 	background: linear-gradient(135deg, var(--primary), var(--primary-light));
 	color: #fff;
-	border-radius: 16px;
+	border-radius: var(--radius-lg);
 	padding: 1.35rem;
 	display: flex;
 	gap: 1.1rem;
@@ -1006,7 +1017,7 @@ body {
 	width: 3rem;
 	height: 3rem;
 	background: rgba(255, 255, 255, 0.15);
-	border-radius: 12px;
+	border-radius: var(--radius-md);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1040,7 +1051,7 @@ body {
 	display: inline-block;
 	background: rgba(255, 255, 255, 0.2);
 	padding: 0.2rem 0.65rem;
-	border-radius: 20px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-2xs);
 	font-weight: 700;
 	text-transform: uppercase;
@@ -1057,7 +1068,7 @@ body {
 .service-card {
 	background: #fff;
 	border: 1px solid var(--border);
-	border-radius: 14px;
+	border-radius: var(--radius-lg);
 	padding: 1rem;
 	box-shadow: var(--shadow);
 }
@@ -1065,7 +1076,7 @@ body {
 .service-badge {
 	width: 2.5rem;
 	height: 2.5rem;
-	border-radius: 10px;
+	border-radius: var(--radius-md);
 	background: var(--primary);
 	display: flex;
 	align-items: center;
@@ -1142,7 +1153,7 @@ body {
 	display: inline-block;
 	background: #fff;
 	padding: 0.15rem 0.55rem;
-	border-radius: 20px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-2xs);
 	font-weight: 700;
 	text-transform: uppercase;
@@ -1168,7 +1179,7 @@ body {
 	bottom: 10px;
 	width: 2px;
 	background: linear-gradient(to bottom, var(--primary), var(--accent));
-	border-radius: 2px;
+	border-radius: var(--radius-xs);
 }
 
 .timeline-item {
@@ -1176,7 +1187,7 @@ body {
 	margin-bottom: 1.5rem;
 	background: #fff;
 	border: 1px solid var(--border);
-	border-radius: 12px;
+	border-radius: var(--radius-md);
 	padding: 1rem 1.1rem;
 	box-shadow: var(--shadow);
 }
@@ -1203,7 +1214,7 @@ body {
 	background: var(--primary);
 	color: #fff;
 	padding: 0.15rem 0.6rem;
-	border-radius: 20px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-2xs);
 	font-weight: 700;
 	margin-bottom: 0.5rem;
@@ -1231,7 +1242,7 @@ body {
    ------------------------------------------------------------ */
 .office-photo {
 	margin: 0 0 2rem;
-	border-radius: 14px;
+	border-radius: var(--radius-lg);
 	overflow: hidden;
 	border: 1px solid var(--border);
 	box-shadow: var(--shadow);
@@ -1297,7 +1308,7 @@ body {
 	justify-content: center;
 	background: rgba(0, 0, 0, 0.4);
 	padding: 0.2rem 0.6rem;
-	border-radius: 20px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-2xs);
 	font-weight: 800;
 	letter-spacing: 0.5px;
@@ -1359,7 +1370,7 @@ body {
 .review-card {
 	background: #fff;
 	border: 1px solid var(--border);
-	border-radius: 12px;
+	border-radius: var(--radius-md);
 	padding: 0.95rem 1.1rem;
 	box-shadow: var(--shadow);
 	display: flex;
@@ -1444,7 +1455,7 @@ body {
 	padding: 0.7rem 1rem;
 	background: #fff;
 	border: 1.5px solid var(--border);
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-sm);
 	font-weight: 700;
 	color: var(--primary);
@@ -1478,7 +1489,7 @@ body {
 .info-block {
 	background: #fff;
 	border: 1px solid var(--border);
-	border-radius: 14px;
+	border-radius: var(--radius-lg);
 	padding: 1.15rem 1.2rem;
 	box-shadow: var(--shadow);
 }
@@ -1544,7 +1555,7 @@ body {
 	gap: 0.75rem;
 	background: #fbfaf5;
 	border: 1px dashed #d9d1b8;
-	border-radius: 12px;
+	border-radius: var(--radius-md);
 	padding: 0.85rem 1rem;
 }
 
@@ -1612,7 +1623,7 @@ body {
 	align-items: center;
 	gap: 0.4rem;
 	padding: 0.28rem 0.65rem;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-2xs);
 	font-weight: 800;
 	line-height: 1;
@@ -1687,7 +1698,7 @@ body {
 	margin: 0 -0.7rem;
 	border-bottom: 1px solid var(--border);
 	font-size: var(--fs-base);
-	border-radius: 8px;
+	border-radius: var(--radius-sm);
 }
 
 .schedule-list li:last-child {
@@ -1736,7 +1747,7 @@ body {
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	padding: 0.1rem 0.4rem;
-	border-radius: 20px;
+	border-radius: var(--radius-pill);
 	line-height: 1.2;
 	margin-left: 0.4rem;
 	vertical-align: middle;
@@ -1746,7 +1757,7 @@ body {
    8.9 MAPPA
    ------------------------------------------------------------ */
 .map-wrap {
-	border-radius: 14px;
+	border-radius: var(--radius-lg);
 	overflow: hidden;
 	border: 1px solid var(--border);
 	box-shadow: var(--shadow-lg);
@@ -1820,7 +1831,7 @@ body {
 	background: var(--primary);
 	color: #fff;
 	border: none;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	padding: 0.75rem 1.3rem;
 	font-weight: 700;
 	font-size: var(--fs-base);
@@ -1879,7 +1890,7 @@ body {
 		var(--gp-terracotta) 0%,
 		var(--gp-terracotta-dark) 100%
 	);
-	border-radius: 20px;
+	border-radius: var(--radius-xl);
 	padding: 2rem 1.5rem;
 	margin-bottom: 1.75rem;
 	text-align: center;
@@ -1986,7 +1997,7 @@ body {
 	background: #fff;
 	border: 1px solid #ecdccc;
 	border-left: 4px solid var(--gp-oliva);
-	border-radius: 12px;
+	border-radius: var(--radius-md);
 	padding: 0.95rem 1.05rem;
 	margin-bottom: 1.5rem;
 }
@@ -2025,7 +2036,7 @@ body {
 	gap: 0.55rem;
 	background: #fff;
 	border: 1px solid #ecdccc;
-	border-radius: 12px;
+	border-radius: var(--radius-md);
 	padding: 1rem 0.75rem;
 	font-size: var(--fs-sm);
 	font-weight: 700;
@@ -2049,7 +2060,7 @@ body {
 	padding: 0.9rem 1.2rem;
 	background: var(--gp-terracotta-dark);
 	color: #fff;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-md);
 	font-weight: 800;
 	box-shadow: 0 6px 18px rgba(var(--gp-rgb), 0.35);
@@ -2093,7 +2104,7 @@ body {
 .legal-block {
 	background: #fff;
 	border: 1px solid var(--border);
-	border-radius: 14px;
+	border-radius: var(--radius-lg);
 	padding: 1.15rem 1.2rem;
 	box-shadow: var(--shadow);
 }
@@ -2136,7 +2147,7 @@ body {
 .legal-block .disclaimer-note {
 	background: var(--rating-tint);
 	border-left: 3px solid var(--gold);
-	border-radius: 8px;
+	border-radius: var(--radius-sm);
 	padding: 0.8rem 0.95rem;
 	font-size: var(--fs-sm);
 	color: var(--text);
@@ -2247,7 +2258,7 @@ body {
 }
 
 .dot.active:focus-visible {
-	border-radius: 4px;
+	border-radius: var(--radius-xs);
 }
 
 .nav-btn .ico {
@@ -2303,7 +2314,7 @@ body {
 .dot.active {
 	background: var(--primary);
 	width: 1.25rem;
-	border-radius: 4px;
+	border-radius: var(--radius-xs);
 }
 
 /* ------------------------------------------------------------
@@ -2359,7 +2370,7 @@ body {
 	background: rgba(var(--primary-rgb), 0.92);
 	color: #fff;
 	padding: 0.5rem 1rem;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-xs);
 	font-weight: 600;
 	display: flex;
@@ -2445,7 +2456,7 @@ html.cookie-chosen .cookie-banner {
 	flex: 1;
 	border: none;
 	padding: 0.65rem 0.9rem;
-	border-radius: 50px;
+	border-radius: var(--radius-pill);
 	font-size: var(--fs-base);
 	font-weight: 700;
 	transition:
@@ -2501,7 +2512,7 @@ html.cookie-chosen .cookie-banner {
 
 .modal-box {
 	background: #fff;
-	border-radius: 22px;
+	border-radius: var(--radius-xl);
 	padding: 2rem 1.5rem 1.6rem;
 	max-width: 26.25rem;
 	width: 100%;
@@ -2595,7 +2606,7 @@ html.cookie-chosen .cookie-banner {
 }
 .policy-content::-webkit-scrollbar-thumb {
 	background: var(--border);
-	border-radius: 3px;
+	border-radius: var(--radius-xs);
 }
 
 .policy-content h3 {
@@ -2644,7 +2655,7 @@ html.cookie-chosen .cookie-banner {
 	font-size: var(--fs-xs);
 	background: var(--bg-alt);
 	padding: 0.1rem 0.35rem;
-	border-radius: 4px;
+	border-radius: var(--radius-xs);
 	color: var(--primary);
 }
 
@@ -2923,7 +2934,7 @@ html.cookie-chosen .cookie-banner {
 		transform: translateX(-50%);
 		max-width: 22rem;
 		width: auto;
-		border-radius: 50px;
+		border-radius: var(--radius-pill);
 		border: 1px solid var(--border);
 		padding: 0.5rem;
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
