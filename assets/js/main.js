@@ -1213,8 +1213,8 @@
 					context = section ? section.id : "global";
 				}
 
-				window.gtag("event", isTel ? "click_telefono" : "click_whatsapp", {
-					event_category: "contatti",
+				window.gtag("event", isTel ? "click_phone" : "click_whatsapp", {
+					event_category: "contacts",
 					event_label: context,
 				});
 			});
