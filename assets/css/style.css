@@ -455,6 +455,9 @@ body {
 .ico-xmark {
 	--src: url(../img/icons/xmark.svg);
 }
+.ico-house {
+	--src: url(../img/icons/house.svg);
+}
 
 /* ============================================================
    6. LAYOUT — App, Header, Deck, Slide
