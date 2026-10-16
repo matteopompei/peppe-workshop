@@ -1,23 +1,32 @@
-# ============================================================
-# CACHE CONTROL
-# ============================================================
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://*.gstatic.com https://*.googleapis.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src https://www.google.com https://maps.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
 
-# Asset statici (CSS, JS, font, icone) — cache aggressiva, 1 anno
-/assets/*
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/404.html
+  Cache-Control: public, max-age=300
+
+/assets/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
-# HTML — sempre rivalidato per garantire contenuti freschi
-/*
+/assets/img/*
+  Cache-Control: public, max-age=2592000
+
+/assets/css/*
   Cache-Control: public, max-age=3600
 
-# ============================================================
-# SECURITY HEADERS
-# ============================================================
+/assets/js/*
+  Cache-Control: public, max-age=3600
 
-/*
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://cloudflareinsights.com; frame-src https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+/assets/img/favicon/site.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=86400
