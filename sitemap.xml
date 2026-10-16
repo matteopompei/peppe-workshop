@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Sitemap di Elettrauto Giuseppe Lelli.
+     Il sito è una single-page application con navigazione a hash:
+     gli anchor (#storia, #servizi, ...) non sono URL distinte e
+     non vanno elencate separatamente.
+     Aggiornare <loc> quando il sito passa a un dominio custom. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-	<url>
-		<loc>https://elettrautogiuseppelelli.pages.dev/</loc>
-		<lastmod>2026-09-24</lastmod>
-		<changefreq>monthly</changefreq>
-		<priority>1.0</priority>
-	</url>
+    <url>
+        <loc>https://elettrautogiuseppelelli.pages.dev/</loc>
+        <lastmod>2026-10-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
 </urlset>
