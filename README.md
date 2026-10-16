@@ -64,7 +64,6 @@ Non servono installazioni di dipendenze né una procedura di build.
 │   ├── js/
 │   ├── fonts/
 │   └── img/
-├── LICENSE
 └── README.md
 ```
 
