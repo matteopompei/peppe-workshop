@@ -2480,6 +2480,21 @@ body {
 	flex-direction: column;
 	gap: 0.55rem;
 	z-index: var(--z-fab);
+	transition:
+		opacity var(--dur-med) var(--ease-ui),
+		transform var(--dur-med) var(--ease-ui);
+}
+
+/* Quando la slide attiva è la hero (#home), i FAB
+   vengono nascosti: le CTA "Dove siamo" e "WhatsApp"
+   nell'hero fanno già lo stesso lavoro.
+   Il selettore sfrutta l'attributo inert: main.js lo
+   mette su tutte le slide non attive, quindi la slide
+   attiva è l'unica SENZA inert. */
+.app:has(#home:not([inert])) .fab {
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(1rem);
 }
 
 .fab-btn {
