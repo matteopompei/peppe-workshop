@@ -25,6 +25,79 @@
      canonicalizzazione duplicata. -->
 		<link rel="canonical" href="https://elettrautogiuseppelelli.pages.dev/" />
 
+		<!-- Dati strutturati schema.org.
+     Dichiara che questa pagina parla di un AutomotiveBusiness.
+     Se un domani il sito diventa ufficiale, si può cambiare
+     il tipo radice da WebPage ad AutomotiveBusiness.
+
+     ATTENZIONE: JSON non ammette commenti al suo interno.
+		 Per modificare i dati, non inserire // o /* */ nel
+     blocco: rompono la validazione e Google scarta tutto.
+     Testare dopo ogni modifica su:
+     https://search.google.com/test/rich-results -->
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "WebPage",
+				"name": "Elettrauto Giuseppe Lelli — Castorano (AP)",
+				"url": "https://elettrautogiuseppelelli.pages.dev/",
+				"description": "Informazioni indipendenti sull'Elettrauto Giuseppe Lelli di Castorano (AP), attivo dal 1973. Diagnostica elettronica, impianti elettrici e soccorso auto.",
+				"inLanguage": "it",
+				"isPartOf": {
+					"@type": "WebSite",
+					"name": "Elettrauto Giuseppe Lelli",
+					"url": "https://elettrautogiuseppelelli.pages.dev/"
+				},
+				"about": {
+					"@type": "AutomotiveBusiness",
+					"name": "Elettrauto Giuseppe Lelli",
+					"description": "Elettrauto a Castorano (AP). Diagnostica elettronica, riparazioni dell'impianto elettrico, avviamento e soccorso con booster.",
+					"foundingDate": "1973",
+					"telephone": "+393519717054",
+					"address": {
+						"@type": "PostalAddress",
+						"streetAddress": "Via Salaria, 126",
+						"addressLocality": "Castorano",
+						"addressRegion": "Marche",
+						"postalCode": "63081",
+						"addressCountry": "IT"
+					},
+					"openingHoursSpecification": [
+						{
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"Monday",
+								"Tuesday",
+								"Wednesday",
+								"Thursday",
+								"Friday"
+							],
+							"opens": "08:30",
+							"closes": "12:30"
+						},
+						{
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"Monday",
+								"Tuesday",
+								"Wednesday",
+								"Thursday",
+								"Friday"
+							],
+							"opens": "15:00",
+							"closes": "19:30"
+						},
+						{
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": "Saturday",
+							"opens": "08:30",
+							"closes": "12:30"
+						}
+					]
+				}
+			}
+		</script>
+
 		<!-- ============================================================
 		     FAVICON & PWA
 		     Tutti i percorsi sono relativi (./assets/...) per funzionare
