@@ -828,6 +828,39 @@ body {
 		linear-gradient(160deg, #f0f3fa 0%, #ffffff 40%, #f6f8fb 100%);
 }
 
+/* Pattern a puntini tecnici su tutta la slide hero.
+   Stesso linguaggio visivo dell'overlay mappa. */
+.slide.hero::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: radial-gradient(
+		circle,
+		rgba(var(--primary-rgb), 0.05) 1px,
+		transparent 1px
+	);
+	background-size: 18px 18px;
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* Glow dorato che sale dal basso.
+   Illumina la parte inferiore della slide e "chiude"
+   visivamente la composizione. */
+.slide.hero::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(
+		ellipse 70% 90% at 50% 120%,
+		rgba(212, 160, 23, 0.12) 0%,
+		rgba(184, 96, 58, 0.06) 40%,
+		transparent 70%
+	);
+	pointer-events: none;
+	z-index: 0;
+}
+
 .hero-content {
 	position: relative;
 	z-index: 1;
