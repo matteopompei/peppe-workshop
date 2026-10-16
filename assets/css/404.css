@@ -1,0 +1,226 @@
+/* ============================================================
+   PAGINA 404
+   Stili specifici della pagina d'errore. Va caricato DOPO
+   style.css, che fornisce token, font, reset, bottoni e icone.
+
+   Scelte:
+   - Struttura a sé: non usa il layout .app (max-width 540px)
+     del sito principale. La 404 è una pagina a piena larghezza.
+   - Riusa .app-header, .logo, .btn, .btn-call, .btn-wa e le
+     icone (.ico-*) da style.css.
+   - Override dell'overflow: il reset principale imposta
+     html/body a overflow: hidden per il layout "app fissa".
+     La 404 deve poter scrollare se il contenuto eccede il
+     viewport. L'override è scopato tramite .is-404 su <html>.
+   ============================================================ */
+
+/* --- Override del reset --- */
+html.is-404,
+html.is-404 body {
+	overflow: auto;
+}
+
+body.page-404 {
+	background: var(--bg-alt);
+}
+
+/* ============================================================
+   STRUTTURA
+   Wrapper colonna: header in alto (flex-shrink: 0), contenuto
+   che occupa il resto dello spazio (flex: 1).
+   ============================================================ */
+.page-404-wrapper {
+	min-height: 100vh;
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+}
+
+/* ============================================================
+   CONTENUTO
+   Sfondo con pattern a puntini + glow dorato dal basso:
+   stessa composizione visiva della hero.
+   ============================================================ */
+.page-404-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 3rem 1.5rem 4rem;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+
+	background: linear-gradient(160deg, #f0f3fa 0%, #ffffff 40%, #f6f8fb 100%);
+}
+
+/* Pattern a puntini tecnici */
+.page-404-content::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: radial-gradient(
+		circle,
+		rgba(var(--primary-rgb), 0.05) 1px,
+		transparent 1px
+	);
+	background-size: 18px 18px;
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* Glow dorato dal basso */
+.page-404-content::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(
+		ellipse 70% 90% at 50% 120%,
+		rgba(212, 160, 23, 0.12) 0%,
+		rgba(184, 96, 58, 0.06) 40%,
+		transparent 70%
+	);
+	pointer-events: none;
+	z-index: 0;
+}
+
+.page-404-content > * {
+	position: relative;
+	z-index: 1;
+}
+
+/* ============================================================
+   NUMERO 404
+   Font display con gradiente animato (stesso pattern del
+   titolo hero). Keyframes dedicato per evitare collisioni
+   future con titleGradient usato altrove.
+   ============================================================ */
+.page-404-code {
+	font-family: var(--font-display);
+	font-size: clamp(6rem, 28vw, 12rem);
+	font-weight: 800;
+	line-height: 0.9;
+	letter-spacing: -0.04em;
+	margin-bottom: 1.5rem;
+	background: linear-gradient(
+		100deg,
+		var(--primary-dark) 0%,
+		var(--primary) 25%,
+		var(--primary-light) 50%,
+		var(--accent) 75%,
+		var(--primary) 100%
+	);
+	background-size: 220% 100%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+	animation: page404TitleGradient 12s ease-in-out infinite;
+}
+
+@keyframes page404TitleGradient {
+	0%,
+	100% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+}
+
+/* ============================================================
+   TITOLO E SOTTOTITOLO
+   ============================================================ */
+.page-404-title {
+	font-family: var(--font-display);
+	font-size: var(--fs-xl);
+	font-weight: 700;
+	color: var(--primary);
+	letter-spacing: -0.2px;
+	margin-bottom: 0.85rem;
+	max-width: 26rem;
+}
+
+.page-404-subtitle {
+	font-size: var(--fs-md);
+	color: var(--text-light);
+	max-width: 24rem;
+	margin-bottom: 2rem;
+	line-height: 1.55;
+}
+
+/* ============================================================
+   CTA "Torna alla home"
+   Riusa .btn .btn-call, con margin-bottom per staccarla dai
+   contatti secondari.
+   ============================================================ */
+.page-404-home {
+	margin-bottom: 2.5rem;
+}
+
+/* ============================================================
+   CONTATTI SECONDARI
+   Separati visivamente da un bordo superiore, così l'azione
+   primaria resta "Torna alla home".
+   ============================================================ */
+.page-404-contacts {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.75rem;
+	padding-top: 2rem;
+	border-top: 1px solid var(--border);
+	width: 100%;
+	max-width: 22rem;
+}
+
+.page-404-contacts-label {
+	font-size: var(--fs-xs);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1.2px;
+	color: var(--accent);
+	margin-bottom: 0.25rem;
+}
+
+.page-404-contacts-row {
+	display: flex;
+	gap: 0.6rem;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.page-404-contacts-row .btn {
+	flex: 1 1 0;
+	min-width: 8rem;
+	padding: 0.65rem 1.1rem;
+	font-size: var(--fs-sm);
+}
+
+/* ============================================================
+   DESKTOP — spazi più ampi, titolo leggermente più grande.
+   ============================================================ */
+@media (min-width: 541px) {
+	.page-404-content {
+		padding: 4rem 2rem 5rem;
+	}
+	.page-404-title {
+		font-size: 1.5rem;
+	}
+	.page-404-subtitle {
+		max-width: 28rem;
+	}
+}
+
+/* ============================================================
+   PREFERS-REDUCED-MOTION — disattiva il gradiente animato.
+   Il resto è già coperto dal blocco in style.css (sezione 11.4).
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+	.page-404-code {
+		animation: none;
+		background-position: 50% 50%;
+	}
+}

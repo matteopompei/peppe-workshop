@@ -1,44 +1,99 @@
 <!doctype html>
-<html lang="it">
+<html lang="it" class="is-404">
 	<head>
 		<meta charset="UTF-8" />
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 		/>
-		<title>Pagina non trovata · Elettrauto Giuseppe Lelli</title>
+		<meta name="robots" content="noindex" />
+		<meta
+			name="description"
+			content="Pagina non trovata. Torna alla home o contatta Elettrauto Giuseppe Lelli."
+		/>
+		<title>Pagina non trovata — Elettrauto Giuseppe Lelli</title>
+
+		<!-- Percorsi assoluti: la 404 può essere servita da qualsiasi
+		     URL (es. /pippo, /a/b/c), quindi i path relativi non
+		     sarebbero affidabili. I path assoluti puntano sempre
+		     alla radice del dominio. -->
 		<link
 			rel="icon"
 			type="image/svg+xml"
 			href="/assets/img/favicon/favicon.svg"
 		/>
+		<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" />
+
+		<meta name="color-scheme" content="light only" />
+		<meta name="theme-color" content="#2a3757" />
+
+		<link
+			rel="preload"
+			href="/assets/fonts/bitter-800.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<link
+			rel="preload"
+			href="/assets/fonts/manrope-400.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+
 		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/404.css" />
+
+		<!-- main.js è caricato con defer. I moduli che non trovano
+		     i propri elementi (deck, dot, modali) escono
+		     silenziosamente. Funzionano invece:
+		     - initSignage: accende l'insegna di notte
+		     - initCookieConsent: carica GA se l'utente ha già
+		       acconsentito (utile per tracciare i 404)
+		     - initContactTracking: traccia i click sui contatti -->
+		<script src="/assets/js/main.js" defer></script>
 	</head>
-	<body>
-		<div class="app">
-			<div class="header-wrap">
-				<header class="app-header">
-					<div class="logo" role="img" aria-label="Elettrauto Ricambi"></div>
-				</header>
-			</div>
-			<main class="deck">
-				<section class="slide hero">
-					<div class="slide-inner">
-						<div class="hero-content">
-							<h1 class="hero-title">404</h1>
-							<div class="hero-kicker">Pagina non trovata</div>
-							<p class="hero-subtitle">
-								La pagina che cerchi non esiste o è stata spostata.
-							</p>
-							<div class="cta-row">
-								<a href="/" class="btn btn-call">
-									<span class="ico ico-location" aria-hidden="true"></span>
-									Torna alla home
-								</a>
-							</div>
-						</div>
+
+	<body class="page-404">
+		<div class="page-404-wrapper">
+			<header class="app-header" id="appHeader">
+				<div class="logo" role="img" aria-label="Elettrauto Ricambi"></div>
+			</header>
+
+			<main class="page-404-content">
+				<div class="page-404-code" aria-hidden="true">404</div>
+
+				<h1 class="page-404-title">Questa pagina non esiste</h1>
+
+				<p class="page-404-subtitle">
+					Il link che hai aperto potrebbe essere vecchio o sbagliato. Nessun
+					problema: torna alla home oppure contattaci direttamente.
+				</p>
+
+				<a href="/" class="btn btn-call page-404-home">
+					<span class="ico ico-house" aria-hidden="true"></span>
+					Torna alla home
+				</a>
+
+				<div class="page-404-contacts">
+					<span class="page-404-contacts-label">Oppure contattaci</span>
+					<div class="page-404-contacts-row">
+						<a href="tel:+393519717054" class="btn btn-call">
+							<span class="ico ico-phone" aria-hidden="true"></span>
+							Chiama
+						</a>
+						<a
+							href="https://wa.me/393519717054"
+							target="_blank"
+							rel="noopener"
+							class="btn btn-wa"
+						>
+							<span class="ico ico-whatsapp" aria-hidden="true"></span>
+							WhatsApp
+						</a>
 					</div>
-				</section>
+				</div>
 			</main>
 		</div>
 	</body>
